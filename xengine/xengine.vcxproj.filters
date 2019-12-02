@@ -1,0 +1,453 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="graphics">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="mesh">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="scene">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="utility">
+      <UniqueIdentifier>{387a17c9-fe9a-443f-b45a-56b27269751f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor">
+      <UniqueIdentifier>{e33a67f0-7abc-497c-ae84-5a1ff39031c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glad">
+      <UniqueIdentifier>{7ea70076-242d-4640-a9bf-7fad46d66a12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\imgui">
+      <UniqueIdentifier>{27bf7661-fb0a-4943-acf1-9c0e1d656cd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geometry">
+      <UniqueIdentifier>{19032a0a-e4e8-4894-ac06-ad5b17f4e143}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mesh\primitive">
+      <UniqueIdentifier>{d9607d5e-6c7d-4623-bdf1-9b69b3a12002}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\platform">
+      <UniqueIdentifier>{ed7a2836-27eb-4d5b-9843-3740009cf6b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\texture">
+      <UniqueIdentifier>{8bfd55d0-ce73-41d7-aacc-fbe9dead4db8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\material">
+      <UniqueIdentifier>{fe3727a5-2eeb-4dfe-ac1f-741b96e938a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\shader">
+      <UniqueIdentifier>{3b34ca5d-2011-47cd-be73-e75f1a6f9b39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\frame_buffer">
+      <UniqueIdentifier>{18e581ab-6448-4b1e-8e83-558444b1d5fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\command">
+      <UniqueIdentifier>{22bea32b-1c73-4071-bf59-4635f22d9db4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model">
+      <UniqueIdentifier>{a699c3a3-0dfd-42ae-b146-24d9e9b93adc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\light">
+      <UniqueIdentifier>{033348f6-e2b7-4fdf-904f-28ca3378ca53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\renderer">
+      <UniqueIdentifier>{a8ce0f3f-146a-4ead-897e-fb2e6c6b3806}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xengine">
+      <UniqueIdentifier>{7e20b9ae-4ef6-40ec-b1c8-b3d80168e674}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="camera">
+      <UniqueIdentifier>{c9f7a436-6228-49f9-872b-f7ca462da338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\uniform_buffer">
+      <UniqueIdentifier>{adb5107e-55b1-43ba-9e98-236242eed652}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\shadow">
+      <UniqueIdentifier>{81bba52e-abf3-4183-866a-dfc46fb19d15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\capture">
+      <UniqueIdentifier>{8ee1fb36-5274-4b2c-863d-35a965a78497}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui">
+      <UniqueIdentifier>{5d0b7d21-67b6-4b2a-a641-964d8d7fd42d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="utility\configure.cpp">
+      <Filter>utility</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\counter.cpp">
+      <Filter>utility</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\log.cpp">
+      <Filter>utility</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\random.cpp">
+      <Filter>utility</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\time.cpp">
+      <Filter>utility</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\glad\glad.c">
+      <Filter>vendor\glad</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\imgui\imgui.cpp">
+      <Filter>vendor\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\imgui\imgui_demo.cpp">
+      <Filter>vendor\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\imgui\imgui_draw.cpp">
+      <Filter>vendor\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\imgui\imgui_widgets.cpp">
+      <Filter>vendor\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry\aabb.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry\frustum.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh\mesh.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh\primitive\cube.cpp">
+      <Filter>mesh\primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh\primitive\plane.cpp">
+      <Filter>mesh\primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh\primitive\quad.cpp">
+      <Filter>mesh\primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh\primitive\sphere.cpp">
+      <Filter>mesh\primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh\primitive\torus.cpp">
+      <Filter>mesh\primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\material\material.cpp">
+      <Filter>graphics\material</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\material\material_manager.cpp">
+      <Filter>graphics\material</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\shader\shader.cpp">
+      <Filter>graphics\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\shader\shader_manager.cpp">
+      <Filter>graphics\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\texture\texture.cpp">
+      <Filter>graphics\texture</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\texture\texture_manager.cpp">
+      <Filter>graphics\texture</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\platform\ogl_status.cpp">
+      <Filter>graphics\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\scene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\file_system.cpp">
+      <Filter>utility</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh\mesh_manager.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="model\model.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\skybox.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\model_manager.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\frame_buffer\frame_buffer.cpp">
+      <Filter>graphics\frame_buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\light\light.cpp">
+      <Filter>graphics\light</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\light\parallel_light.cpp">
+      <Filter>graphics\light</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\light\point_light.cpp">
+      <Filter>graphics\light</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\command\render_command.cpp">
+      <Filter>graphics\command</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\command\render_command_manager.cpp">
+      <Filter>graphics\command</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\renderer\renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\renderer\general_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\renderer\deferred_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\renderer\forward_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\renderer\ssao_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\renderer\downsample_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\renderer\gaussian_blur_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\renderer\bloom_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\renderer\post_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\renderer\render_config.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="xengine.cpp">
+      <Filter>xengine</Filter>
+    </ClCompile>
+    <ClCompile Include="camera\camera.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="camera\eular_camera.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\uniform_buffer\uniform_buffer.cpp">
+      <Filter>graphics\uniform_buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\shadow\shadow.cpp">
+      <Filter>graphics\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\shadow\parallel_shadow.cpp">
+      <Filter>graphics\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\uniform_buffer\uniform_block.cpp">
+      <Filter>graphics\uniform_buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\capture\cubic_capture.cpp">
+      <Filter>graphics\capture</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\renderer\ibl_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\ui.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\imgui\imgui_impl_glfw.cpp">
+      <Filter>vendor\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\imgui\imgui_impl_opengl3.cpp">
+      <Filter>vendor\imgui</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="utility\configure.h">
+      <Filter>utility</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\counter.h">
+      <Filter>utility</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\log.h">
+      <Filter>utility</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\random.h">
+      <Filter>utility</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\time.h">
+      <Filter>utility</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\glad\glad.h">
+      <Filter>vendor\glad</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\glad\khrplatform.h">
+      <Filter>vendor\glad</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\imconfig.h">
+      <Filter>vendor\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\imgui.h">
+      <Filter>vendor\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\imgui_internal.h">
+      <Filter>vendor\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\imstb_rectpack.h">
+      <Filter>vendor\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\imstb_textedit.h">
+      <Filter>vendor\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\imstb_truetype.h">
+      <Filter>vendor\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry\aabb.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry\frustum.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\mesh.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry\constant.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\primitive\cube.h">
+      <Filter>mesh\primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\primitive\plane.h">
+      <Filter>mesh\primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\primitive\quad.h">
+      <Filter>mesh\primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\primitive\sphere.h">
+      <Filter>mesh\primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\primitive\torus.h">
+      <Filter>mesh\primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\material\material.h">
+      <Filter>graphics\material</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\material\material_manager.h">
+      <Filter>graphics\material</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\shader\shader.h">
+      <Filter>graphics\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\shader\shader_manager.h">
+      <Filter>graphics\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\texture\texture.h">
+      <Filter>graphics\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\texture\texture_manager.h">
+      <Filter>graphics\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\platform\ogl_status.h">
+      <Filter>graphics\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\scene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\file_system.h">
+      <Filter>utility</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\mesh_manager.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="model\model.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\skybox.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\model_manager.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\frame_buffer\frame_buffer.h">
+      <Filter>graphics\frame_buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\light\light.h">
+      <Filter>graphics\light</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\light\parallel_light.h">
+      <Filter>graphics\light</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\light\point_light.h">
+      <Filter>graphics\light</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\command\render_command.h">
+      <Filter>graphics\command</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\command\render_command_manager.h">
+      <Filter>graphics\command</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\renderer\renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\renderer\general_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\renderer\deferred_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\renderer\forward_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\renderer\ssao_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\renderer\downsample_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\renderer\gaussian_blur_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\renderer\bloom_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\renderer\post_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\renderer\render_config.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="xengine.h">
+      <Filter>xengine</Filter>
+    </ClInclude>
+    <ClInclude Include="camera\camera.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="camera\eular_camera.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\uniform_buffer\uniform_buffer.h">
+      <Filter>graphics\uniform_buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\primitive.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\shadow\shadow.h">
+      <Filter>graphics\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\shadow\parallel_shadow.h">
+      <Filter>graphics\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\uniform_buffer\uniform_block.h">
+      <Filter>graphics\uniform_buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\capture\cubic_capture.h">
+      <Filter>graphics\capture</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\renderer\ibl_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ui.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\imgui_impl_glfw.h">
+      <Filter>vendor\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\imgui_impl_opengl3.h">
+      <Filter>vendor\imgui</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
