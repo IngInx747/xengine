@@ -30,9 +30,9 @@ namespace xengine
 		shadow.UpdateView(direction, { 0.0f, 0.0f, 0.0f });
 	}
 
-	void ParallelLight::UpdateShadowView(const glm::vec3& camPos)
+	void ParallelLight::UpdateShadowView(const glm::vec3& center)
 	{
-		shadow.UpdateView(direction, camPos);
+		shadow.UpdateView(direction, center);
 	}
 
 	void ParallelLight::SetRegional(bool regional)

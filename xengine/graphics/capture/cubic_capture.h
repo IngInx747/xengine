@@ -20,6 +20,9 @@ namespace xengine
 		// bind one face of the cube map to be active render target
 		void BindFace(unsigned int face, unsigned int mipmap = 0);
 
+		// unbind cubemap
+		void Unbind();
+
 		// resize capture side length
 		void Resize(unsigned int side_length);
 

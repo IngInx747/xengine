@@ -28,11 +28,11 @@ namespace xengine
 		// render target(s)
 		FrameBuffer m_target;
 
+		// relates shader(s)
+		Shader m_shader;
+
 		// render result(s)
 		Texture* m_output;
-
-		// relates shader(s)
-		Shader* m_shader;
 
 		// related mesh(es)
 		Mesh* m_quad;

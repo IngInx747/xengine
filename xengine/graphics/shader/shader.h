@@ -10,6 +10,17 @@
 
 namespace xengine
 {
+	unsigned int CreateShader(const std::string& source, unsigned int type); // create a shader of TYPE
+	unsigned int CreateVertexShader(const std::string& source, unsigned int type);   // compile a vertex shader
+	unsigned int CreateGeometryShader(const std::string& source, unsigned int type); // compile a geometry shader
+	unsigned int CreateFragmentShader(const std::string& source, unsigned int type); // compile a fragment shader
+
+	// read shader source from file (if include exists, read included files recursively)
+	std::string ReadShaderSource(const std::string& path);
+
+	// insert precompile flag to shader source
+	std::string InsertShaderDefine(const std::string& source, const std::vector<std::string>& defines);
+
 	class Shader
 	{
 	public:
@@ -24,10 +35,14 @@ namespace xengine
 		Shader();
 		~Shader();
 
-		// make this shader as current
-		void Use();
+		// use the shader program (make this shader as current active)
+		void Bind();
+		
+		// stop using the shader program
+		static void Unbind();
 
-		inline unsigned int ID() const { return m_id; }
+		// delete program
+		void Destory();
 
 		// return location of uniform variable, -1 if not exist
 		int GetUniformLocation(const std::string& name);
@@ -47,11 +62,35 @@ namespace xengine
 		void SetUniform(const std::string& location, int size, const std::vector<glm::vec3>& values);
 		void SetUniform(const std::string& location, int size, const std::vector<glm::vec4>& values);
 
-		// generate vertex-fragment shader program
-		void GenerateVertFragShader(const std::string& vsCode, const std::string& fsCode, const std::vector<std::string>& defines);
+		// generate program alone w/o linking attached shaders
+		void Generate();
+
+		// compile shader source and attach shader to the program
+		void AttachVertexShader(const std::string& source);   // compile a vertex shader and attach to the program
+		void AttachGeometryShader(const std::string& source); // compile a geometry shader and attach to the program
+		void AttachFragmentShader(const std::string& source); // compile a fragment shader and attach to the program
+
+		// link all attached shaders
+		void Link();
+
+		// generate shader program and link all attached shaders
+		void GenerateAndLink();
+
+		// query active attributes and store result to lookup hash table
+		void QueryActiveAttributes();
+
+		// query active uniforms and store result to lookup hash table
+		void QueryActiveUniforms();
+
+		inline unsigned int ID() const { return m_id; }
 
 	protected:
-		unsigned int m_id;
+		unsigned int m_id = 0; // shader program id
+
+		unsigned int m_vs = 0; // vertex shader id
+		unsigned int m_gs = 0; // geometry shader id
+		unsigned int m_fs = 0; // fragment shader id
+
 		std::unordered_map<std::string, VarTableEntry> m_attributeTable;
 		std::unordered_map<std::string, VarTableEntry> m_uniformTable;
 	};

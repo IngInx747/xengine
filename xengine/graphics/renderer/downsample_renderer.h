@@ -34,17 +34,14 @@ namespace xengine
 		FrameBuffer m_target2;
 		FrameBuffer m_target3;
 
+		// relates shader(s)
+		Shader m_genShader;
+
 		// render result(s)
 		Texture* m_output0;
 		Texture* m_output1;
 		Texture* m_output2;
 		Texture* m_output3;
-
-		// relates shader(s)
-		Shader* m_shader;
-
-		// related mesh(es)
-		Mesh* m_quad;
 	};
 }
 

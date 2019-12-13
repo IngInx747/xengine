@@ -89,25 +89,10 @@ int main(int argc, char** argv)
 
 			// capture mouse actions and update primary camera
 			processMouseMove(deltaTime);
+			mainCamera->Update(deltaTime);
 
 			// move objects and update lights in the scene
 			scene->Update(currentFrameTime, deltaTime);
-
-			// take capture in the scene
-			//myScene.capture.SetCapturePosition(mainCamera->GetPosition());
-			//myScene.capture.SetCapturePosition(glm::vec3(0, 1, 0));
-			//
-			//for (unsigned int i = 0; i < 6; ++i)
-			//{
-			//	// set face to be render target
-			//	myScene.capture.BindFace(i);
-			//
-			//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			//
-			//	// render scene into targeted attachment
-			//	//cubicRenderer->Render(&myScene.scene, &myScene.capture.cameras[i], &myScene.capture.captures);
-			//	mainRenderer->Render(&myScene.scene, &myScene.capture.cameras[i], &myScene.capture.captures);
-			//}
 
 			// primary render pipeline
 			mainRenderer->Render(scene.get(), mainCamera, nullptr);
@@ -189,8 +174,6 @@ void processMouseMove(float deltaTime)
 		xengine::UI::FlipSwitch();
 		keysActive[GLFW_KEY_TAB] = true;
 	}
-
-	mainCamera->Update(deltaTime);
 }
 
 void glfwMouseMoveCallback(GLFWwindow *window, double xpos, double ypos)

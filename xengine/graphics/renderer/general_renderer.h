@@ -11,28 +11,19 @@
 
 namespace xengine
 {
-	// collection of basic render methods
-	class GeneralRenderer
-	{
-	public:
-		// render a single mesh, based on current shader (uniforms) and ogl settings
-		static void RenderMesh(Mesh* mesh);
+	/// collection of basic render methods
 
-		// render a mesh, given a material (handling shader and all corresponding uniforms, and ogl settings)
-		static void RenderMesh(Mesh* mesh, Material* material);
+	// render a single mesh, based on current shader (uniforms) and ogl settings
+	void RenderMesh(Mesh* mesh);
 
-		// render a command (mesh, material, transform, etc.)
-		static void RenderSingleCommand(const RenderCommand& command);
+	// render a mesh, given a material (handling shader and all corresponding uniforms, and ogl settings)
+	void RenderMesh(Mesh* mesh, Material* material);
 
-		// render a command at a given position and view (instead of global camera)
-		static void RenderSingleCommand(const RenderCommand& command, Camera* camera);
+	// blit data from one buffer to another (type: GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, etc.)
+	void Blit(FrameBuffer* from, FrameBuffer* to, unsigned int type);
 
-		// blit data from one buffer to another (type: GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, etc.)
-		static void Blit(FrameBuffer* from, FrameBuffer* to, unsigned int type);
-
-		// blit data from one frame buffer to default frame buffer (type: GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, etc.)
-		static void Blit(FrameBuffer* from, unsigned int width, unsigned height, unsigned int type);
-	};
+	// blit data from one frame buffer to default frame buffer (type: GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, etc.)
+	void Blit(FrameBuffer* from, unsigned int width, unsigned height, unsigned int type);
 }
 
 #endif // !XE_GENERAL_RENDERER_H

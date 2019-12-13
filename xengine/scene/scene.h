@@ -14,6 +14,7 @@
 #include <graphics/light/point_light.h>
 #include <graphics/light/parallel_light.h>
 #include <graphics/renderer/ibl_renderer.h>
+#include <graphics/particle_system/particle_system.h>
 
 namespace xengine
 {
@@ -34,6 +35,9 @@ namespace xengine
 		void AddLight(ParallelLight* light);
 		void AddLight(PointLight* light);
 
+		// particle
+		void AddParticle(ParticleSystem* particle);
+
 	private:
 
 	public:
@@ -47,6 +51,9 @@ namespace xengine
 		// lights
 		std::vector<ParallelLight*> parallelLights;
 		std::vector<PointLight*> pointLights;
+
+		// particle
+		std::vector<ParticleSystem*> particles;
 
 		// ambient (IBL) (bad practice to put a big module in general scene class)
 		CubeMap* irradianceMap;

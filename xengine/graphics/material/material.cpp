@@ -132,7 +132,7 @@ namespace xengine
 
 	void Material::UpdateShaderUniforms()
 	{
-		shader->Use();
+		shader->Bind();
 
 		for (const auto& mp : textureTable)
 		{

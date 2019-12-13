@@ -16,8 +16,8 @@ namespace xengine
 		// generate a shadow map for parallel light
 		void GenerateShadowMap(unsigned int width, unsigned height);
 
-		// update light view based on light direction and camera position
-		void UpdateView(const glm::vec3& lightDir, const glm::vec3& camPos);
+		// update light view based on light direction and lighting center
+		void UpdateView(const glm::vec3& lightDir, const glm::vec3& center);
 
 		// set out-of-view depth value (1: 1.0, 0: 0.0)
 		void SetBorderDepth(bool flag);

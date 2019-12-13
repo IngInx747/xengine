@@ -29,19 +29,16 @@ namespace xengine
 		FrameBuffer m_target0;
 		FrameBuffer m_target1;
 
-		// render result(s)
-		Texture* m_output0;
-		Texture* m_output1;
-
 		// intermidiate target(s)
 		FrameBuffer m_medium0;
 		FrameBuffer m_medium1;
-
+	
 		// relates shader(s)
-		Shader* m_shader;
+		Shader m_genShader;
 
-		// related mesh(es)
-		Mesh* m_quad;
+		// render result(s)
+		Texture* m_output0;
+		Texture* m_output1;
 	};
 }
 

@@ -1,8 +1,5 @@
 #include "shader_manager.h"
 
-#include <string>
-#include <fstream>
-
 #include <utility/log.h>
 
 namespace xengine
@@ -30,7 +27,7 @@ namespace xengine
 		return nullptr;
 	}
 
-	Shader* ShaderManager::LoadVertFragShader(
+	Shader* ShaderManager::LoadVF(
 		const std::string& name,
 		const std::string& vsPath,
 		const std::string& fsPath,
@@ -39,9 +36,9 @@ namespace xengine
 		auto it = _shaderTable.find(name);
 		if (it != _shaderTable.end()) return it->second;
 
-		Log::Message("[ShaderManager] Loading shader \"" + name + "\" from \"" + vsPath + "\" and \"" + fsPath + "\" ...", Log::INFO);
+		Log::Message("[ShaderManager] Loading shader \"" + name + "\" from \"" + vsPath + "\", \"" + fsPath + "\" ...", Log::INFO);
 
-		std::shared_ptr<Shader> shader = loadVertFragShader(vsPath, fsPath, defines);
+		std::shared_ptr<Shader> shader = loadVF(vsPath, fsPath, defines);
 
 		if (!shader)
 		{
@@ -57,94 +54,67 @@ namespace xengine
 		return shader.get();
 	}
 
-	std::shared_ptr<Shader> ShaderManager::loadVertFragShader(
+	Shader * ShaderManager::LoadVGF(
+		const std::string & name,
+		const std::string & vsPath,
+		const std::string & gsPath,
+		const std::string & fsPath,
+		const std::vector<std::string>& defines)
+	{
+		auto it = _shaderTable.find(name);
+		if (it != _shaderTable.end()) return it->second;
+
+		Log::Message("[ShaderManager] Loading shader \"" + name + "\" from \"" + vsPath + "\", \"" + gsPath + "\", \"" + fsPath + "\" ...", Log::INFO);
+
+		std::shared_ptr<Shader> shader = loadVGF(vsPath, gsPath, fsPath, defines);
+
+		if (!shader)
+		{
+			Log::Message("[ShaderManager] Shader \"" + name + "\" loading failed", Log::ERROR);
+			return nullptr;
+		}
+
+		_shaders.push_back(shader);
+		_shaderTable[name] = shader.get();
+
+		Log::Message("[ShaderManager] Shader \"" + name + "\" loaded successfully", Log::INFO);
+
+		return shader.get();
+	}
+
+	std::shared_ptr<Shader> ShaderManager::loadVF(
 		const std::string& vsPath,
 		const std::string& fsPath,
 		const std::vector<std::string>& defines)
 	{
-		std::string vsSource = readsrc(vsPath);
-		std::string fsSource = readsrc(fsPath);
 		std::shared_ptr<Shader> shader = std::make_shared<Shader>();
-		shader->GenerateVertFragShader(vsSource, fsSource, defines);
+
+		shader->AttachVertexShader(InsertShaderDefine(ReadShaderSource(vsPath), defines));
+		shader->AttachFragmentShader(InsertShaderDefine(ReadShaderSource(fsPath), defines));
+
+		shader->GenerateAndLink();
+
 		return shader;
 	}
 
-	std::string ShaderManager::readsrc(const std::string& path)
+	std::shared_ptr<Shader> ShaderManager::loadVGF(
+		const std::string & vsPath,
+		const std::string & gsPath,
+		const std::string & fsPath,
+		const std::vector<std::string>& defines)
 	{
-		std::string directory = path.substr(0, path.find_last_of("/\\"));
-		std::string source{}, line;
-		std::ifstream in(path, std::ios::in);
+		std::shared_ptr<Shader> shader = std::make_shared<Shader>();
 
-		if (!in)
-		{
-			Log::Message("[ShaderManager] Cannot open shader source \"" + path + "\"", Log::ERROR);
-			return "";
-		}
+		shader->AttachVertexShader(InsertShaderDefine(ReadShaderSource(vsPath), defines));
+		shader->AttachGeometryShader(InsertShaderDefine(ReadShaderSource(gsPath), defines));
+		shader->AttachFragmentShader(InsertShaderDefine(ReadShaderSource(fsPath), defines));
 
-		while (std::getline(in, line))
-		{
-			// if we encounter an #include line, include other shader source
-			if (line.substr(0, 8) == "#include")
-			{
-				std::string includePath = directory + "/" + line.substr(9);
-				source.append(readsrc(includePath));
-			}
-			else
-			{
-				source.append(line + "\n");
-			}
-		}
+		shader->GenerateAndLink();
 
-		return source;
+		return shader;
 	}
 
 	void ShaderManager::generateDefaultShader()
 	{
-		Shader* shader = nullptr;
-
-		/// deferred
-
-		shader = LoadVertFragShader("deferred ambient", "shaders/deferred/screen_ambient.vs", "shaders/deferred/ambient.fs");
-		shader->Use();
-		shader->SetUniform("gPositionMetallic", 0);
-		shader->SetUniform("gNormalRoughness", 1);
-		shader->SetUniform("gAlbedoAO", 2);
-		shader->SetUniform("envIrradiance", 3);
-		shader->SetUniform("envPrefilter", 4);
-		shader->SetUniform("BRDFLUT", 5);
-		shader->SetUniform("TexSSAO", 6);
-
-		shader = LoadVertFragShader("deferred irradiance", "shaders/deferred/ambient_irradience.vs", "shaders/deferred/ambient_irradience.fs");
-		shader->Use();
-		shader->SetUniform("gPositionMetallic", 0);
-		shader->SetUniform("gNormalRoughness", 1);
-		shader->SetUniform("gAlbedoAO", 2);
-		shader->SetUniform("envIrradiance", 3);
-		shader->SetUniform("envPrefilter", 4);
-		shader->SetUniform("BRDFLUT", 5);
-		shader->SetUniform("TexSSAO", 6);
-
-		shader = LoadVertFragShader("deferred directional", "shaders/deferred/screen_directional.vs", "shaders/deferred/directional.fs");
-		//shader->Use();
-		//shader->SetUniform("gPositionMetallic", 0);
-		//shader->SetUniform("gNormalRoughness", 1);
-		//shader->SetUniform("gAlbedoAO", 2);
-		//shader->SetUniform("lightShadowMap", 3);
-
-		shader = LoadVertFragShader("deferred point", "shaders/deferred/point.vs", "shaders/deferred/point.fs");
-		//shader->Use();
-		//shader->SetUniform("gPositionMetallic", 0);
-		//shader->SetUniform("gNormalRoughness", 1);
-		//shader->SetUniform("gAlbedoAO", 2);
-
-		/// lighting
-
-		shader = LoadVertFragShader("shadow directional", "shaders/shadow_cast.vs", "shaders/shadow_cast.fs");
-
-		shader = LoadVertFragShader("volumn light", "shaders/light.vs", "shaders/light.fs");
-
-		/// blit
-
-		shader = LoadVertFragShader("blit", "shaders/screen_quad.vs", "shaders/default_blit.fs");
 	}
 }

@@ -12,13 +12,6 @@ namespace xengine
 		rotation(glm::quat{})
 	{}
 
-	//Model::Model()
-	//{}
-	//
-	//Model::Model(const Model & other)
-	//{
-	//}
-
 	void Model::InsertMesh(Mesh * mesh, Material * material)
 	{
 		meshes.push_back(mesh);

@@ -1,4 +1,5 @@
 #version 430 core
+
 out vec4 FragColor;
 
 in vec3 FragPos;
@@ -22,8 +23,8 @@ uniform sampler2D   TexSSAO;
 uniform vec3 probePos;
 uniform float probeRadius;
 
-uniform int SSAO;
-uniform int SSR;
+uniform int UseSSAO;
+uniform int UseSSR;
 
 void main()
 {
@@ -32,8 +33,9 @@ void main()
     vec4 albedoAO         = texture(gAlbedoAO, uv);
     vec4 normalRoughness  = texture(gNormalRoughness, uv);
     vec4 positionMetallic = texture(gPositionMetallic, uv);
-    float ao = 1.0;
-    if(SSAO == 1)
+    float ao = 1.0; // AO = 1.0 - ambient occlusion
+
+    if (UseSSAO == 1)
     {
         ao = texture(TexSSAO, uv).r;
     }
@@ -63,13 +65,16 @@ void main()
 	
 	// calculate specular global illumination contribution w/ Epic's split-sum approximation
     vec3 specular = vec3(0.0);
-    if(SSR == 0)
+
+    if (UseSSR == 1)
     {
-        const float MAX_REFLECTION_LOD = 5.0;
-        vec3 prefilteredColor = textureLod(envPrefilter, R,  roughness * MAX_REFLECTION_LOD).rgb;
-        vec2 envBRDF          = texture(BRDFLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
-        specular = prefilteredColor * (F * envBRDF.x + envBRDF.y);
+        ;
     }
+
+    const float MAX_REFLECTION_LOD = 5.0;
+    vec3 prefilteredColor = textureLod(envPrefilter, R,  roughness * MAX_REFLECTION_LOD).rgb;
+    vec2 envBRDF          = texture(BRDFLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
+    specular = prefilteredColor * (F * envBRDF.x + envBRDF.y);
     
 	// for energy conservation, the diffuse and specular light can't
     // be above 1.0 (unless the surface emits light) so to preserve this

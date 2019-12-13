@@ -136,7 +136,7 @@ namespace xengine
 		{
 			std::string name{ "deferred" };
 
-			Shader* shader = ShaderManager::LoadVertFragShader(name, "shaders/deferred/g_buffer.vs", "shaders/deferred/g_buffer.fs", { "MESH_TBN" });
+			Shader* shader = ShaderManager::LoadVF(name, "shaders/deferred/g_buffer.vs", "shaders/deferred/g_buffer.fs", { "MESH_TBN" });
 
 			std::shared_ptr<Material> material = loadMaterial(shader);
 			material->type = Material::DEFERRED;
@@ -154,15 +154,15 @@ namespace xengine
 		{
 			std::string name{ "deferred no TBN" };
 
-			Shader* shader = ShaderManager::LoadVertFragShader(name, "shaders/deferred/g_buffer.vs", "shaders/deferred/g_buffer.fs");
+			Shader* shader = ShaderManager::LoadVF(name, "shaders/deferred/g_buffer.vs", "shaders/deferred/g_buffer.fs");
 
 			std::shared_ptr<Material> material = loadMaterial(shader);
 			material->type = Material::DEFERRED;
 			material->RegisterTexture("TexAlbedo", TextureManager::Get("chessboard"));
 			material->RegisterTexture("TexNormal", TextureManager::Get("normal"));
-			material->RegisterTexture("TexMetallic", TextureManager::Get("black"));
+			material->RegisterTexture("TexMetallic", TextureManager::Get("black")); // default: perfect metallic
 			material->RegisterTexture("TexRoughness", TextureManager::Get("chessboard"));
-			material->RegisterTexture("TexAO", TextureManager::Get("white"));
+			material->RegisterTexture("TexAO", TextureManager::Get("white")); // default: no AO
 
 			_defaultMaterials.push_back(material);
 			_defaultMaterialTable[name] = material.get();
@@ -172,7 +172,7 @@ namespace xengine
 		{
 			std::string name{ "glass" };
 
-			Shader* shader = ShaderManager::LoadVertFragShader(name, "shaders/forward_render.vs", "shaders/forward_render.fs", { "ALPHA_BLEND" });
+			Shader* shader = ShaderManager::LoadVF(name, "shaders/forward_render.vs", "shaders/forward_render.fs", { "ALPHA_BLEND" });
 
 			std::shared_ptr<Material> material = loadMaterial(shader);
 			material->type = Material::FORWARD;
@@ -191,7 +191,7 @@ namespace xengine
 		{
 			std::string name{ "alpha blend" };
 
-			Shader* shader = ShaderManager::LoadVertFragShader(name, "shaders/forward_render.vs", "shaders/forward_render.fs", { "ALPHA_BLEND" });
+			Shader* shader = ShaderManager::LoadVF(name, "shaders/forward_render.vs", "shaders/forward_render.fs", { "ALPHA_BLEND" });
 
 			std::shared_ptr<Material> material = loadMaterial(shader);
 			material->type = Material::FORWARD;
@@ -205,7 +205,7 @@ namespace xengine
 		{
 			std::string name{ "alpha discard" };
 
-			Shader* shader = ShaderManager::LoadVertFragShader(name, "shaders/forward_render.vs", "shaders/forward_render.fs", { "ALPHA_DISCARD" });
+			Shader* shader = ShaderManager::LoadVF(name, "shaders/forward_render.vs", "shaders/forward_render.fs", { "ALPHA_DISCARD" });
 
 			std::shared_ptr<Material> material = loadMaterial(shader);
 			material->type = Material::FORWARD;
@@ -219,7 +219,7 @@ namespace xengine
 		{
 			std::string name{ "skybox" };
 
-			Shader* shader = ShaderManager::LoadVertFragShader("background", "shaders/background.vs", "shaders/background.fs");
+			Shader* shader = ShaderManager::LoadVF("background", "shaders/background.vs", "shaders/background.fs");
 
 			std::shared_ptr<Material> material = loadMaterial(shader);
 			material->RegisterUniform("Exposure", 1.0f);
@@ -235,7 +235,7 @@ namespace xengine
 		// normal vector debug
 		{
 			std::string name{ "normal debug" };
-			Shader* shader = ShaderManager::LoadVertFragShader(name, "shaders/debug_forward.vs", "shaders/debug_forward.fs");
+			Shader* shader = ShaderManager::LoadVF(name, "shaders/debug_forward.vs", "shaders/debug_forward.fs");
 
 			std::shared_ptr<Material> material = loadMaterial(shader);
 			material->type = Material::FORWARD;

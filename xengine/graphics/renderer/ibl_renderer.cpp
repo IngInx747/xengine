@@ -12,15 +12,15 @@
 
 namespace xengine
 {
-	Texture* IblRenderer::_normalRoughnessLookup = nullptr;
-	FrameBuffer IblRenderer::_fbNormalRoughnessLookup;
+	Texture* IblRenderer::_brdfIntegrationMap = nullptr;
+	FrameBuffer IblRenderer::_brdfIntegrationMapBuffer;
 
 	IblRenderer::IblRenderer()
 	{
 		// shaders
-		m_environmentCaptureShader = ShaderManager::LoadVertFragShader("pbr:env_hdr_to_cubemap", "shaders/pbr/cube_sample.vs", "shaders/pbr/spherical_to_cube.fs");
-		m_irradianceCaptureShader = ShaderManager::LoadVertFragShader("pbr:irradiance", "shaders/pbr/cube_sample.vs", "shaders/pbr/irradiance_capture.fs");
-		m_reflectionCaptureShader = ShaderManager::LoadVertFragShader("pbr:reflection", "shaders/pbr/cube_sample.vs", "shaders/pbr/prefilter_capture.fs");
+		m_environmentCaptureShader = ShaderManager::LoadVF("pbr:environment", "shaders/pbr/pbr.sampler.cube.vs", "shaders/pbr/pbr.environment.fs");
+		m_irradianceCaptureShader = ShaderManager::LoadVF("pbr:irradiance", "shaders/pbr/pbr.sampler.cube.vs", "shaders/pbr/pbr.capture.irradiance.fs");
+		m_reflectionCaptureShader = ShaderManager::LoadVF("pbr:reflection", "shaders/pbr/pbr.sampler.cube.vs", "shaders/pbr/pbr.capture.reflection.fs");
 
 		// meshes
 		m_quad = MeshManager::LoadPrimitive("quad");
@@ -31,7 +31,7 @@ namespace xengine
 		m_environmentCapture.GenerateCubeMap(1024);
 		m_environmentCubeMap = m_environmentCapture.captures.GetColorAttachment(0);
 
-		m_irradianceCapture.GenerateCubeMap(128);
+		m_irradianceCapture.GenerateCubeMap(32);
 		m_envIrradianceCubeMap = m_irradianceCapture.captures.GetColorAttachment(0);
 
 		m_reflectionCapture.GenerateCubeMap(128);
@@ -60,12 +60,17 @@ namespace xengine
 		for (unsigned int i = 0; i < 6; ++i)
 		{
 			m_environmentCapture.BindFace(i);
-
 			glViewport(0, 0, m_environmentCapture.Width(), m_environmentCapture.Height());
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			RenderCommand command(m_cube, &material);
-			GeneralRenderer::RenderSingleCommand(command, &m_environmentCapture.cameras[i]);
+			Camera* camera = &m_irradianceCapture.cameras[i];
+
+			material.shader->Bind();
+			material.shader->SetUniform("projection", camera->GetProjection());
+			material.shader->SetUniform("view", camera->GetView());
+			material.shader->SetUniform("camPos", camera->GetPosition());
+
+			RenderMesh(m_cube, &material);
 		}
 	}
 
@@ -79,13 +84,21 @@ namespace xengine
 		for (unsigned int i = 0; i < 6; ++i)
 		{
 			m_irradianceCapture.BindFace(i);
-
 			glViewport(0, 0, m_irradianceCapture.Width(), m_irradianceCapture.Height());
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			RenderCommand command(m_cube, &material);
-			GeneralRenderer::RenderSingleCommand(command, &m_irradianceCapture.cameras[i]);
+			Camera* camera = &m_irradianceCapture.cameras[i];
+
+			material.shader->Bind();
+			material.shader->SetUniform("projection", camera->GetProjection());
+			material.shader->SetUniform("view", camera->GetView());
+			material.shader->SetUniform("camPos", camera->GetPosition());
+
+			RenderMesh(m_cube, &material);
 		}
+
+		material.shader->Unbind();
+		m_irradianceCapture.Unbind();
 	}
 
 	void IblRenderer::GenerateReflection(CubeMap * capture)
@@ -105,37 +118,42 @@ namespace xengine
 			for (unsigned int i = 0; i < 6; ++i)
 			{
 				m_reflectionCapture.BindFace(i, mip);
-
 				glViewport(0, 0, width, height);
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-				RenderCommand command(m_cube, &material);
-				GeneralRenderer::RenderSingleCommand(command, &m_reflectionCapture.cameras[i]);
+				Camera* camera = &m_irradianceCapture.cameras[i];
+
+				material.shader->Bind();
+				material.shader->SetUniform("projection", camera->GetProjection());
+				material.shader->SetUniform("view", camera->GetView());
+				material.shader->SetUniform("camPos", camera->GetPosition());
+
+				RenderMesh(m_cube, &material);
 			}
 		}
 	}
 
 	void IblRenderer::generateNormalRoughnessLookup()
 	{
-		if (_normalRoughnessLookup) return;
+		if (_brdfIntegrationMap) return;
 
-		_fbNormalRoughnessLookup.GenerateColorAttachments(128, 128, GL_HALF_FLOAT, 1);
-		_fbNormalRoughnessLookup.GenerateDepthRenderBuffer(128, 128);
+		_brdfIntegrationMapBuffer.GenerateColorAttachments(128, 128, GL_HALF_FLOAT, 1);
+		_brdfIntegrationMapBuffer.GenerateDepthRenderBuffer(128, 128);
 
-		_fbNormalRoughnessLookup.Bind();
+		_brdfIntegrationMapBuffer.Bind();
 
-		glViewport(0, 0, _fbNormalRoughnessLookup.Width(), _fbNormalRoughnessLookup.Height());
+		glViewport(0, 0, _brdfIntegrationMapBuffer.Width(), _brdfIntegrationMapBuffer.Height());
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		Shader *shader = ShaderManager::LoadVertFragShader("pbr:nr_lookup", "shaders/screen_quad.vs", "shaders/pbr/integrate_brdf.fs");
+		Shader *shader = ShaderManager::LoadVF("pbr:integration", "shaders/pbr/pbr.sampler.quad.vs", "shaders/pbr/pbr.brdf_integration.fs");
 		Mesh* quad = MeshManager::LoadPrimitive("quad");
 
-		shader->Use();
+		shader->Bind();
 
-		GeneralRenderer::RenderMesh(quad);
+		RenderMesh(quad);
 
-		_fbNormalRoughnessLookup.Unbind();
+		_brdfIntegrationMapBuffer.Unbind();
 
-		_normalRoughnessLookup = _fbNormalRoughnessLookup.GetColorAttachment(0);
+		_brdfIntegrationMap = _brdfIntegrationMapBuffer.GetColorAttachment(0);
 	}
 }

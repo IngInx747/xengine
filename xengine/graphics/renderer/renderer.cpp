@@ -11,6 +11,8 @@
 #include "forward_renderer.h"
 
 #include "../texture/texture_manager.h"
+#include "../particle_system/particle_system.h"
+
 
 namespace xengine
 {
@@ -34,16 +36,25 @@ namespace xengine
 
 	Renderer::Renderer()
 	{
-		// primary frame buffer
+		/// primary frame buffer
 
 		// 1 color attachment
-		m_canvas.GenerateColorAttachments(1, 1, GL_HALF_FLOAT, 1);
+		m_framebuffer0.GenerateColorAttachments(1, 1, GL_HALF_FLOAT, 1);
 
 		// 1 render buffer for depth test (in the case depth value is not needed by other routines)
-		m_canvas.GenerateDepthRenderBuffer(1, 1);
+		m_framebuffer0.GenerateDepthRenderBuffer(1, 1);
 
 		// depth attachment (in the case depth value is needed)
 		//m_canvas.GenerateDepthAttachment(1, 1, GL_HALF_FLOAT);
+
+		m_mainCanvas = &m_framebuffer0;
+
+		/// secondary frame buffer
+
+		// 1 color attachment
+		m_framebuffer1.GenerateColorAttachments(1, 1, GL_HALF_FLOAT, 1);
+
+		m_swapCanvas = &m_framebuffer1;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,7 +69,7 @@ namespace xengine
 			unsigned int size;
 			unsigned int offset = 0;
 
-			size = static_cast<unsigned int>(sizeof(glm::mat4) * 5 + sizeof(glm::vec4));
+			size = static_cast<unsigned int>(sizeof(glm::mat4) * 4 + sizeof(glm::vec4) * 4);
 			blockCamera.Register(&ubCamera);
 			blockCamera.SetBlock(offset, size);
 			offset += size;
@@ -92,11 +103,14 @@ namespace xengine
 		// camera
 		blockCamera.Refresh();
 		blockCamera.CommitData(camera->GetProjection() * camera->GetView());
-		blockCamera.CommitData(camera->GetProjection() * camera->GetPreviousView());
+		blockCamera.CommitData(camera->GetProjection() * camera->GetPrevView());
 		blockCamera.CommitData(camera->GetProjection());
 		blockCamera.CommitData(camera->GetView());
-		blockCamera.CommitData(glm::inverse(camera->GetView()));
+
 		blockCamera.CommitData(camera->GetPosition());
+		blockCamera.CommitData(camera->GetForward());
+		blockCamera.CommitData(camera->GetUp());
+		blockCamera.CommitData(camera->GetRight());
 
 		// parallel lights
 		blockParallelLights.Refresh();
@@ -174,14 +188,13 @@ namespace xengine
 		this->width = width;
 		this->height = height;
 
-		m_canvas.Resize(width, height);
+		m_framebuffer0.Resize(width, height);
+		m_framebuffer1.Resize(width, height);
 
 		deferredRenderer.Resize(width, height);
 		ssaoRenderer.Resize(width, height);
-		downsampleRenderer.Resize(width, height);
-		gaussianBlurRenderer.Resize(width, height);
 		bloomRenderer.Resize(width, height);
-		postRenderer.Resize(width, height);
+		motionBlurRenderer.Resize(width, height);
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -190,8 +203,6 @@ namespace xengine
 
 	void Renderer::Render(Scene* scene, Camera* camera, FrameBuffer* target)
 	{
-		FrameBuffer* fBuffer = &m_canvas;
-
 		updateUniformBuffer(scene, camera);
 
 		updateCommandBuffer(scene, camera);
@@ -203,18 +214,18 @@ namespace xengine
 		OglStatus::SetDepthTest(GL_TRUE);
 		OglStatus::SetDepthFunc(GL_LESS);
 
-		// 1. deferred pass
+		/// deferred pass
 		{
 			std::vector<RenderCommand> commands = commandManager.DeferredCommands(camera);
 
 			OglStatus::SetPolygonMode(RenderConfig::UseWireframe() ? GL_LINE : GL_FILL);
 
-			deferredRenderer.GenerateGeometry(commands);
+			deferredRenderer.Generate(commands);
 
 			OglStatus::SetPolygonMode(GL_FILL);
 		}
 
-		// 2. shadow maps
+		/// shadow maps
 		if (RenderConfig::UseShadow())
 		{
 			std::vector<RenderCommand> commands = commandManager.ShadowCastCommands();
@@ -222,17 +233,23 @@ namespace xengine
 			forwardRenderer.GenerateShadowParallelLights(commands, scene->parallelLights, camera);
 		}
 
-		// 3. per-lighting pass
-		if (RenderConfig::UseSSAO())
+		/// per-lighting pass
 		{
 			OglStatus::SetBlend(GL_FALSE);
 
-			ssaoRenderer.Generate(deferredRenderer.GetTexPosition(), deferredRenderer.GetTexNormal(), camera);
+			if (RenderConfig::UseSSAO())
+				ssaoRenderer.Generate(deferredRenderer.GetTexPosition(), deferredRenderer.GetTexNormal(), camera);
+
+			if (RenderConfig::UseMotionBlur())
+			{
+				motionBlurRenderer.Generate(deferredRenderer.GetTexPosition(), camera);
+				motionBlurRenderer.AttachMotion(deferredRenderer.GetTexMotion());
+			}
 		}
 
-		// 4. deferred lighting
+		/// deferred lighting
 		{
-			fBuffer->Bind(); glViewport(0, 0, fBuffer->Width(), fBuffer->Height());
+			m_mainCanvas->Bind(); glViewport(0, 0, m_mainCanvas->Width(), m_mainCanvas->Height());
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 			if (scene->irradianceMap && scene->reflectionMap) deferredRenderer.RenderAmbientLight(
@@ -243,15 +260,15 @@ namespace xengine
 			deferredRenderer.RenderPointLights(scene->pointLights, camera);
 		}
 
-		// 5. forward pass
+		/// forward pass
 		{
-			GeneralRenderer::Blit(deferredRenderer.GetFrameBuffer(), fBuffer, GL_DEPTH_BUFFER_BIT); // copy depth buffer
+			Blit(deferredRenderer.GetFrameBuffer(), m_mainCanvas, GL_DEPTH_BUFFER_BIT); // copy depth buffer
 
 			std::vector<RenderCommand> commands = commandManager.ForwardCommands(camera);
 
 			ForwardRenderer::SetShadowParallelLights(scene->parallelLights, commands);
 
-			fBuffer->Bind(); glViewport(0, 0, fBuffer->Width(), fBuffer->Height());
+			m_mainCanvas->Bind(); glViewport(0, 0, m_mainCanvas->Width(), m_mainCanvas->Height());
 
 			OglStatus::SetPolygonMode(RenderConfig::UseWireframe() ? GL_LINE : GL_FILL);
 
@@ -263,15 +280,18 @@ namespace xengine
 
 			if (RenderConfig::UseRenderLights())
 				forwardRenderer.RenderEmissionPointLights(scene->pointLights, camera, 0.25f);
+
+			for (ParticleSystem* ps : scene->particles)
+				ps->Render();
 		}
 
-		// 6. alpha pass
+		/// alpha pass
 		{
 			std::vector<RenderCommand> commands = commandManager.AlphaCommands(camera);
 
 			ForwardRenderer::SetShadowParallelLights(scene->parallelLights, commands);
 
-			fBuffer->Bind(); glViewport(0, 0, fBuffer->Width(), fBuffer->Height());
+			m_mainCanvas->Bind(); glViewport(0, 0, m_mainCanvas->Width(), m_mainCanvas->Height());
 
 			OglStatus::SetPolygonMode(RenderConfig::UseWireframe() ? GL_LINE : GL_FILL);
 
@@ -280,23 +300,19 @@ namespace xengine
 			OglStatus::SetPolygonMode(GL_FILL);
 		}
 
-		// 7. post-lighting pass
+		/// post-lighting pass
 		{
 			OglStatus::SetBlend(GL_FALSE);
 
-			downsampleRenderer.Generate(fBuffer->GetColorAttachment(0));
-
-			gaussianBlurRenderer.Generate(downsampleRenderer.GetSample_1_2());
-
 			if (RenderConfig::UseBloom())
-				bloomRenderer.Generate(fBuffer->GetColorAttachment(0));
+				bloomRenderer.Generate(m_mainCanvas->GetColorAttachment(0));
 		}
 
-		// 8. visualization pass
+		/// visualization pass
 		{
 			if (RenderConfig::UseLightVolume())
 			{
-				fBuffer->Bind(); glViewport(0, 0, fBuffer->Width(), fBuffer->Height());
+				m_mainCanvas->Bind(); glViewport(0, 0, m_mainCanvas->Width(), m_mainCanvas->Height());
 
 				OglStatus::SetPolygonMode(GL_LINE);
 				OglStatus::SetCull(GL_TRUE);
@@ -314,23 +330,42 @@ namespace xengine
 			}
 		}
 
-		// 9. post-processing pass
+		/// post-processing pass
 		{
-			postRenderer.GenerateEffect(
-				fBuffer->GetColorAttachment(0),
-				deferredRenderer.GetTexMotion(),
-				bloomRenderer.GetSample_1_2(),
-				bloomRenderer.GetSample_1_4(), 
-				bloomRenderer.GetSample_1_8(), 
-				bloomRenderer.GetSample_1_16());
+			// src: main canvas
+			// dst: swap canvas
+
+			if (RenderConfig::UseMotionBlur())
+			{
+				m_swapCanvas->Bind(); glViewport(0, 0, m_swapCanvas->Width(), m_swapCanvas->Height());
+				motionBlurRenderer.Render(m_mainCanvas->GetColorAttachment(0));
+				std::swap(m_mainCanvas, m_swapCanvas);
+			}
+
+			if (RenderConfig::UseBloom())
+			{
+				m_swapCanvas->Bind(); glViewport(0, 0, m_swapCanvas->Width(), m_swapCanvas->Height());
+				bloomRenderer.Render(m_mainCanvas->GetColorAttachment(0));
+				std::swap(m_mainCanvas, m_swapCanvas);
+			}
+
+			{
+				m_swapCanvas->Bind(); glViewport(0, 0, m_swapCanvas->Width(), m_swapCanvas->Height());
+				postRenderer.GenerateEffect(m_mainCanvas->GetColorAttachment(0));
+				std::swap(m_mainCanvas, m_swapCanvas);
+			}
 		}
 
 		// 10. blit to default frame buffer
 		{
 			if (target)
-				GeneralRenderer::Blit(postRenderer.GetFrameBuffer(), target, GL_COLOR_BUFFER_BIT);
+				Blit(m_mainCanvas, target, GL_COLOR_BUFFER_BIT);
 			else
-				GeneralRenderer::Blit(postRenderer.GetFrameBuffer(), width, height, GL_COLOR_BUFFER_BIT);
+				Blit(m_mainCanvas, width, height, GL_COLOR_BUFFER_BIT);
+
+			// restore front/back buffer pointers
+			m_mainCanvas = &m_framebuffer0;
+			m_swapCanvas = &m_framebuffer1;
 		}
 	}
 }

@@ -1,16 +1,19 @@
 #version 430 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec2 aUV0;
+
+layout (location = 0) in vec3 aPosition;
+layout (location = 1) in vec2 aTexCoord;
 layout (location = 2) in vec3 aNormal;
 layout (location = 3) in vec3 aTangent;
 layout (location = 4) in vec3 aBitangent;
 
-out vec2 UV0;
+out vec2 TexCoord;
 out vec3 FragPos;
 out vec3 Normal;
 out mat3 TBN;
-out vec4 ClipSpacePos;
-out vec4 PrevClipSpacePos;
+
+// motion blur
+out vec4 currClipSpacePos;
+out vec4 prevClipSpacePos;
 
 #include ../common/uniforms.glsl
 
@@ -21,8 +24,8 @@ float time;
 
 void main()
 {
-	UV0 = aUV0;
-	FragPos = vec3(model * vec4(aPos, 1.0));
+	TexCoord = aTexCoord;
+	FragPos = vec3(model * vec4(aPosition, 1.0));
         
     vec3 N = normalize(mat3(model) * aNormal);
     Normal = N;
@@ -39,8 +42,9 @@ void main()
     
     TBN = mat3(T, B, N);
     
-    ClipSpacePos     = viewProjection * model * vec4(aPos, 1.0);
-    PrevClipSpacePos = prevViewProjection * prevModel * vec4(aPos, 1.0);
+    // motion blur
+    currClipSpacePos = viewProjection * model * vec4(aPosition, 1.0);
+    prevClipSpacePos = prevViewProjection * prevModel * vec4(aPosition, 1.0);
 	
 	gl_Position =  projection * view * vec4(FragPos, 1.0);
 }

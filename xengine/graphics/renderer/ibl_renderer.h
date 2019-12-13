@@ -29,17 +29,17 @@ namespace xengine
 		void GenerateEnvCubeMap(Texture* environment);
 
 		// generate irradiance cube map from captured environment cube map
-		void GenerateIrradiance(Texture* capture);
+		void GenerateIrradiance(CubeMap* capture);
 
 		// generate reflection cube map from captured environment cube map
-		void GenerateReflection(Texture* capture);
+		void GenerateReflection(CubeMap* capture);
 
 		CubeMap* GetEnvironment() { return m_environmentCubeMap; }
 		CubeMap* GetIrradiance() { return m_envIrradianceCubeMap; }
 		CubeMap* GetReflection() { return m_envReflectionCubeMap; }
 
 	public:
-		static Texture* GetNormalRoughnessLookup() { return _normalRoughnessLookup; }
+		static Texture* GetBrdfIntegrationMap() { return _brdfIntegrationMap; }
 
 	private:
 		static void generateNormalRoughnessLookup();
@@ -68,8 +68,8 @@ namespace xengine
 		Mesh* m_sphere;
 
 	private:
-		static Texture* _normalRoughnessLookup; // pre-calculated normal-roughness lookup texture
-		static FrameBuffer _fbNormalRoughnessLookup; // pre-calculated normal-roughness lookup frame buffer
+		static Texture* _brdfIntegrationMap; // pre-calculated normal-roughness lookup texture
+		static FrameBuffer _brdfIntegrationMapBuffer; // pre-calculated normal-roughness lookup frame buffer
 	};
 }
 

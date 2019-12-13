@@ -38,4 +38,9 @@ namespace xengine
 	{
 		pointLights.push_back(light);
 	}
+
+	void Scene::AddParticle(ParticleSystem * particle)
+	{
+		particles.push_back(particle);
+	}
 }

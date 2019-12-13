@@ -24,6 +24,7 @@ namespace xengine
 			bool useVignette;
 			bool useBloom;
 			bool useSSAO;
+			bool useSSR;
 			bool useTXAA;
 			bool useMotionBlur;
 
@@ -38,6 +39,7 @@ namespace xengine
 		static bool UseRenderProbes() { return _config.useRenderProbes; }
 		static bool UseShadow() { return _config.useShadows; }
 		static bool UseSSAO() { return _config.useSSAO; }
+		static bool UseSSR() { return _config.useSSR; }
 		static bool UseSepia() { return _config.useSepia; }
 		static bool UseVignette() { return _config.useVignette; }
 		static bool UseBloom() { return _config.useBloom; }

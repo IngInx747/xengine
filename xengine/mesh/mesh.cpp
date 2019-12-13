@@ -254,10 +254,20 @@ namespace xengine
 	{
 		if (vao)
 		{
-			glDeleteBuffers(1, &ibo);
-			glDeleteBuffers(1, &vbo);
 			glDeleteVertexArrays(1, &vao);
 			vao = 0;
+		}
+
+		if(vbo)
+		{
+			glDeleteBuffers(1, &vbo);
+			vbo = 0;
+		}
+
+		if(ibo)
+		{
+			glDeleteBuffers(1, &ibo);
+			ibo = 0;
 		}
 	}
 }

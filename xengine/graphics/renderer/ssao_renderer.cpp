@@ -38,13 +38,16 @@ namespace xengine
 		for (unsigned int i = 0; i < 16; i++)
 			noises.push_back({ dice() * 2.0 - 1.0, dice() * 2.0 - 1.0, 0.0f });
 
-		m_shader = ShaderManager::LoadVertFragShader("ssao", "shaders/screen_quad.vs", "shaders/post/ssao.fs");
-		m_shader->Use();
-		m_shader->SetUniform("gPositionMetallic", 0);
-		m_shader->SetUniform("gNormalRoughness", 1);
-		m_shader->SetUniform("texNoise", 2);
-		m_shader->SetUniform("kernel", static_cast<int>(kernel.size()), kernel);
-		m_shader->SetUniform("sampleCount", m_kernelSize);
+		m_shader.AttachVertexShader(ReadShaderSource("shaders/effect/effect.quad.vs"));
+		m_shader.AttachFragmentShader(ReadShaderSource("shaders/effect/effect.ssao.capture.fs"));
+		m_shader.GenerateAndLink();
+		m_shader.Bind();
+		m_shader.SetUniform("gPosition", 0);
+		m_shader.SetUniform("gNormal", 1);
+		m_shader.SetUniform("texNoise", 2);
+		m_shader.SetUniform("kernel", static_cast<int>(kernel.size()), kernel);
+		m_shader.SetUniform("sampleCount", m_kernelSize);
+		m_shader.Unbind();
 
 		m_target.GenerateColorAttachments(1, 1, GL_HALF_FLOAT, 1);
 
@@ -58,25 +61,30 @@ namespace xengine
 	void SSAORenderer::Resize(unsigned int width, unsigned int height)
 	{
 		m_target.Resize(width / 2, height / 2);
+
+		m_shader.Bind();
+		m_shader.SetUniform("renderSize", glm::vec2{ width, height });
+		m_shader.Unbind();
 	}
 
 	void SSAORenderer::Generate(Texture * gPosition, Texture * gNormal, Camera * camera)
 	{
-		glm::vec2 size{ gPosition->Width(), gPosition->Height() };
+		m_target.Bind();
+		glViewport(0, 0, m_target.Width(), m_target.Height());
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		gPosition->Bind(0);
 		gNormal->Bind(1);
 		m_noise.Bind(2);
 
-		m_shader->Use();
-		m_shader->SetUniform("renderSize", size);
-		m_shader->SetUniform("projection", camera->GetProjection());
-		m_shader->SetUniform("view", camera->GetView());
+		m_shader.Bind();
+		m_shader.SetUniform("projection", camera->GetProjection());
+		m_shader.SetUniform("view", camera->GetView());
 
-		m_target.Bind();
-		glViewport(0, 0, m_target.Width(), m_target.Height());
-		glClear(GL_COLOR_BUFFER_BIT);
+		RenderMesh(m_quad);
 
-		GeneralRenderer::RenderMesh(m_quad);
+		m_shader.Unbind();
+
+		m_target.Unbind();
 	}
 }

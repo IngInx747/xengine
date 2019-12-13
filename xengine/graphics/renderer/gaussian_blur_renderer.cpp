@@ -13,21 +13,7 @@ namespace xengine
 	// Util
 	////////////////////////////////////////////////////////////////
 
-	struct FuncGaussianBlur
-	{
-		FuncGaussianBlur(Shader* shader, Mesh* canvas)
-			:
-			shader(shader),
-			canvas(canvas)
-		{}
-
-		void operator () (Texture* source, FrameBuffer* target, FrameBuffer* medium, unsigned int count);
-
-		Shader* shader;
-		Mesh* canvas;
-	};
-
-	void FuncGaussianBlur::operator()(Texture* src, FrameBuffer* dst, FrameBuffer* medium, unsigned int count)
+	void gaussian_blur_pingpong_op(Texture* src, FrameBuffer* dst, FrameBuffer* medium, Shader* shader, unsigned int count)
 	{
 		// pick pre-defined render targets for blur based on render size
 		FrameBuffer* rt_horizontal = medium;
@@ -38,11 +24,11 @@ namespace xengine
 		glViewport(0, 0, dst->Width(), dst->Height());
 
 		bool flag = true; // last is horizontal
-		shader->Use();
+		shader->Bind();
 
 		for (unsigned int i = 0; i < count; ++i, flag = !flag)
 		{
-			shader->SetUniform("horizontal", flag);
+			shader->SetUniform("bHorizontal", flag);
 
 			if (i == 0)
 				src->Bind(0);
@@ -54,7 +40,7 @@ namespace xengine
 			if (flag) rt_horizontal->Bind();
 			else rt_vertical->Bind();
 
-			GeneralRenderer::RenderMesh(canvas);
+			glDrawArrays(GL_POINTS, 0, 1);
 		}
 	}
 
@@ -73,11 +59,13 @@ namespace xengine
 		m_medium0.GenerateColorAttachments(1, 1, GL_HALF_FLOAT, 1);
 		m_medium1.GenerateColorAttachments(1, 1, GL_HALF_FLOAT, 1);
 
-		m_shader = ShaderManager::LoadVertFragShader("gaussian blur", "shaders/screen_quad.vs", "shaders/post/blur_guassian.fs");
-		m_shader->Use();
-		m_shader->SetUniform("TexSrc", 0);
+		m_genShader.AttachVertexShader(ReadShaderSource("shaders/effect/quad.vs"));
+		m_genShader.AttachGeometryShader(ReadShaderSource("shaders/effect/quad.gs"));
+		m_genShader.AttachFragmentShader(ReadShaderSource("shaders/effect/effect.gen.gaussian_blur.fs"));
+		m_genShader.GenerateAndLink();
 
-		m_quad = MeshManager::LoadPrimitive("quad");
+		m_genShader.Bind();
+		m_genShader.SetUniform("TexSrc", 0);
 	}
 
 	void GaussianBlurRenderer::Resize(unsigned int width, unsigned int height)
@@ -96,8 +84,7 @@ namespace xengine
 
 	void GaussianBlurRenderer::Generate(Texture * source)
 	{
-		FuncGaussianBlur func(m_shader, m_quad);
-		func(source, &m_target0, &m_medium0, 4);
-		func(source, &m_target1, &m_medium1, 4);
+		gaussian_blur_pingpong_op(source, &m_target0, &m_medium0, &m_genShader, 4);
+		gaussian_blur_pingpong_op(source, &m_target1, &m_medium1, &m_genShader, 4);
 	}
 }

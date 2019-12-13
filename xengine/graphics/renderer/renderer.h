@@ -14,12 +14,10 @@
 
 #include "deferred_renderer.h"
 #include "forward_renderer.h"
-#include "downsample_renderer.h"
-#include "gaussian_blur_renderer.h"
 #include "bloom_renderer.h"
+#include "motion_blur_renderer.h"
 #include "ssao_renderer.h"
 #include "post_renderer.h"
-#include "ibl_renderer.h"
 
 namespace xengine
 {
@@ -67,16 +65,17 @@ namespace xengine
 
 		// screen space renderers
 		SSAORenderer ssaoRenderer;
-		DownsampleRenderer downsampleRenderer;
-		GaussianBlurRenderer gaussianBlurRenderer;
 		BloomRenderer bloomRenderer;
-		//IblRenderer iblRenderer;
-
+		MotionBlurRenderer motionBlurRenderer;
+		
 		// post renderer
 		PostRenderer postRenderer;
 
 		// related frame buffer(s)
-		FrameBuffer m_canvas;
+		FrameBuffer m_framebuffer0; // primary frame buffer
+		FrameBuffer m_framebuffer1; // secondary frame buffer
+		FrameBuffer* m_mainCanvas;
+		FrameBuffer* m_swapCanvas;
 
 	private:
 		// uniform buffer objects

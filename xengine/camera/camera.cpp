@@ -68,23 +68,23 @@ namespace xengine
 	void Camera::SetProjPerspective(float fov, float aspect, float near, float far)
 	{
 		isProjPers = true;
-		matProjection = glm::perspective(fov, aspect, near, far);
 		zNear = near;
 		zFar = far;
 		pFov = fov;
 		pAspect = aspect;
+		updateProjPerspective();
 	}
 
 	void Camera::SetProjOrtho(float left, float right, float bottom, float top, float near, float far)
 	{
 		isProjPers = false;
-		matProjection = glm::ortho(left, right, bottom, top, near, far);
 		zNear = near;
 		zFar = far;
 		oLeft = left;
 		oRight = right;
 		oBottom = bottom;
 		oTop = top;
+		updateProjOrtho();
 	}
 
 	void Camera::Update(float dt)
@@ -93,6 +93,7 @@ namespace xengine
 		vUp = glm::normalize(glm::cross(vRight, vForward));
 
 		UpdateView();
+		UpdateProj();
 		UpdateFrustum();
 	}
 

@@ -18,8 +18,8 @@ namespace xengine
 {
 	ForwardRenderer::ForwardRenderer()
 	{
-		m_parallelShadowShader = ShaderManager::LoadVertFragShader("shadow directional", "shaders/shadow_cast.vs", "shaders/shadow_cast.fs");
-		m_volumnLightShader = ShaderManager::LoadVertFragShader("volumn light", "shaders/light.vs", "shaders/light.fs");
+		m_parallelShadowShader = ShaderManager::LoadVF("shadow directional", "shaders/shadow_cast.vs", "shaders/shadow_cast.fs");
+		m_volumnLightShader = ShaderManager::LoadVF("volumn light", "shaders/light.vs", "shaders/light.fs");
 		m_sphere = MeshManager::LoadPrimitive("sphere", 16, 8);
 	}
 
@@ -44,7 +44,7 @@ namespace xengine
 			glViewport(0, 0, shadow.GetFrameBuffer()->Width(), shadow.GetFrameBuffer()->Height());
 			glClear(GL_DEPTH_BUFFER_BIT); // each light's framebuffer need be refreshed per frame
 
-			shader->Use();
+			shader->Bind();
 			shader->SetUniform("projection", shadow.GetProj());
 			shader->SetUniform("view", shadow.GetView());
 
@@ -54,7 +54,7 @@ namespace xengine
 				if (!light->shadow.GetCamera()->IntersectFrustum(command.aabb)) continue;
 
 				shader->SetUniform("model", command.transform);
-				GeneralRenderer::RenderMesh(command.mesh);
+				RenderMesh(command.mesh);
 			}
 		}
 
@@ -92,7 +92,7 @@ namespace xengine
 			{
 				if (lights[i]->useShadowCast)
 				{
-					shader->Use();
+					shader->Bind();
 					shader->SetUniform("ShadowsEnabled", RenderConfig::UseShadow());
 					shader->SetUniform("lightShadowViewProjection" + std::to_string(i + 1), lights[i]->shadow.GetViewProj());
 				}
@@ -103,7 +103,15 @@ namespace xengine
 	void ForwardRenderer::RenderForwardCommands(const std::vector<RenderCommand>& commands)
 	{
 		for (const RenderCommand& command : commands)
-			GeneralRenderer::RenderSingleCommand(command);
+		{
+			Material* material = command.material;
+			Mesh* mesh = command.mesh;
+
+			material->shader->Bind();
+			material->shader->SetUniform("model", command.transform);
+
+			RenderMesh(mesh, material);
+		}
 	}
 
 	void ForwardRenderer::RenderEmissionPointLights(const std::vector<PointLight*>& lights, Camera* camera, float radius)
@@ -111,7 +119,7 @@ namespace xengine
 		Shader* shader = m_volumnLightShader;
 		Mesh* sphere = m_sphere;
 
-		shader->Use();
+		shader->Bind();
 
 		for (PointLight* light : lights)
 		{
@@ -129,7 +137,7 @@ namespace xengine
 			shader->SetUniform("model", model);
 			shader->SetUniform("lightColor", glm::normalize(light->color) * light->intensity * 0.25f);
 
-			GeneralRenderer::RenderMesh(sphere);
+			RenderMesh(sphere);
 		}
 	}
 }

@@ -1,5 +1,8 @@
 #include "shader.h"
 
+#include <string>
+#include <fstream>
+
 #include <vendor/glad/glad.h>
 #include <vendor/glm/glm.hpp>
 
@@ -7,22 +10,35 @@
 
 namespace xengine
 {
+	////////////////////////////////////////////////////////////////
+	// Shader
+	////////////////////////////////////////////////////////////////
+
 	Shader::Shader()
 	{
 	}
 
 	Shader::~Shader()
 	{
-		if (m_id)
-		{
-			glDeleteProgram(m_id);
-			m_id = 0;
-		}
+		Destory();
 	}
 
-	void Shader::Use()
+	void Shader::Bind()
 	{
 		glUseProgram(m_id);
+	}
+
+	void Shader::Unbind()
+	{
+		glUseProgram(0);
+	}
+
+	void Shader::Destory()
+	{
+		if (m_id) { glDeleteProgram(m_id); m_id = 0; }
+		if (m_vs) { glDeleteShader(m_vs); m_vs = 0; }
+		if (m_gs) { glDeleteShader(m_gs); m_gs = 0; }
+		if (m_fs) { glDeleteShader(m_fs); m_fs = 0; }
 	}
 
 	int Shader::GetUniformLocation(const std::string& name)
@@ -41,7 +57,7 @@ namespace xengine
 	void Shader::SetUniform(const std::string& name, bool value)
 	{
 		int loc = GetUniformLocation(name);
-		if (loc >= 0) glUniform1i(loc, (int)value);
+		if (loc >= 0) glUniform1i(loc, static_cast<int>(value));
 	}
 
 	void Shader::SetUniform(const std::string& name, float value)
@@ -110,127 +126,88 @@ namespace xengine
 		if (loc >= 0) glUniformMatrix4fv(loc, 1, GL_FALSE, &value[0][0]);
 	}
 
-	void Shader::GenerateVertFragShader(const std::string & vsCode, const std::string & fsCode, const std::vector<std::string>& defines)
+	void Shader::Generate()
 	{
-		// compile both shaders and link them
+		if (!m_id) m_id = glCreateProgram();
+	}
+
+	void Shader::AttachVertexShader(const std::string & source)
+	{
+		m_vs = CreateShader(source, GL_VERTEX_SHADER);
+	}
+
+	void Shader::AttachGeometryShader(const std::string & source)
+	{
+		m_gs = CreateShader(source, GL_GEOMETRY_SHADER);
+	}
+
+	void Shader::AttachFragmentShader(const std::string & source)
+	{
+		m_fs = CreateShader(source, GL_FRAGMENT_SHADER);
+	}
+
+	void Shader::Link()
+	{
+		if (m_id == 0)
+		{
+			Log::Message("[Shader] Shader program has not been created. \n", Log::ERROR);
+			return;
+		}
+
 		int status;
 		char log[1024];
-		this->m_id = glCreateProgram();
-		unsigned int vs = glCreateShader(GL_VERTEX_SHADER);
-		unsigned int fs = glCreateShader(GL_FRAGMENT_SHADER);
 
-		// if a list of define statements is specified, add these to the start of the shader 
-		// source, s.t. we can selectively compile different shaders based on the defines we set.
-		if (defines.size() > 0)
-		{
-			std::vector<std::string> vsMergedCode;
-			std::vector<std::string> fsMergedCode;
-			std::string vsCodeTmp(vsCode);
-			std::string fsCodeTmp(fsCode);
-
-			std::string firstLine = vsCode.substr(0, vsCode.find("\n"));
-			if (firstLine.find("#version") != std::string::npos)
-			{
-				// strip shader code of first line and add to list of shader code strings.
-				vsCodeTmp = vsCode.substr(vsCode.find("\n") + 1, vsCode.length() - 1);
-				vsMergedCode.push_back(firstLine + "\n");
-			}
-
-			firstLine = fsCode.substr(0, fsCode.find("\n"));
-			if (firstLine.find("#version") != std::string::npos)
-			{
-				// strip shader code of first line and add to list of shader code strings.
-				fsCodeTmp = fsCode.substr(fsCode.find("\n") + 1, fsCode.length() - 1);
-				fsMergedCode.push_back(firstLine + "\n");
-			}
-
-			// then add define statements to the shader string list.
-			for (unsigned int i = 0; i < defines.size(); ++i)
-			{
-				std::string define = "#define " + defines[i] + "\n";
-				vsMergedCode.push_back(define);
-				fsMergedCode.push_back(define);
-			}
-
-			// then add remaining shader code to merged result and pass result to glShaderSource.
-			vsMergedCode.push_back(vsCodeTmp);
-			fsMergedCode.push_back(fsCodeTmp);
-
-			// note that we manually build an array of C style strings as glShaderSource doesn't 
-			// expect it in any other format.
-			// all strings are null-terminated so pass NULL as glShaderSource's final argument.
-			const char **vsStringsC = new const char*[vsMergedCode.size()];
-			const char **fsStringsC = new const char*[fsMergedCode.size()];
-
-			for (unsigned int i = 0; i < vsMergedCode.size(); ++i)
-				vsStringsC[i] = vsMergedCode[i].c_str();
-
-			for (unsigned int i = 0; i < fsMergedCode.size(); ++i)
-				fsStringsC[i] = fsMergedCode[i].c_str();
-
-			glShaderSource(vs, (GLsizei)vsMergedCode.size(), vsStringsC, NULL);
-			glShaderSource(fs, (GLsizei)fsMergedCode.size(), fsStringsC, NULL);
-
-			delete[] vsStringsC;
-			delete[] fsStringsC;
-		}
-		else
-		{
-			const char *vsSourceC = vsCode.c_str();
-			const char *fsSourceC = fsCode.c_str();
-			glShaderSource(vs, 1, &vsSourceC, NULL);
-			glShaderSource(fs, 1, &fsSourceC, NULL);
-		}
-
-		glCompileShader(vs);
-		glGetShaderiv(vs, GL_COMPILE_STATUS, &status);
-		if (!status)
-		{
-			glGetShaderInfoLog(vs, 1024, NULL, log);
-			Log::Message("[Shader] Vertex shader compilation error!\n" + std::string(log), Log::ERROR);
-		}
-		glAttachShader(m_id, vs);
-
-		glCompileShader(fs);
-		glGetShaderiv(fs, GL_COMPILE_STATUS, &status);
-		if (!status)
-		{
-			glGetShaderInfoLog(fs, 1024, NULL, log);
-			Log::Message("[Shader] Fragment shader compilation error!\n" + std::string(log), Log::ERROR);
-		}
-		glAttachShader(m_id, fs);
+		if (m_vs) glAttachShader(m_id, m_vs);
+		if (m_gs) glAttachShader(m_id, m_gs);
+		if (m_vs) glAttachShader(m_id, m_fs);
 
 		glLinkProgram(m_id);
+
 		glGetProgramiv(m_id, GL_LINK_STATUS, &status);
 		if (!status)
 		{
 			glGetProgramInfoLog(m_id, 1024, NULL, log);
-			Log::Message("[Shader] Shader program linking error: \n" + std::string(log), Log::ERROR);
+			Log::Message("[Shader] Program linking error: \n" + std::string(log), Log::ERROR);
+			glDeleteProgram(m_id);
+			m_id = 0;
 		}
 
-		glDeleteShader(vs);
-		glDeleteShader(fs);
+		QueryActiveAttributes();
+		QueryActiveUniforms();
+	}
 
-		// query the number of active uniforms and attributes
-		int nrAttributes, nrUniforms;
-		glGetProgramiv(m_id, GL_ACTIVE_ATTRIBUTES, &nrAttributes);
-		glGetProgramiv(m_id, GL_ACTIVE_UNIFORMS, &nrUniforms);
+	void Shader::GenerateAndLink()
+	{
+		Generate(); // in case program was not create
+		Link();
+	}
 
-		// iterate over all active attributes
+	void Shader::QueryActiveAttributes()
+	{
 		char buffer[128];
+		int niv;
 
-		for (int i = 0; i < nrAttributes; ++i)
+		glGetProgramiv(m_id, GL_ACTIVE_ATTRIBUTES, &niv);
+
+		for (int i = 0; i < niv; ++i)
 		{
 			GLenum glType;
 			GLsizei glSize;
-			glGetActiveUniform(m_id, i, sizeof(buffer), 0, &glSize, &glType, buffer);
+			glGetActiveAttrib(m_id, i, sizeof(buffer), 0, &glSize, &glType, buffer);
 			m_attributeTable[std::string(buffer)].type = glType;
 			m_attributeTable[std::string(buffer)].size = glSize;
-			m_attributeTable[std::string(buffer)].location = glGetUniformLocation(m_id, buffer);
+			m_attributeTable[std::string(buffer)].location = glGetAttribLocation(m_id, buffer);
 		}
+	}
 
-		// iterate over all active uniforms
-		for (int i = 0; i < nrUniforms; ++i)
+	void Shader::QueryActiveUniforms()
+	{
+		char buffer[128];
+		int niv;
+
+		glGetProgramiv(m_id, GL_ACTIVE_UNIFORMS, &niv);
+
+		for (int i = 0; i < niv; ++i)
 		{
 			GLenum glType;
 			GLsizei glSize;
@@ -239,5 +216,111 @@ namespace xengine
 			m_uniformTable[std::string(buffer)].size = glSize;
 			m_uniformTable[std::string(buffer)].location = glGetUniformLocation(m_id, buffer);
 		}
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Shader tools
+	////////////////////////////////////////////////////////////////
+
+	unsigned int CreateShader(const std::string & source, unsigned int type)
+	{
+		int status;
+		char log[1024];
+		const char *src_c = source.c_str();
+
+		unsigned int shader_id = glCreateShader(type);
+		glShaderSource(shader_id, 1, &src_c, NULL);
+		glCompileShader(shader_id);
+
+		glGetShaderiv(shader_id, GL_COMPILE_STATUS, &status);
+		if (!status)
+		{
+			glGetShaderInfoLog(shader_id, 1024, NULL, log);
+
+			switch (type)
+			{
+			case GL_VERTEX_SHADER:
+				Log::Message("[Shader] Vertex shader compilation error!\n" + std::string(log), Log::ERROR);
+				break;
+			case GL_GEOMETRY_SHADER:
+				Log::Message("[Shader] Geometry shader compilation error!\n" + std::string(log), Log::ERROR);
+				break;
+			case GL_FRAGMENT_SHADER:
+				Log::Message("[Shader] Fragment shader compilation error!\n" + std::string(log), Log::ERROR);
+				break;
+			default:
+				break;
+			}
+
+			glDeleteShader(shader_id);
+			shader_id = 0;
+		}
+
+		return shader_id;
+	}
+
+	unsigned int CreateVertexShader(const std::string & source, unsigned int type)
+	{
+		return CreateShader(source, GL_VERTEX_SHADER);
+	}
+
+	unsigned int CreateGeometryShader(const std::string & source, unsigned int type)
+	{
+		return CreateShader(source, GL_GEOMETRY_SHADER);
+	}
+
+	unsigned int CreateFragmentShader(const std::string & source, unsigned int type)
+	{
+		return CreateShader(source, GL_FRAGMENT_SHADER);
+	}
+
+	std::string ReadShaderSource(const std::string& path)
+	{
+		std::string directory = path.substr(0, path.find_last_of("/\\"));
+		std::string source{}, line;
+		std::ifstream in(path, std::ios::in);
+
+		if (!in)
+		{
+			Log::Message("[Shader] Cannot open shader source \"" + path + "\"", Log::ERROR);
+			return "";
+		}
+
+		while (std::getline(in, line))
+		{
+			// if we encounter an #include line, include other shader source
+			if (line.substr(0, 8) == "#include")
+			{
+				std::string includePath = directory + "/" + line.substr(9);
+				source.append(ReadShaderSource(includePath));
+			}
+			else
+			{
+				source.append(line + "\n");
+			}
+		}
+
+		return source;
+	}
+
+	std::string InsertShaderDefine(const std::string & source, const std::vector<std::string>& defines)
+	{
+		if (defines.size() == 0) return source;
+
+		std::string editedSrc;
+		std::string firstLine = source.substr(0, source.find("\n")); // #version xx0 core
+		std::string restLines = source.substr(source.find("\n") + 1, source.length() - 1);
+
+		editedSrc.append(firstLine + "\n");
+
+		for (const std::string& define : defines)
+		{
+			std::string def = "#define " + define + "\n";
+			editedSrc.append(def);
+		}
+
+		editedSrc.append(restLines);
+
+		return editedSrc;
 	}
 }

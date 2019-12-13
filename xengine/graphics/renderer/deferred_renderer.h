@@ -20,7 +20,7 @@ namespace xengine
 		void Resize(unsigned int width, unsigned int height);
 
 		// render scene to get geometry information
-		void GenerateGeometry(const std::vector<RenderCommand>& commands);
+		void Generate(const std::vector<RenderCommand>& commands);
 
 		// render deferred parallel lights
 		void RenderParallelLights(const std::vector<ParallelLight*>& lights, Camera* camera);
@@ -35,7 +35,8 @@ namespace xengine
 		inline Texture* GetTexPosition() { return m_gBuffer.GetColorAttachment(0); }
 		inline Texture* GetTexNormal() { return m_gBuffer.GetColorAttachment(1); }
 		inline Texture* GetTexAlbedo() { return m_gBuffer.GetColorAttachment(2); }
-		inline Texture* GetTexMotion() { return m_gBuffer.GetColorAttachment(3); }
+		inline Texture* GetTexPbrParam() { return m_gBuffer.GetColorAttachment(3); }
+		inline Texture* GetTexMotion() { return m_gBuffer.GetColorAttachment(4); }
 
 	public:
 

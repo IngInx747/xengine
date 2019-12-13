@@ -26,9 +26,6 @@ public:
 
 	// ibl
 	std::shared_ptr<xengine::IblRenderer> ibl;
-
-	// cubic captures
-	xengine::CubicCapture capture; // for dynamic environment cubemap
 };
 
 class MyScene2 : public xengine::Scene
@@ -43,6 +40,13 @@ public:
 	xengine::Model* glock17;
 	xengine::Model glock17_armed;
 	xengine::Skybox skybox;
+	xengine::Model floor;
+
+	// lights
+	xengine::ParallelLight dir_light;
+
+	//
+	xengine::ParticleSystem firework;
 
 	// ibl
 	std::shared_ptr<xengine::IblRenderer> ibl;

@@ -41,7 +41,7 @@ namespace xengine
 		inline const glm::vec3& GetUp() const { return vUp; }
 		inline const glm::vec3& GetRight() const { return vRight; }
 		inline const glm::mat4& GetView() const { return matView; }
-		inline const glm::mat4& GetPreviousView() const { return matPrevView; }
+		inline const glm::mat4& GetPrevView() const { return matPrevView; }
 		inline const glm::mat4& GetProjection() const { return matProjection; }
 
 	protected:

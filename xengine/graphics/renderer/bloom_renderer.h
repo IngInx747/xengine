@@ -14,32 +14,28 @@ namespace xengine
 	public:
 		BloomRenderer();
 
-		// get blooming results
+		// resize frame buffer
+		void Resize(unsigned int width, unsigned int height);
+
+		// generate effect
+		void Generate(Texture* source);
+
+		// cast effect onto target
+		void Render(Texture* source);
+
 		inline Texture* GetSample_1_2() { return m_output0; }
 		inline Texture* GetSample_1_4() { return m_output1; }
 		inline Texture* GetSample_1_8() { return m_output2; }
 		inline Texture* GetSample_1_16() { return m_output3; }
 
-		// resize frame buffer
-		void Resize(unsigned int width, unsigned int height);
-
-		// generate the blooming results
-		void Generate(Texture* source);
-
 	private:
-		// render target(s)
+		// result buffer(s)
 		FrameBuffer m_target0;
 		FrameBuffer m_target1;
 		FrameBuffer m_target2;
 		FrameBuffer m_target3;
 
-		// render result(s)
-		Texture* m_output0;
-		Texture* m_output1;
-		Texture* m_output2;
-		Texture* m_output3;
-
-		// intermidiate target(s)
+		// intermidiate buffer(s)
 		FrameBuffer m_medium0;
 		FrameBuffer m_medium1;
 		FrameBuffer m_medium2;
@@ -47,10 +43,17 @@ namespace xengine
 		FrameBuffer m_origin;
 
 		// relates shader(s)
-		Shader* m_filterShader;
-		Shader* m_blurShader;
+		Shader m_filterShader;
+		Shader m_blurShader;
+		Shader m_postShader;
 
-		// related mesh(es)
+		// render result(s)
+		Texture* m_output0;
+		Texture* m_output1;
+		Texture* m_output2;
+		Texture* m_output3;
+
+		// canvas
 		Mesh* m_quad;
 	};
 }

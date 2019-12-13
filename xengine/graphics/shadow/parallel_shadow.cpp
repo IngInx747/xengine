@@ -42,15 +42,15 @@ namespace xengine
 		m_shadowMap.Unbind();
 	}
 
-	void ParallelShadow::UpdateView(const glm::vec3 & lightDir, const glm::vec3 & camPos)
+	void ParallelShadow::UpdateView(const glm::vec3 & lightDir, const glm::vec3 & center)
 	{
-		glm::vec3 eye = -lightDir * 10.0f + camPos;
+		glm::vec3 eye = -lightDir * 10.0f + center;
 
-		glm::vec3 up{ 0.0f, 0.0f, 0.0f };
-		if (std::fabsf(eye.y) < kEps) up.z = -1.0f;
-		else up.y = 1.0f;
+		glm::vec3 up{ 0, 1, 0 };
+		if (glm::length(glm::cross(up, eye)) < kEps)
+			up = glm::vec3(0, 0, -1);
 
-		camera.SetView(eye, camPos, up);
+		camera.SetView(eye, center, up);
 		viewProj = camera.GetProjection() * camera.GetView();
 	}
 

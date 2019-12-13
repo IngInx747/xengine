@@ -15,18 +15,10 @@ namespace xengine
 	public:
 		PostRenderer();
 
-		inline FrameBuffer* GetFrameBuffer() { return &m_target; }
-
-		// resize frame buffer
-		void Resize(unsigned int width, unsigned int height);
-
 		// integrate both pre and post lighting effects
-		void GenerateEffect(Texture* source, Texture* motion, Texture* bloom1, Texture* bloom2, Texture* bloom3, Texture* bloom4);
+		void GenerateEffect(Texture* source);
 
 	private:
-		// render target(s)
-		FrameBuffer m_target;
-
 		// relates shader(s)
 		Shader* m_shader;
 

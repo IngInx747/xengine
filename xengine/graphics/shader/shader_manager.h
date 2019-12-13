@@ -20,18 +20,30 @@ namespace xengine
 		// get a named shader
 		static Shader* Get(const std::string& name);
 
-		static Shader* LoadVertFragShader(
+		// load a vertex-fragment shader program
+		static Shader* LoadVF(
 			const std::string& name,
 			const std::string& vsPath,
 			const std::string& fsPath,
 			const std::vector<std::string>& defines = {});
 
-	private:
-		// read shader source from file
-		static std::string readsrc(const std::string& path);
-
-		static std::shared_ptr<Shader> loadVertFragShader(
+		// load a vertex-geometry-fragment shader program
+		static Shader* LoadVGF(
+			const std::string& name,
 			const std::string& vsPath,
+			const std::string& gsPath,
+			const std::string& fsPath,
+			const std::vector<std::string>& defines = {});
+
+	private:
+		static std::shared_ptr<Shader> loadVF(
+			const std::string& vsPath,
+			const std::string& fsPath,
+			const std::vector<std::string>& defines);
+
+		static std::shared_ptr<Shader> loadVGF(
+			const std::string& vsPath,
+			const std::string& gsPath,
 			const std::string& fsPath,
 			const std::vector<std::string>& defines);
 

@@ -28,6 +28,11 @@ namespace xengine
 		captures.BindCubeMapFaceColorAttachment(0, face, 0, mipmap);
 	}
 
+	void CubicCapture::Unbind()
+	{
+		captures.Unbind();
+	}
+
 	void CubicCapture::Resize(unsigned int side_length)
 	{
 		sideLen = side_length;

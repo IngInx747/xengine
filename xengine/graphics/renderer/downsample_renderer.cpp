@@ -13,29 +13,15 @@ namespace xengine
 	// Util
 	////////////////////////////////////////////////////////////////
 
-	struct FuncDownsample
-	{
-		FuncDownsample(Shader* shader, Mesh* canvas)
-			:
-			shader(shader),
-			canvas(canvas)
-		{}
-
-		void operator () (Texture* src, FrameBuffer* dst);
-
-		Shader* shader;
-		Mesh* canvas;
-	};
-
-	void FuncDownsample::operator() (Texture* src, FrameBuffer* dst)
+	void downsample_op(Texture* src, FrameBuffer* dst, Shader* shader)
 	{
 		dst->Bind();
 		glViewport(0, 0, dst->Width(), dst->Height());
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		src->Bind(0);
-		shader->Use();
-		GeneralRenderer::RenderMesh(canvas);
+		shader->Bind();
+		glDrawArrays(GL_POINTS, 0, 1);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -54,11 +40,13 @@ namespace xengine
 		m_output2 = m_target2.GetColorAttachment(0);
 		m_output3 = m_target3.GetColorAttachment(0);
 
-		m_shader = ShaderManager::LoadVertFragShader("down sample", "shaders/screen_quad.vs", "shaders/post/down_sample.fs");
-		m_shader->Use();
-		m_shader->SetUniform("TexSrc", 0);
+		m_genShader.AttachVertexShader(ReadShaderSource("shaders/effect/quad.vs"));
+		m_genShader.AttachGeometryShader(ReadShaderSource("shaders/effect/quad.gs"));
+		m_genShader.AttachFragmentShader(ReadShaderSource("shaders/effect/effect.gen.downsample.fs"));
+		m_genShader.GenerateAndLink();
 
-		m_quad = MeshManager::LoadPrimitive("quad");
+		m_genShader.Bind();
+		m_genShader.SetUniform("TexSrc", 0);
 	}
 
 	void DownsampleRenderer::Resize(unsigned int width, unsigned int height)
@@ -80,10 +68,9 @@ namespace xengine
 
 	void DownsampleRenderer::Generate(Texture* source)
 	{
-		FuncDownsample func(m_shader, m_quad);
-		func(source,    &m_target0); // src -> 0
-		func(m_output0, &m_target1); // 0 -> 1
-		func(m_output1, &m_target2); // 1 -> 2
-		func(m_output2, &m_target3); // 2 -> 3
+		downsample_op(source,    &m_target0, &m_genShader); // src -> 0
+		downsample_op(m_output0, &m_target1, &m_genShader); // 0 -> 1
+		downsample_op(m_output1, &m_target2, &m_genShader); // 1 -> 2
+		downsample_op(m_output2, &m_target3, &m_genShader); // 2 -> 3
 	}
 }

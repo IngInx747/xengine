@@ -4,10 +4,10 @@ void MyScene1::Initialize()
 {
 	// mesh
 	xengine::Mesh* sphere = xengine::MeshManager::LoadPrimitive("sphere", 256, 128);
-	xengine::Mesh* torus = xengine::MeshManager::LoadPrimitive("torus", 32, 32, 2.0f, 0.4f);
+	xengine::Mesh* torus = xengine::MeshManager::LoadPrimitive("torus", 32, 32, 2.0f, 0.5f);
 
 	// shader
-	xengine::Shader* shdPlasma = xengine::ShaderManager::LoadVertFragShader("plasma orb", "shaders/custom/plasma_orb.vs", "shaders/custom/plasma_orb.fs");
+	xengine::Shader* shdPlasma = xengine::ShaderManager::LoadVF("plasma orb", "shaders/plasma_orb.vs", "shaders/plasma_orb.fs");
 
 	// material
 	//xengine::Material* mtrTorus = xengine::MaterialManager::Get("deferred"); // "normal debug" "deferred"
@@ -82,9 +82,6 @@ void MyScene1::Initialize()
 	skybox.SetCubeMap(ibl->GetEnvironment());
 	//skybox.SetCubeMap(ibl->GetIrradiance());
 
-	//capture.GenerateCubeMap(1024);
-	//skybox.SetCubeMap(capture.captures.GetColorAttachment(0));
-
 	// scene
 	InsertModel(&torus_0);
 	InsertModel(&plasmaOrb);
@@ -115,7 +112,7 @@ void MyScene1::Update(float t, float dt)
 
 	for (int i = 0; i < torchLights.size(); ++i)
 	{
-		torchLights[i].radius = 1.5f + 0.1f * std::cosf(std::sinf(t * 1.37f + i * 7.31f) * 3.1f + i);
-		torchLights[i].intensity = 25.0f + 5.0f * std::cosf(std::sinf(t * 0.67f + i * 2.31f) * 2.31f * i);
+		torchLights[i].radius = 1.8f + 0.3f * std::cosf(std::sinf(t * 1.37f + i * 7.31f) * 3.1f + i);
+		torchLights[i].intensity = 50.0f + 15.0f * std::cosf(std::sinf(t * 0.67f + i * 2.31f) * 2.31f * i);
 	}
 }

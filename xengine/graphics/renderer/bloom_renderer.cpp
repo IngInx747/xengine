@@ -13,21 +13,7 @@ namespace xengine
 	// Util
 	////////////////////////////////////////////////////////////////
 
-	struct FuncBloomBlur
-	{
-		FuncBloomBlur(Shader* shader, Mesh* canvas)
-			:
-			shader(shader),
-			canvas(canvas)
-		{}
-
-		void operator () (Texture* source, FrameBuffer* target, FrameBuffer* medium, unsigned int count);
-
-		Shader* shader;
-		Mesh* canvas;
-	};
-
-	void FuncBloomBlur::operator()(Texture* src, FrameBuffer* dst, FrameBuffer* medium, unsigned int count)
+	static void bloom_blur_pingpong_op(Texture* src, FrameBuffer* dst, FrameBuffer* medium, Shader* shader, Mesh* quad, unsigned int count)
 	{
 		// pick pre-defined render targets for blur based on render size
 		FrameBuffer* rt_horizontal = medium;
@@ -38,11 +24,11 @@ namespace xengine
 		glViewport(0, 0, dst->Width(), dst->Height());
 
 		bool flag = true; // last is horizontal
-		shader->Use();
+		shader->Bind();
 
 		for (unsigned int i = 0; i < count; ++i, flag = !flag)
 		{
-			shader->SetUniform("horizontal", flag);
+			shader->SetUniform("bHorizontal", flag);
 
 			if (i == 0)
 				src->Bind(0);
@@ -54,7 +40,7 @@ namespace xengine
 			if (flag) rt_horizontal->Bind();
 			else rt_vertical->Bind();
 
-			GeneralRenderer::RenderMesh(canvas);
+			RenderMesh(quad);
 		}
 	}
 
@@ -80,13 +66,30 @@ namespace xengine
 		m_medium3.GenerateColorAttachments(1, 1, GL_HALF_FLOAT, 1); // 1/16 medium
 		m_origin.GenerateColorAttachments(1, 1, GL_HALF_FLOAT, 1); // origin
 
-		m_filterShader = ShaderManager::LoadVertFragShader("bloom", "shaders/screen_quad.vs", "shaders/post/bloom.fs");
-		m_filterShader->Use();
-		m_filterShader->SetUniform("HDRScene", 0);
+		m_filterShader.AttachVertexShader(ReadShaderSource("shaders/effect/effect.quad.vs"));
+		m_filterShader.AttachFragmentShader(ReadShaderSource("shaders/effect/effect.bloom.filter.fs"));
+		m_filterShader.GenerateAndLink();
+		m_filterShader.Bind();
+		m_filterShader.SetUniform("TexSrc", 0);
+		m_filterShader.Unbind();
 
-		m_blurShader = ShaderManager::LoadVertFragShader("gaussian blur", "shaders/screen_quad.vs", "shaders/post/blur_guassian.fs");
-		m_blurShader->Use();
-		m_blurShader->SetUniform("TexSrc", 0);
+		m_blurShader.AttachVertexShader(ReadShaderSource("shaders/effect/effect.quad.vs"));
+		m_blurShader.AttachFragmentShader(ReadShaderSource("shaders/effect/effect.bloom.blur.fs"));
+		m_blurShader.GenerateAndLink();
+		m_blurShader.Bind();
+		m_blurShader.SetUniform("TexSrc", 0);
+		m_blurShader.Unbind();
+
+		m_postShader.AttachVertexShader(ReadShaderSource("shaders/effect/effect.quad.vs"));
+		m_postShader.AttachFragmentShader(ReadShaderSource("shaders/effect/effect.bloom.post.fs"));
+		m_postShader.GenerateAndLink();
+		m_postShader.Bind();
+		m_postShader.SetUniform("TexSrc", 0);
+		m_postShader.SetUniform("TexBloom1", 1);
+		m_postShader.SetUniform("TexBloom2", 2);
+		m_postShader.SetUniform("TexBloom3", 3);
+		m_postShader.SetUniform("TexBloom4", 4);
+		m_postShader.Unbind();
 
 		m_quad = MeshManager::LoadPrimitive("quad");
 	}
@@ -117,20 +120,37 @@ namespace xengine
 
 	void BloomRenderer::Generate(Texture * source)
 	{
-		m_filterShader->Use();
-		source->Bind(0);
-
 		m_origin.Bind();
 		glViewport(0, 0, m_origin.Width(), m_origin.Height());
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		GeneralRenderer::RenderMesh(m_quad);
+		source->Bind(0); // TexSrc
 
-		// blur bloom result
-		FuncBloomBlur func(m_blurShader, m_quad);
-		func(m_origin.GetColorAttachment(0), &m_target0, &m_medium0, 8);
-		func(m_output0, &m_target1, &m_medium1, 8);
-		func(m_output1, &m_target2, &m_medium2, 8);
-		func(m_output2, &m_target3, &m_medium3, 8);
+		m_filterShader.Bind();
+
+		RenderMesh(m_quad);
+		bloom_blur_pingpong_op(m_origin.GetColorAttachment(0), &m_target0, &m_medium0, &m_blurShader, m_quad, 8);
+		bloom_blur_pingpong_op(m_output0, &m_target1, &m_medium1, &m_blurShader, m_quad, 8);
+		bloom_blur_pingpong_op(m_output1, &m_target2, &m_medium2, &m_blurShader, m_quad, 8);
+		bloom_blur_pingpong_op(m_output2, &m_target3, &m_medium3, &m_blurShader, m_quad, 8);
+
+		m_filterShader.Unbind();
+
+		m_origin.Unbind(); // also unbind all other frame buffers used in this pass
+	}
+
+	void BloomRenderer::Render(Texture * source)
+	{
+		source->Bind(0); // TexSrc
+		m_output0->Bind(1);
+		m_output1->Bind(2);
+		m_output2->Bind(3);
+		m_output3->Bind(4);
+
+		m_postShader.Bind();
+
+		RenderMesh(m_quad);
+
+		m_postShader.Unbind();
 	}
 }

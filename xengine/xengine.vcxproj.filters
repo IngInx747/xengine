@@ -76,6 +76,9 @@
     <Filter Include="ui">
       <UniqueIdentifier>{5d0b7d21-67b6-4b2a-a641-964d8d7fd42d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="graphics\particle_system">
+      <UniqueIdentifier>{2b5e04d6-a240-4e50-b3c4-b4b268d0b0da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utility\configure.cpp">
@@ -204,12 +207,6 @@
     <ClCompile Include="graphics\renderer\ssao_renderer.cpp">
       <Filter>graphics\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\renderer\downsample_renderer.cpp">
-      <Filter>graphics\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\renderer\gaussian_blur_renderer.cpp">
-      <Filter>graphics\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\renderer\bloom_renderer.cpp">
       <Filter>graphics\renderer</Filter>
     </ClCompile>
@@ -254,6 +251,12 @@
     </ClCompile>
     <ClCompile Include="vendor\imgui\imgui_impl_opengl3.cpp">
       <Filter>vendor\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\particle_system\particle_system.cpp">
+      <Filter>graphics\particle_system</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\renderer\motion_blur_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -395,12 +398,6 @@
     <ClInclude Include="graphics\renderer\ssao_renderer.h">
       <Filter>graphics\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\renderer\downsample_renderer.h">
-      <Filter>graphics\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\renderer\gaussian_blur_renderer.h">
-      <Filter>graphics\renderer</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\renderer\bloom_renderer.h">
       <Filter>graphics\renderer</Filter>
     </ClInclude>
@@ -448,6 +445,12 @@
     </ClInclude>
     <ClInclude Include="vendor\imgui\imgui_impl_opengl3.h">
       <Filter>vendor\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\renderer\motion_blur_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\particle_system\particle_system.h">
+      <Filter>graphics\particle_system</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

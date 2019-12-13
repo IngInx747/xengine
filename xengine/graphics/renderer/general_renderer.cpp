@@ -4,7 +4,7 @@
 
 namespace xengine
 {
-	void GeneralRenderer::RenderMesh(Mesh * mesh)
+	void RenderMesh(Mesh * mesh)
 	{
 		glBindVertexArray(mesh->VAO());
 
@@ -12,11 +12,13 @@ namespace xengine
 			glDrawElements(mesh->Topology(), static_cast<GLsizei>(mesh->indices.size()), GL_UNSIGNED_INT, 0);
 		else
 			glDrawArrays(mesh->Topology(), 0, static_cast<GLsizei>(mesh->positions.size()));
+
+		glBindVertexArray(0);
 	}
 
-	void GeneralRenderer::RenderMesh(Mesh * mesh, Material * material)
+	void RenderMesh(Mesh * mesh, Material * material)
 	{
-		material->shader->Use();
+		material->shader->Bind();
 
 		// flush all active ogl settings
 		material->UpdateOglStatus(); // note: OglStatus may lock to prevent from being modified
@@ -27,40 +29,14 @@ namespace xengine
 		RenderMesh(mesh);
 	}
 
-	void GeneralRenderer::RenderSingleCommand(const RenderCommand & command)
-	{
-		Material* material = command.material;
-		Mesh* mesh = command.mesh;
-
-		// set command-specific uniforms
-		material->shader->Use();
-		material->shader->SetUniform("model", command.transform);
-		material->shader->SetUniform("prevModel", command.prevTransform);
-
-		RenderMesh(mesh, material);
-	}
-
-	void GeneralRenderer::RenderSingleCommand(const RenderCommand & command, Camera * camera)
-	{
-		Material* material = command.material;
-
-		// TODO: set different names from these in uniform buffer
-		material->shader->Use();
-		material->shader->SetUniform("projection", camera->GetProjection());
-		material->shader->SetUniform("view", camera->GetView());
-		material->shader->SetUniform("camPos", camera->GetPosition());
-
-		RenderSingleCommand(command);
-	}
-
-	void GeneralRenderer::Blit(FrameBuffer * from, FrameBuffer * to, unsigned int type)
+	void Blit(FrameBuffer * from, FrameBuffer * to, unsigned int type)
 	{
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, from->ID());
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, to->ID());
 		glBlitFramebuffer(0, 0, from->Width(), from->Height(), 0, 0, to->Width(), to->Height(), type, GL_NEAREST);
 	}
 
-	void GeneralRenderer::Blit(FrameBuffer * from, unsigned int width, unsigned height, unsigned int type)
+	void Blit(FrameBuffer * from, unsigned int width, unsigned height, unsigned int type)
 	{
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, from->ID());
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);

@@ -31,6 +31,8 @@ namespace xengine
 	{
 		if (m_lock) return;
 
+		m_bDepthTest = enable;
+
 		if (enable)
 			glEnable(GL_DEPTH_TEST);
 		else

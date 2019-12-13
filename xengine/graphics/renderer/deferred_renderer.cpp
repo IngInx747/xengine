@@ -18,13 +18,14 @@ namespace xengine
 	DeferredRenderer::DeferredRenderer()
 	{
 		// geometry buffer requires 4 color attachments (PositionMetallic, NormalRoughness, AlbedoAO, Motion)
-		m_gBuffer.GenerateColorAttachments(1, 1, GL_HALF_FLOAT, 4);
+		m_gBuffer.GenerateColorAttachments(1, 1, GL_HALF_FLOAT, 5);
 
 		// set color attachments properly
 		m_gBuffer.BindColorAttachment(0, 0);
 		m_gBuffer.BindColorAttachment(1, 1);
 		m_gBuffer.BindColorAttachment(2, 2);
 		m_gBuffer.BindColorAttachment(3, 3);
+		m_gBuffer.BindColorAttachment(4, 4);
 
 		// geometry buffer requires 1 depth attachment for 3d scene depth test
 		//m_gBuffer.GenerateDepthAttachment(1, 1, GL_HALF_FLOAT);
@@ -32,9 +33,34 @@ namespace xengine
 		// actually depth value will not be used except depth test, so an RBO is a better choice
 		m_gBuffer.GenerateDepthRenderBuffer(1, 1);
 
-		m_parallelLightShader = ShaderManager::LoadVertFragShader("deferred directional", "shaders/deferred/screen_directional.vs", "shaders/deferred/directional.fs");
-		m_pointLightShader = ShaderManager::LoadVertFragShader("deferred point", "shaders/deferred/point.vs", "shaders/deferred/point.fs");
-		m_ambientLightShader = ShaderManager::LoadVertFragShader("deferred ambient", "shaders/deferred/screen_ambient.vs", "shaders/deferred/ambient.fs");
+		m_ambientLightShader = ShaderManager::LoadVF("deferred ambient", "shaders/deferred/deferred.quad.vs", "shaders/deferred/deferred.lighting.ambient.fs");
+		m_ambientLightShader->Bind();
+		m_ambientLightShader->SetUniform("gPosition", 0);
+		m_ambientLightShader->SetUniform("gNormal", 1);
+		m_ambientLightShader->SetUniform("gAlbedo", 2);
+		m_ambientLightShader->SetUniform("gPbrParam", 3);
+		m_ambientLightShader->SetUniform("envIrradiance", 4);
+		m_ambientLightShader->SetUniform("envReflection", 5);
+		m_ambientLightShader->SetUniform("BRDFLUT", 6);
+		m_ambientLightShader->SetUniform("TexSSAO", 7);
+		m_ambientLightShader->Unbind();
+
+		m_parallelLightShader = ShaderManager::LoadVF("deferred parallel", "shaders/deferred/deferred.quad.vs", "shaders/deferred/deferred.lighting.parallel.fs");
+		m_parallelLightShader->Bind();
+		m_parallelLightShader->SetUniform("gPosition", 0);
+		m_parallelLightShader->SetUniform("gNormal", 1);
+		m_parallelLightShader->SetUniform("gAlbedo", 2);
+		m_parallelLightShader->SetUniform("gPbrParam", 3);
+		m_parallelLightShader->SetUniform("lightShadowMap", 4);
+		m_parallelLightShader->Unbind();
+
+		m_pointLightShader = ShaderManager::LoadVF("deferred point", "shaders/deferred/deferred.sphere.vs", "shaders/deferred/deferred.lighting.point.fs");
+		m_pointLightShader->Bind();
+		m_pointLightShader->SetUniform("gPosition", 0);
+		m_pointLightShader->SetUniform("gNormal", 1);
+		m_pointLightShader->SetUniform("gAlbedo", 2);
+		m_pointLightShader->SetUniform("gPbrParam", 3);
+		m_pointLightShader->Unbind();
 
 		m_quad = MeshManager::LoadPrimitive("quad");
 		m_sphere = MeshManager::LoadPrimitive("sphere", 16, 8);
@@ -45,18 +71,19 @@ namespace xengine
 		m_gBuffer.Resize(width, height);
 	}
 
-	void DeferredRenderer::GenerateGeometry(const std::vector<RenderCommand>& commands)
+	void DeferredRenderer::Generate(const std::vector<RenderCommand>& commands)
 	{
 		m_gBuffer.Bind();
 
 		// enable usage of 4 texture attachments of framebuffer
-		unsigned int attachments[4] = {
+		unsigned int attachments[5] = {
 			GL_COLOR_ATTACHMENT0,
 			GL_COLOR_ATTACHMENT1,
 			GL_COLOR_ATTACHMENT2,
-			GL_COLOR_ATTACHMENT3
+			GL_COLOR_ATTACHMENT3,
+			GL_COLOR_ATTACHMENT4,
 		};
-		glDrawBuffers(4, attachments);
+		glDrawBuffers(5, attachments);
 
 		glViewport(0, 0, m_gBuffer.Width(), m_gBuffer.Height());
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -64,7 +91,16 @@ namespace xengine
 		OglStatus::Lock(); // we don't want materials change OpenGL settings in this pass
 		{
 			for (const RenderCommand& command : commands)
-				GeneralRenderer::RenderSingleCommand(command);
+			{
+				Material* material = command.material;
+				Mesh* mesh = command.mesh;
+
+				material->shader->Bind();
+				material->shader->SetUniform("model", command.transform);
+				material->shader->SetUniform("prevModel", command.prevTransform);
+
+				RenderMesh(mesh, material);
+			}
 		}
 		OglStatus::Unlock();
 
@@ -72,7 +108,8 @@ namespace xengine
 		attachments[1] = GL_NONE;
 		attachments[2] = GL_NONE;
 		attachments[3] = GL_NONE;
-		glDrawBuffers(4, attachments);
+		attachments[4] = GL_NONE;
+		glDrawBuffers(5, attachments);
 
 		m_gBuffer.Unbind();
 	}
@@ -82,14 +119,11 @@ namespace xengine
 		GetTexPosition()->Bind(0); // gPositionMetallic
 		GetTexNormal()->Bind(1); // gNormalRoughness
 		GetTexAlbedo()->Bind(2); // gAlbedoAO
+		GetTexPbrParam()->Bind(3); // gPbrParam
 
 		Shader* shader = m_parallelLightShader;
 
-		shader->Use();
-		shader->SetUniform("gPositionMetallic", 0);
-		shader->SetUniform("gNormalRoughness", 1);
-		shader->SetUniform("gAlbedoAO", 2);
-		shader->SetUniform("lightShadowMap", 3);
+		shader->Bind();
 		shader->SetUniform("ShadowsEnabled", RenderConfig::UseShadow());
 
 		OglStatus::SetDepthTest(GL_FALSE);
@@ -99,18 +133,20 @@ namespace xengine
 		for (ParallelLight* light : lights)
 		{
 			ParallelShadow& shadow = light->shadow;
-			shadow.GetFrameBuffer()->GetDepthStencilAttachment(0)->Bind(3); // lightShadowMap
+			shadow.GetFrameBuffer()->GetDepthStencilAttachment(0)->Bind(4); // lightShadowMap
 
 			shader->SetUniform("lightDir", light->direction);
 			shader->SetUniform("lightColor", glm::normalize(light->color) * light->intensity);
 			shader->SetUniform("lightShadowViewProjection", shadow.GetViewProj());
 
-			GeneralRenderer::RenderMesh(m_quad);
+			RenderMesh(m_quad);
 		}
 
 		OglStatus::SetBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 		OglStatus::SetBlend(GL_FALSE);
 		OglStatus::SetDepthTest(GL_TRUE);
+
+		shader->Unbind();
 	}
 
 	void DeferredRenderer::RenderPointLights(const std::vector<PointLight*>& lights, Camera * camera)
@@ -118,13 +154,11 @@ namespace xengine
 		GetTexPosition()->Bind(0); // gPositionMetallic
 		GetTexNormal()->Bind(1); // gNormalRoughness
 		GetTexAlbedo()->Bind(2); // gAlbedoAO
+		GetTexPbrParam()->Bind(3); // gPbrParam
 
 		Shader* shader = m_pointLightShader;
 
-		shader->Use();
-		shader->SetUniform("gPositionMetallic", 0);
-		shader->SetUniform("gNormalRoughness", 1);
-		shader->SetUniform("gAlbedoAO", 2);
+		shader->Bind();
 
 		OglStatus::SetDepthTest(GL_FALSE);
 		OglStatus::SetBlend(GL_TRUE);
@@ -148,7 +182,7 @@ namespace xengine
 			shader->SetUniform("lightRadius", light->radius);
 			shader->SetUniform("lightColor", glm::normalize(light->color) * light->intensity);
 
-			GeneralRenderer::RenderMesh(m_sphere);
+			RenderMesh(m_sphere);
 		}
 
 		OglStatus::SetCullFace(GL_BACK);
@@ -156,6 +190,8 @@ namespace xengine
 		OglStatus::SetBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 		OglStatus::SetBlend(GL_FALSE);
 		OglStatus::SetDepthTest(GL_TRUE);
+
+		shader->Unbind();
 	}
 
 	void DeferredRenderer::RenderAmbientLight(CubeMap * irradiance, CubeMap * reflection, Texture * ambientOcclusion)
@@ -163,23 +199,20 @@ namespace xengine
 		GetTexPosition()->Bind(0); // gPositionMetallic
 		GetTexNormal()->Bind(1); // gNormalRoughness
 		GetTexAlbedo()->Bind(2); // gAlbedoAO
-		irradiance->Bind(3); // envIrradiance
-		reflection->Bind(4); // envReflection
-		IblRenderer::GetNormalRoughnessLookup()->Bind(5);
-		ambientOcclusion->Bind(6);
+		GetTexPbrParam()->Bind(3); // gPbrParam
+		irradiance->Bind(4); // envIrradiance
+		reflection->Bind(5); // envReflection
+		IblRenderer::GetBrdfIntegrationMap()->Bind(6);
+		ambientOcclusion->Bind(7);
 
 		Shader* shader = m_ambientLightShader;
 
-		shader->Use();
-		shader->SetUniform("gPositionMetallic", 0);
-		shader->SetUniform("gNormalRoughness", 1);
-		shader->SetUniform("gAlbedoAO", 2);
-		shader->SetUniform("envIrradiance", 3);
-		shader->SetUniform("envReflection", 4);
-		shader->SetUniform("BRDFLUT", 5);
-		shader->SetUniform("TexSSAO", 6);
-		shader->SetUniform("SSAO", RenderConfig::UseSSAO());
+		shader->Bind();
+		shader->SetUniform("UseSSAO", RenderConfig::UseSSAO());
+		shader->SetUniform("UseSSR", RenderConfig::UseSSR());
 
-		GeneralRenderer::RenderMesh(m_quad);
+		RenderMesh(m_quad);
+
+		shader->Unbind();
 	}
 }
