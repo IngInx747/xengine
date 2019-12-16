@@ -4,25 +4,47 @@
 
 #include <vector>
 #include <memory>
+#include <unordered_map>
+
+#include <utility/smart_handle.h>
 
 #include "../texture/texture.h"
 
 namespace xengine
 {
-	class FrameBuffer
+	class FrameBufferMemory : public SharedMemory
 	{
 	public:
-		struct Attribute
-		{
-			unsigned int width;
-			unsigned int height;
+		FrameBufferMemory();
+		virtual ~FrameBufferMemory();
 
-			Attribute();
-		};
+		// Note: As the struct holds unique resource, instance copy is not allowed
+		FrameBufferMemory(const FrameBufferMemory& other) = delete;
+		FrameBufferMemory & operator=(const FrameBufferMemory& other) = delete;
 
+		void Generate(); // allocate memory on GPU
+		void Destory(); // free memory on GPU
+
+	public:
+		unsigned int width = 0;
+		unsigned int height = 0;
+		unsigned int fbo = 0; // frame buffer object
+		unsigned int rbo = 0; // render buffer object (optional)
+		std::vector<std::shared_ptr<Texture>> attachments; // texture attachments
+		std::vector<Texture*> colors; // color attachments
+		std::vector<Texture*> depths; // depth / depth-stencil attachments
+	};
+
+	class FrameBuffer : public SharedHandle
+	{
 	public:
 		FrameBuffer();
 		~FrameBuffer();
+
+		// Note: Instance copy is disabled.
+		// GPU data handle should exist in only one instance.
+		FrameBuffer(const FrameBuffer& other);
+		FrameBuffer & operator=(const FrameBuffer& other);
 
 		// bind the fbo
 		void Bind();
@@ -44,9 +66,6 @@ namespace xengine
 
 		// resize buffer, re-allocate memory for attachments
 		void Resize(unsigned int width, unsigned int height);
-
-		// release memory
-		void Destory();
 
 		// get i-th color attachment, null if not available
 		Texture* GetColorAttachment(unsigned int i);
@@ -79,32 +98,29 @@ namespace xengine
 		// generate cube map depth attachment alone (for point light shadow map)
 		void GenerateCubeMapDepthAttachment(unsigned int width, unsigned int height, unsigned int data_type, unsigned int num_attachment = 1);
 
-		inline unsigned int ID() const { return m_fbo; }
-		inline unsigned int Width() const { return attribute.width; }
-		inline unsigned int Height() const { return attribute.height; }
+		inline unsigned int ID() const { return m_ptr->fbo; }
+		inline unsigned int Width() const { return m_ptr->width; }
+		inline unsigned int Height() const { return m_ptr->height; }
 
 	private:
-		// generate frame buffer object, if not created before
-		void generateFrameBuffer();
+		FrameBufferMemory* m_ptr = nullptr;
 
-	public:
-		Attribute attribute;
-
-	private:
 		// fbo (frame buffer object)
-		unsigned int m_fbo = 0;
-
-		// rbo (render buffer object)
-		unsigned int m_rbo = 0; // optional
-
-		// texture attachments
-		std::vector<std::shared_ptr<Texture>> m_attachments;
-
-		// color attachments
-		std::vector<Texture*> m_colors;
-
-		// depth / depth-stencil attachments
-		std::vector<Texture*> m_depths;
+		//unsigned int m_fbo = 0;
+		//
+		//// rbo (render buffer object)
+		//unsigned int m_rbo = 0; // optional
+		//
+		//// texture attachments
+		//std::vector<std::shared_ptr<Texture>> m_attachments;
+		//
+		//// color attachments
+		//std::vector<Texture*> m_colors;
+		//
+		//// depth / depth-stencil attachments
+		//std::vector<Texture*> m_depths;
+		//unsigned int width;
+		//unsigned int height;
 	};
 }
 

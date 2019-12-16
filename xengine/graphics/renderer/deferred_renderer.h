@@ -6,8 +6,7 @@
 
 #include "../frame_buffer/frame_buffer.h"
 #include "../command/render_command.h"
-#include "../light/parallel_light.h"
-#include "../light/point_light.h"
+#include "../light/light.h"
 
 namespace xengine
 {
@@ -23,13 +22,13 @@ namespace xengine
 		void Generate(const std::vector<RenderCommand>& commands);
 
 		// render deferred parallel lights
-		void RenderParallelLights(const std::vector<ParallelLight*>& lights, Camera* camera);
+		void RenderParallelLights(const std::vector<ParallelLight*>& lights, Camera* camera, Texture * ao);
 
 		// render deferred volumn point lights
 		void RenderPointLights(const std::vector<PointLight*>& lights, Camera* camera);
 
 		// render deferred ambient light (Image-based lighting environment)
-		void RenderAmbientLight(CubeMap* irradiance, CubeMap* reflection, Texture * ambientOcclusion);
+		void RenderAmbientLight(CubeMap* irradiance, CubeMap* reflection, Texture * ao);
 
 		inline FrameBuffer* GetFrameBuffer() { return &m_gBuffer; }
 		inline Texture* GetTexPosition() { return m_gBuffer.GetColorAttachment(0); }

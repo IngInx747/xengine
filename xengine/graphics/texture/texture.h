@@ -67,7 +67,7 @@ namespace xengine
 		void EnableMipmap();
 
 		// delete data from memory
-		void Destory();
+		void DeleteGpuData();
 
 	public:
 		Attribute attribute;

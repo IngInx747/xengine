@@ -51,7 +51,8 @@ namespace xengine
 		m_parallelLightShader->SetUniform("gNormal", 1);
 		m_parallelLightShader->SetUniform("gAlbedo", 2);
 		m_parallelLightShader->SetUniform("gPbrParam", 3);
-		m_parallelLightShader->SetUniform("lightShadowMap", 4);
+		m_parallelLightShader->SetUniform("TexSSAO", 4);
+		m_parallelLightShader->SetUniform("lightShadowMap", 5);
 		m_parallelLightShader->Unbind();
 
 		m_pointLightShader = ShaderManager::LoadVF("deferred point", "shaders/deferred/deferred.sphere.vs", "shaders/deferred/deferred.lighting.point.fs");
@@ -97,7 +98,7 @@ namespace xengine
 
 				material->shader->Bind();
 				material->shader->SetUniform("model", command.transform);
-				material->shader->SetUniform("prevModel", command.prevTransform);
+				material->shader->SetUniform("prevModel", command.prevTrans);
 
 				RenderMesh(mesh, material);
 			}
@@ -114,17 +115,19 @@ namespace xengine
 		m_gBuffer.Unbind();
 	}
 
-	void DeferredRenderer::RenderParallelLights(const std::vector<ParallelLight*>& lights, Camera * camera)
+	void DeferredRenderer::RenderParallelLights(const std::vector<ParallelLight*>& lights, Camera * camera, Texture * ao)
 	{
-		GetTexPosition()->Bind(0); // gPositionMetallic
-		GetTexNormal()->Bind(1); // gNormalRoughness
-		GetTexAlbedo()->Bind(2); // gAlbedoAO
+		GetTexPosition()->Bind(0); // gPosition
+		GetTexNormal()->Bind(1); // gNormal
+		GetTexAlbedo()->Bind(2); // gAlbedo
 		GetTexPbrParam()->Bind(3); // gPbrParam
+		ao->Bind(4); // TexSSAO
 
 		Shader* shader = m_parallelLightShader;
 
 		shader->Bind();
-		shader->SetUniform("ShadowsEnabled", RenderConfig::UseShadow());
+		shader->SetUniform("UseParallelShadow", RenderConfig::UseParallelShadow());
+		shader->SetUniform("UseSSAO", RenderConfig::UseSSAO());
 
 		OglStatus::SetDepthTest(GL_FALSE);
 		OglStatus::SetBlend(GL_TRUE);
@@ -133,7 +136,7 @@ namespace xengine
 		for (ParallelLight* light : lights)
 		{
 			ParallelShadow& shadow = light->shadow;
-			shadow.GetFrameBuffer()->GetDepthStencilAttachment(0)->Bind(4); // lightShadowMap
+			shadow.GetFrameBuffer()->GetDepthStencilAttachment(0)->Bind(5); // lightShadowMap
 
 			shader->SetUniform("lightDir", light->direction);
 			shader->SetUniform("lightColor", glm::normalize(light->color) * light->intensity);
@@ -194,16 +197,16 @@ namespace xengine
 		shader->Unbind();
 	}
 
-	void DeferredRenderer::RenderAmbientLight(CubeMap * irradiance, CubeMap * reflection, Texture * ambientOcclusion)
+	void DeferredRenderer::RenderAmbientLight(CubeMap * irradiance, CubeMap * reflection, Texture * ao)
 	{
 		GetTexPosition()->Bind(0); // gPositionMetallic
 		GetTexNormal()->Bind(1); // gNormalRoughness
 		GetTexAlbedo()->Bind(2); // gAlbedoAO
 		GetTexPbrParam()->Bind(3); // gPbrParam
-		irradiance->Bind(4); // envIrradiance
-		reflection->Bind(5); // envReflection
-		IblRenderer::GetBrdfIntegrationMap()->Bind(6);
-		ambientOcclusion->Bind(7);
+		if (irradiance) irradiance->Bind(4); // envIrradiance
+		if (reflection) reflection->Bind(5); // envReflection
+		IblRenderer::GetBrdfIntegrationMap()->Bind(6); // BRDFLUT
+		ao->Bind(7); // TexSSAO
 
 		Shader* shader = m_ambientLightShader;
 

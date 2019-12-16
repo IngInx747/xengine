@@ -4,17 +4,14 @@
 
 #include <mesh/mesh_manager.h>
 
+#include "../platform/ogl_status.h"
 #include "general_renderer.h"
 
 namespace xengine
 {
 	MotionBlurRenderer::MotionBlurRenderer()
 	{
-		m_target0.GenerateColorAttachments(1, 1, GL_HALF_FLOAT, 1);
-		m_target1.GenerateColorAttachments(1, 1, GL_HALF_FLOAT, 1);
-
-		m_currBuffer = &m_target0;
-		m_swapBuffer = &m_target1;
+		m_target.GenerateColorAttachments(1, 1, GL_HALF_FLOAT, 1);
 
 		m_captureShader.AttachVertexShader(ReadShaderSource("shaders/effect/effect.quad.vs"));
 		m_captureShader.AttachFragmentShader(ReadShaderSource("shaders/effect/effect.motion_blur.capture.fs"));
@@ -28,7 +25,6 @@ namespace xengine
 		m_blitShader.GenerateAndLink();
 		m_blitShader.Bind();
 		m_blitShader.SetUniform("TexSrc", 0);
-		m_blitShader.SetUniform("TexOrg", 1);
 		m_blitShader.Unbind();
 
 		m_postShader.AttachVertexShader(ReadShaderSource("shaders/effect/effect.quad.vs"));
@@ -46,14 +42,13 @@ namespace xengine
 
 	void MotionBlurRenderer::Resize(unsigned int width, unsigned int height)
 	{
-		m_target0.Resize(width, height);
-		m_target1.Resize(width, height);
+		m_target.Resize(width, height);
 	}
 
 	void MotionBlurRenderer::Generate(Texture * gPosition, Camera* camera)
 	{
-		m_currBuffer->Bind();
-		glViewport(0, 0, m_currBuffer->Width(), m_currBuffer->Height());
+		m_target.Bind();
+		glViewport(0, 0, m_target.Width(), m_target.Height());
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		gPosition->Bind(0); // TexSrc
@@ -71,13 +66,13 @@ namespace xengine
 
 		m_captureShader.Unbind();
 
-		m_currBuffer->Unbind();
+		m_target.Unbind();
 	}
 
 	void MotionBlurRenderer::Render(Texture * source)
 	{
 		source->Bind(0); // TexSrc
-		m_currBuffer->GetColorAttachment(0)->Bind(1); // TexMotion
+		m_target.GetColorAttachment(0)->Bind(1); // TexMotion
 
 		m_postShader.Bind();
 
@@ -88,12 +83,14 @@ namespace xengine
 
 	void MotionBlurRenderer::AttachMotion(Texture * source)
 	{
-		m_swapBuffer->Bind();
-		glViewport(0, 0, m_swapBuffer->Width(), m_swapBuffer->Height());
-		glClear(GL_COLOR_BUFFER_BIT);
+		m_target.Bind();
+		glViewport(0, 0, m_target.Width(), m_target.Height());
+
+		OglStatus::SetDepthTest(GL_FALSE);
+		OglStatus::SetBlend(GL_TRUE);
+		OglStatus::SetBlendFunc(GL_ONE, GL_ONE);
 
 		source->Bind(0); // TexSrc
-		m_currBuffer->GetColorAttachment(0)->Bind(1); // TexOrg
 
 		m_blitShader.Bind();
 
@@ -101,8 +98,8 @@ namespace xengine
 
 		m_blitShader.Unbind();
 
-		m_currBuffer->Unbind();
-
-		std::swap(m_currBuffer, m_swapBuffer);
+		OglStatus::SetBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+		OglStatus::SetBlend(GL_FALSE);
+		OglStatus::SetDepthTest(GL_TRUE);
 	}
 }

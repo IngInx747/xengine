@@ -8,7 +8,7 @@ namespace xengine
 	{
 		glBindVertexArray(mesh->VAO());
 
-		if (mesh->indices.size() > 0)
+		if (mesh->IBO())
 			glDrawElements(mesh->Topology(), static_cast<GLsizei>(mesh->indices.size()), GL_UNSIGNED_INT, 0);
 		else
 			glDrawArrays(mesh->Topology(), 0, static_cast<GLsizei>(mesh->positions.size()));

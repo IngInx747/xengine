@@ -1,10 +1,11 @@
 #ifndef SHADOW_GLSL
 #define SHADOW_GLSL
-uniform bool ShadowsEnabled;
+
+uniform bool UseParallelShadow;
 
 float ShadowFactor(sampler2D shadowMap, vec4 fragPosLightSpace, vec3 N, vec3 L)
 {   
-    if (ShadowsEnabled)
+    if (UseParallelShadow)
     {
         // perspective divide
         vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;

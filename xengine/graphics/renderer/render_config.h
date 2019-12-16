@@ -14,7 +14,7 @@ namespace xengine
 		struct Config
 		{
 			bool useIrradianceGI;
-			bool useShadows;
+			bool useParallelShadow;
 			bool useFlashLight;
 			bool useRenderLights;
 			bool useLightVolumes;
@@ -37,7 +37,7 @@ namespace xengine
 		static bool UseLightVolume() { return _config.useLightVolumes; }
 		static bool UseRenderLights() { return _config.useRenderLights; }
 		static bool UseRenderProbes() { return _config.useRenderProbes; }
-		static bool UseShadow() { return _config.useShadows; }
+		static bool UseParallelShadow() { return _config.useParallelShadow; }
 		static bool UseSSAO() { return _config.useSSAO; }
 		static bool UseSSR() { return _config.useSSR; }
 		static bool UseSepia() { return _config.useSepia; }

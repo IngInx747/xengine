@@ -35,17 +35,12 @@ namespace xengine
 
 	private:
 		// result buffer(s)
-		FrameBuffer m_target0;
-		FrameBuffer m_target1;
+		FrameBuffer m_target;
 
 		// relates shader(s)
 		Shader m_captureShader; // capture camera motion
 		Shader m_blitShader; // add another motion info
 		Shader m_postShader; // cast motion blur effect
-
-		//
-		FrameBuffer* m_currBuffer;
-		FrameBuffer* m_swapBuffer;
 
 		// canvas
 		Mesh* m_quad;

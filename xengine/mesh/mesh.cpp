@@ -7,14 +7,19 @@ namespace xengine
 	Mesh::Mesh()
 	{}
 
-	Mesh::Mesh(const std::vector<glm::vec3>& positions, const std::vector<unsigned int>& indices)
+	Mesh::Mesh(
+		const std::vector<glm::vec3>& positions,
+		const std::vector<unsigned int>& indices)
 		:
 		positions(positions),
 		indices(indices),
 		aabb(positions)
 	{}
 
-	Mesh::Mesh(const std::vector<glm::vec3>& positions, const std::vector<glm::vec2>& texCoords, const std::vector<unsigned int>& indices)
+	Mesh::Mesh(
+		const std::vector<glm::vec3>& positions,
+		const std::vector<glm::vec2>& texCoords,
+		const std::vector<unsigned int>& indices)
 		:
 		positions(positions),
 		texCoords(texCoords),
@@ -22,7 +27,11 @@ namespace xengine
 		aabb(positions)
 	{}
 
-	Mesh::Mesh(const std::vector<glm::vec3>& positions, const std::vector<glm::vec2>& texCoords, const std::vector<glm::vec3>& normals, const std::vector<unsigned int>& indices)
+	Mesh::Mesh(
+		const std::vector<glm::vec3>& positions,
+		const std::vector<glm::vec2>& texCoords,
+		const std::vector<glm::vec3>& normals,
+		const std::vector<unsigned int>& indices)
 		:
 		positions(positions),
 		texCoords(texCoords),
@@ -31,7 +40,13 @@ namespace xengine
 		aabb(positions)
 	{}
 
-	Mesh::Mesh(const std::vector<glm::vec3>& positions, const std::vector<glm::vec2>& texCoords, const std::vector<glm::vec3>& normals, const std::vector<glm::vec3>& tangents, const std::vector<glm::vec3>& bitangents, const std::vector<unsigned int>& indices)
+	Mesh::Mesh(
+		const std::vector<glm::vec3>& positions,
+		const std::vector<glm::vec2>& texCoords,
+		const std::vector<glm::vec3>& normals,
+		const std::vector<glm::vec3>& tangents,
+		const std::vector<glm::vec3>& bitangents,
+		const std::vector<unsigned int>& indices)
 		:
 		positions(positions),
 		texCoords(texCoords),
@@ -44,10 +59,10 @@ namespace xengine
 
 	Mesh::~Mesh()
 	{
-		DeleteData();
+		DeleteGpuData();
 	}
 
-	void Mesh::CommitData(bool flag)
+	void Mesh::CommitGpuData(bool flag)
 	{
 		// process buffer data as interleaved or seperate when specified
 		if (flag)
@@ -58,6 +73,11 @@ namespace xengine
 		{
 			commitDataBatch();
 		}
+
+		texCoords.clear();
+		normals.clear();
+		tangents.clear();
+		bitangents.clear();
 	}
 
 	void Mesh::commitDataInterleaved()
@@ -250,7 +270,7 @@ namespace xengine
 		glBindVertexArray(0);
 	}
 
-	void Mesh::DeleteData()
+	void Mesh::DeleteGpuData()
 	{
 		if (vao)
 		{

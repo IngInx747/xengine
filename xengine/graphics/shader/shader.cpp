@@ -20,7 +20,7 @@ namespace xengine
 
 	Shader::~Shader()
 	{
-		Destory();
+		DeleteGpuData();
 	}
 
 	void Shader::Bind()
@@ -33,12 +33,9 @@ namespace xengine
 		glUseProgram(0);
 	}
 
-	void Shader::Destory()
+	void Shader::DeleteGpuData()
 	{
 		if (m_id) { glDeleteProgram(m_id); m_id = 0; }
-		if (m_vs) { glDeleteShader(m_vs); m_vs = 0; }
-		if (m_gs) { glDeleteShader(m_gs); m_gs = 0; }
-		if (m_fs) { glDeleteShader(m_fs); m_fs = 0; }
 	}
 
 	int Shader::GetUniformLocation(const std::string& name)
@@ -159,9 +156,13 @@ namespace xengine
 
 		if (m_vs) glAttachShader(m_id, m_vs);
 		if (m_gs) glAttachShader(m_id, m_gs);
-		if (m_vs) glAttachShader(m_id, m_fs);
+		if (m_fs) glAttachShader(m_id, m_fs);
 
 		glLinkProgram(m_id);
+
+		if (m_vs) { glDetachShader(m_id, m_vs); glDeleteShader(m_vs); m_vs = 0; }
+		if (m_gs) { glDetachShader(m_id, m_gs); glDeleteShader(m_gs); m_gs = 0; }
+		if (m_fs) { glDetachShader(m_id, m_fs); glDeleteShader(m_fs); m_fs = 0; }
 
 		glGetProgramiv(m_id, GL_LINK_STATUS, &status);
 		if (!status)

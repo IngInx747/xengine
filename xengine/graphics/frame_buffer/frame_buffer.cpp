@@ -6,77 +6,131 @@
 
 namespace xengine
 {
-	FrameBuffer::Attribute::Attribute()
+	////////////////////////////////////////////////////////////////
+	// Frame Buffer Unique Instance
+	////////////////////////////////////////////////////////////////
+
+	FrameBufferMemory::FrameBufferMemory()
+		:
+		SharedMemory()
 	{
-		width = 0;
-		height = 0;
 	}
 
-	FrameBuffer::FrameBuffer()
-	{
-	}
-
-	FrameBuffer::~FrameBuffer()
+	FrameBufferMemory::~FrameBufferMemory()
 	{
 		Destory();
 	}
 
-	void FrameBuffer::generateFrameBuffer()
+	void FrameBufferMemory::Generate()
 	{
-		if (!m_fbo) glGenFramebuffers(1, &m_fbo);
+		if (!fbo)
+		{
+			glGenFramebuffers(1, &fbo);
+			Log::Message("[FrameBufferMemory] FrameBuffer " + std::to_string(fbo) + " generated", Log::DEBUG);
+		}
+	}
+
+	void FrameBufferMemory::Destory()
+	{
+		if (fbo)
+		{
+			Log::Message("[FrameBufferMemory] FrameBuffer " + std::to_string(fbo) + " deleted", Log::DEBUG);
+
+			attachments.clear();
+
+			if (rbo)
+			{
+				glDeleteRenderbuffers(1, &rbo);
+				rbo = 0;
+			}
+
+			glDeleteFramebuffers(1, &fbo);
+			fbo = 0;
+		}
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Frame Buffer
+	////////////////////////////////////////////////////////////////
+
+	FrameBuffer::FrameBuffer()
+		:
+		SharedHandle()
+	{
+		m_ptr = new FrameBufferMemory;
+
+		SharedHandle::Register(m_ptr);
+	}
+
+	FrameBuffer::FrameBuffer(const FrameBuffer & other)
+		:
+		SharedHandle(other)
+	{
+		m_ptr = other.m_ptr;
+	}
+
+	FrameBuffer & FrameBuffer::operator=(const FrameBuffer & other)
+	{
+		this->SharedHandle::operator=(other);
+		m_ptr = other.m_ptr;
+		return *this;
+	}
+
+	FrameBuffer::~FrameBuffer()
+	{
 	}
 
 	Texture* FrameBuffer::GetColorAttachment(unsigned int i)
 	{
-		if (i >= m_colors.size()) return nullptr;
-		return m_colors[i];
+		if (i >= m_ptr->colors.size()) return nullptr;
+		return m_ptr->colors[i];
 	}
 
 	Texture* FrameBuffer::GetDepthStencilAttachment(unsigned int i)
 	{
-		if (i >= m_depths.size()) return nullptr;
-		return m_depths[i];
+		if (i >= m_ptr->depths.size()) return nullptr;
+		return m_ptr->depths[i];
 	}
 
 	void FrameBuffer::Bind()
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_ptr->fbo);
 	}
 
 	void FrameBuffer::BindColorAttachment(unsigned int attachment_id, unsigned int color_id, unsigned int mipmap)
 	{
-		if (m_colors.size() <= attachment_id || m_colors[attachment_id]->attribute.target != GL_TEXTURE_2D) return;
+		if (m_ptr->colors.size() <= attachment_id || m_ptr->colors[attachment_id]->attribute.target != GL_TEXTURE_2D) return;
 
 		Bind();
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + color_id, GL_TEXTURE_2D, m_colors[attachment_id]->ID(), mipmap);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + color_id, GL_TEXTURE_2D, m_ptr->colors[attachment_id]->ID(), mipmap);
 	}
 
 	void FrameBuffer::BindDepthAttachment(unsigned int attachment_id)
 	{
-		if (m_depths.size() <= attachment_id || m_depths[attachment_id]->attribute.target != GL_TEXTURE_2D) return;
+		if (m_ptr->depths.size() <= attachment_id || m_ptr->depths[attachment_id]->attribute.target != GL_TEXTURE_2D) return;
 
 		Bind();
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depths[attachment_id]->ID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_ptr->depths[attachment_id]->ID(), 0);
 	}
 
 	void FrameBuffer::BindCubeMapFaceColorAttachment(unsigned int attachment_id, unsigned int face, unsigned int color_id, unsigned int mipmap)
 	{
-		if (m_colors.size() <= attachment_id || m_colors[attachment_id]->attribute.target != GL_TEXTURE_CUBE_MAP) return;
+		if (m_ptr->colors.size() <= attachment_id || m_ptr->colors[attachment_id]->attribute.target != GL_TEXTURE_CUBE_MAP) return;
 
 		Bind();
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + color_id, GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, m_colors[attachment_id]->ID(), mipmap);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + color_id, GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, m_ptr->colors[attachment_id]->ID(), mipmap);
 	}
 
 	void FrameBuffer::BindCubeMapFaceDepthAttachment(unsigned int attachment_id, unsigned int face)
 	{
-		if (m_depths.size() <= attachment_id || m_depths[attachment_id]->attribute.target != GL_TEXTURE_CUBE_MAP) return;
+		if (m_ptr->depths.size() <= attachment_id || m_ptr->depths[attachment_id]->attribute.target != GL_TEXTURE_CUBE_MAP) return;
 
 		Bind();
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, m_depths[attachment_id]->ID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, m_ptr->depths[attachment_id]->ID(), 0);
 	}
 
 	void FrameBuffer::Unbind()
@@ -86,56 +140,29 @@ namespace xengine
 
 	void FrameBuffer::Resize(unsigned int width, unsigned int height)
 	{
-		attribute.width = width;
-		attribute.height = height;
+		m_ptr->width = width;
+		m_ptr->height = height;
 
-		for (unsigned int i = 0; i < m_attachments.size(); ++i)
+		for (unsigned int i = 0; i < m_ptr->attachments.size(); ++i)
 		{
-			m_attachments[i]->Resize(width, height);
+			m_ptr->attachments[i]->Resize(width, height);
 		}
 
-		if (m_rbo > 0)
+		if (m_ptr->rbo > 0)
 		{
-			glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
-			glBindRenderbuffer(GL_RENDERBUFFER, m_rbo);
+			glBindFramebuffer(GL_FRAMEBUFFER, m_ptr->fbo);
+			glBindRenderbuffer(GL_RENDERBUFFER, m_ptr->rbo);
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_rbo);
+			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_ptr->rbo);
 			glBindRenderbuffer(GL_RENDERBUFFER, 0);
-			//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		}
-	}
-
-	void FrameBuffer::Destory()
-	{
-		if (m_fbo)
-		{
-			for (std::shared_ptr<Texture> attachment : m_attachments)
-			{
-				attachment->Destory();
-			}
-
-			m_attachments.clear();
-
-			if (m_rbo)
-			{
-				glDeleteRenderbuffers(1, &m_rbo);
-				m_rbo = 0;
-			}
-
-			glDeleteFramebuffers(1, &m_fbo);
-			m_fbo = 0;
-
-			attribute.width = 0;
-			attribute.height = 0;
 		}
 	}
 
 	void FrameBuffer::GenerateColorAttachments(unsigned int width, unsigned int height, unsigned int data_type, unsigned int num_attachment)
 	{
-		attribute.width = width;
-		attribute.height = height;
-
-		generateFrameBuffer();
+		m_ptr->width = width;
+		m_ptr->height = height;
+		m_ptr->Generate();
 
 		Bind();
 
@@ -157,16 +184,13 @@ namespace xengine
 
 			texture->Generate2D(width, height, internalFormat, GL_RGBA, data_type, 0);
 
-			//unsigned int attach_id = static_cast<unsigned int>(m_colors.size());
-			//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attach_id, GL_TEXTURE_2D, texture->ID(), 0);
+			m_ptr->attachments.push_back(texture);
 
-			m_attachments.push_back(texture);
-
-			m_colors.push_back(texture.get());
+			m_ptr->colors.push_back(texture.get());
 		}
 
 		// bind attachment [color_0] as default
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_colors[0]->ID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ptr->colors[0]->ID(), 0);
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		{
@@ -178,10 +202,9 @@ namespace xengine
 
 	void FrameBuffer::GenerateDepthAttachment(unsigned int width, unsigned int height, unsigned int data_type, unsigned int num_attachment)
 	{
-		attribute.width = width;
-		attribute.height = height;
-
-		generateFrameBuffer();
+		m_ptr->width = width;
+		m_ptr->height = height;
+		m_ptr->Generate();
 
 		Bind();
 
@@ -197,13 +220,13 @@ namespace xengine
 
 			texture->Generate2D(width, height, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, data_type, 0);
 
-			m_attachments.push_back(texture);
+			m_ptr->attachments.push_back(texture);
 
-			m_depths.push_back(texture.get());
+			m_ptr->depths.push_back(texture.get());
 		}
 
 		// bind attachment [depth_0] as default
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depths[0]->ID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_ptr->depths[0]->ID(), 0);
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		{
@@ -215,7 +238,7 @@ namespace xengine
 
 	void FrameBuffer::GenerateDepthRenderBuffer(unsigned int width, unsigned height)
 	{
-		if (m_rbo)
+		if (m_ptr->rbo)
 		{
 			Log::Message("[FrameBuffer] RenderBuffer (depth) were occupied", Log::WARN);
 			return;
@@ -223,10 +246,10 @@ namespace xengine
 
 		Bind();
 
-		glGenRenderbuffers(1, &m_rbo);
-		glBindRenderbuffer(GL_RENDERBUFFER, m_rbo);
+		glGenRenderbuffers(1, &m_ptr->rbo);
+		glBindRenderbuffer(GL_RENDERBUFFER, m_ptr->rbo);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_rbo);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_ptr->rbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -239,10 +262,9 @@ namespace xengine
 
 	void FrameBuffer::GenerateDepthStencilAttachment(unsigned int width, unsigned int height)
 	{
-		attribute.width = width;
-		attribute.height = height;
-
-		generateFrameBuffer();
+		m_ptr->width = width;
+		m_ptr->height = height;
+		m_ptr->Generate();
 
 		Bind();
 
@@ -258,9 +280,9 @@ namespace xengine
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, texture->ID(), 0);
 
-		m_attachments.push_back(texture);
+		m_ptr->attachments.push_back(texture);
 
-		m_depths.push_back(texture.get());
+		m_ptr->depths.push_back(texture.get());
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		{
@@ -272,7 +294,7 @@ namespace xengine
 
 	void FrameBuffer::GenerateDepthStencilRenderBuffer(unsigned int width, unsigned height)
 	{
-		if (m_rbo)
+		if (m_ptr->rbo)
 		{
 			Log::Message("[FrameBuffer] RenderBuffer (depth-stencil) were occupied", Log::WARN);
 			return;
@@ -283,10 +305,10 @@ namespace xengine
 
 		Bind();
 
-		glGenRenderbuffers(1, &m_rbo);
-		glBindRenderbuffer(GL_RENDERBUFFER, m_rbo);
+		glGenRenderbuffers(1, &m_ptr->rbo);
+		glBindRenderbuffer(GL_RENDERBUFFER, m_ptr->rbo);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_rbo);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_ptr->rbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -299,10 +321,9 @@ namespace xengine
 
 	void FrameBuffer::GenerateCubeMapColorAttachments(unsigned int width, unsigned int height, unsigned int data_type, unsigned int num_attachment)
 	{
-		attribute.width = width;
-		attribute.height = height;
-
-		generateFrameBuffer();
+		m_ptr->width = width;
+		m_ptr->height = height;
+		m_ptr->Generate();
 
 		Bind();
 
@@ -319,18 +340,13 @@ namespace xengine
 
 			texture->GenerateCube(width, height, GL_RGB, data_type, 0);
 
-			//for (unsigned int i = 0; i < 6; ++i)
-			//{
-			//	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, texture->ID(), 0);
-			//}
+			m_ptr->attachments.push_back(texture);
 
-			m_attachments.push_back(texture);
-
-			m_colors.push_back(texture.get());
+			m_ptr->colors.push_back(texture.get());
 		}
 
 		// bind attachment [color_0], face [+X] as default
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X, m_colors[0]->ID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X, m_ptr->colors[0]->ID(), 0);
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		{
@@ -342,10 +358,9 @@ namespace xengine
 
 	void FrameBuffer::GenerateCubeMapDepthAttachment(unsigned int width, unsigned int height, unsigned int data_format, unsigned int num_attachment)
 	{
-		attribute.width = width;
-		attribute.height = height;
-
-		generateFrameBuffer();
+		m_ptr->width = width;
+		m_ptr->height = height;
+		m_ptr->Generate();
 
 		Bind();
 
@@ -365,18 +380,13 @@ namespace xengine
 			// require geometry shader support
 			//glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texture->ID(), 0);
 
-			//for (unsigned int i = 0; i < 6; ++i)
-			//{
-			//	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, texture->ID(), 0);
-			//}
+			m_ptr->attachments.push_back(texture);
 
-			m_attachments.push_back(texture);
-
-			m_depths.push_back(texture.get());
+			m_ptr->depths.push_back(texture.get());
 		}
 
 		// bind attachment [depth_0], face [+X] as default
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_CUBE_MAP_POSITIVE_X, m_depths[0]->ID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_CUBE_MAP_POSITIVE_X, m_ptr->depths[0]->ID(), 0);
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		{

@@ -37,7 +37,7 @@ namespace xengine
 
 	Texture::~Texture()
 	{
-		Destory();
+		DeleteGpuData();
 	}
 
 	void Texture::Bind(int unit)
@@ -80,7 +80,7 @@ namespace xengine
 		Unbind();
 	}
 
-	void Texture::Destory()
+	void Texture::DeleteGpuData()
 	{
 		if (m_id)
 		{

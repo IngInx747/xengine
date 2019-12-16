@@ -12,15 +12,24 @@ namespace xengine
 		setCaptureView();
 	}
 
+	CubicCapture::CubicCapture(const CubicCapture & other)
+	{
+		captures = other.captures;
+		sideLen = other.sideLen;
+	}
+
+	CubicCapture & CubicCapture::operator=(const CubicCapture & other)
+	{
+		captures = other.captures;
+		sideLen = other.sideLen;
+
+		return *this;
+	}
+
 	CubicCapture::CubicCapture(const glm::vec3 & position)
 	{
 		SetCapturePosition(position);
 		setCaptureView();
-	}
-
-	CubicCapture::~CubicCapture()
-	{
-		captures.Destory();
 	}
 
 	void CubicCapture::BindFace(unsigned int face, unsigned int mipmap)

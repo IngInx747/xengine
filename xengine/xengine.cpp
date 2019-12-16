@@ -81,6 +81,9 @@ namespace xengine
 		// ui
 		UI::Initialize(window);
 
+		// image-based lighting
+		IblRenderer::Initialize();
+
 		// generate uniform buffers
 		Renderer::Initialize();
 	}

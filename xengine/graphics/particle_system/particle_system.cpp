@@ -12,7 +12,11 @@
 
 namespace xengine
 {
-	ParticleSystem::Particle::Particle()
+	////////////////////////////////////////////////////////////////
+	// Particle System
+	////////////////////////////////////////////////////////////////
+
+	PSFirework::Particle::Particle()
 		:
 		position(),
 		velocity(),
@@ -21,15 +25,29 @@ namespace xengine
 	{}
 
 	ParticleSystem::ParticleSystem()
+		:
+		GeometryObject()
+	{
+		aabbLocal = AABB({ -1, -1, -1 }, { 1, 1, 1 });
+		aabbGlobal.BuildFromTransform(aabbLocal, transform);
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Particle System: Firework
+	////////////////////////////////////////////////////////////////
+
+	PSFirework::PSFirework()
+		:
+		ParticleSystem()
 	{
 	}
 
-	ParticleSystem::~ParticleSystem()
+	PSFirework::~PSFirework()
 	{
-		Destory();
+		DeleteGpuData();
 	}
 
-	void ParticleSystem::Initialize(const glm::vec3& position)
+	void PSFirework::Initialize()
 	{
 		std::uniform_real_distribution<float> random_dist(0.0f, 1.0f);
 		std::default_random_engine random_dist_generator;
@@ -41,17 +59,11 @@ namespace xengine
 
 		std::vector<Particle> particles(m_numParticle);
 
-		//particles[0].position = position;
-		//particles[0].velocity = glm::vec3(0, 0.001f, 0);
-		//
-		for (unsigned int i = 0; i < m_numParticle; ++i)
-		{
-			particles[i].position = position;
-			//float vx = dice() * 2.0f - 1.0f;
-			//float vy = 1.0f;
-			//float vz = dice() * 2.0f - 1.0f;
-			//particles[i].velocity = glm::vec3(vx, vy, vz) * 0.1f;
-		}
+		// note: Particles will stay in (0,0,0) if not given specific position and
+		// during the very first batches of generations particles that not reached
+		// by updating geometry shader will appear at (0,0,0).
+		// After a few gnerations when all particles are reached by the shader, no
+		// particle will appear at (0,0,0).
 
 		// buffer data to GPU
 		glGenVertexArrays(2, m_vaos);
@@ -107,7 +119,7 @@ namespace xengine
 			m_particleUpdateShader.SetUniform("gShellLifetime", 500);
 			m_particleUpdateShader.SetUniform("gSecondaryShellLifetime", 100);
 			m_particleUpdateShader.SetUniform("gRandomTexture", 0);
-			m_particleUpdateShader.SetUniform("gPositionOriginal", position);
+			m_particleUpdateShader.SetUniform("gPositionOriginal", glm::vec3(0, 0, 0));
 			m_particleUpdateShader.SetUniform("gVelocityOriginal", glm::vec3(0, 2.0f, 0));
 			m_particleUpdateShader.SetUniform("gGrativityAccel", glm::vec3(0, -1.0f, 0));
 		}
@@ -128,22 +140,31 @@ namespace xengine
 
 		/// textures
 		std::vector<glm::vec3> noises;
-		for (unsigned int i = 0; i < m_numParticle; i++)
+		for (unsigned int i = 0; i < 1000; i++)
 			noises.push_back({ dice(), dice(), dice() });
 
 		m_noise.attribute.wrapS = GL_REPEAT;
 		m_noise.attribute.filterMin = GL_LINEAR;
-		m_noise.Generate1D(m_numParticle, GL_RGB, GL_RGB, GL_FLOAT, &noises[0]);
+		m_noise.Generate1D(1000, GL_RGB, GL_RGB, GL_FLOAT, &noises[0]);
 
 		m_particleTexture = TextureManager::Get("white");
 	}
 
-	void ParticleSystem::Reset()
+	void PSFirework::SetPosition(const glm::vec3 & position)
+	{
+		GeometryObject::SetPosition(position);
+
+		m_particleUpdateShader.Bind();
+		m_particleUpdateShader.SetUniform("gPositionOriginal", position);
+		m_particleUpdateShader.Unbind();
+	}
+
+	void PSFirework::Reset()
 	{
 		m_time = 0;
 	}
 
-	void ParticleSystem::Render()
+	void PSFirework::Render()
 	{
 		m_time += 1;
 
@@ -154,7 +175,7 @@ namespace xengine
 		m_currId = 1 - m_currId;
 	}
 
-	void ParticleSystem::Destory()
+	void PSFirework::DeleteGpuData()
 	{
 		if (m_vaos[0])
 		{
@@ -175,7 +196,7 @@ namespace xengine
 		}
 	}
 
-	void ParticleSystem::updateParticles()
+	void PSFirework::updateParticles()
 	{
 		m_particleUpdateShader.Bind();
 		m_particleUpdateShader.SetUniform("gTime", m_time);
@@ -207,7 +228,7 @@ namespace xengine
 		glDisable(GL_RASTERIZER_DISCARD);
 	}
 
-	void ParticleSystem::renderParticles()
+	void PSFirework::renderParticles()
 	{
 		m_particleRenderShader.Bind();
 

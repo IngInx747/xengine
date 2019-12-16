@@ -248,7 +248,7 @@ namespace xengine
 
 		mesh->Topology() = GL_TRIANGLES;
 
-		mesh->CommitData();
+		mesh->CommitGpuData();
 
 		_meshes.push_back(mesh);
 		//_meshTable[name] = mesh.get();

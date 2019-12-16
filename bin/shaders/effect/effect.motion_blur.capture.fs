@@ -37,15 +37,15 @@ void main()
         worldPos += (camForward + camUp * FragPos.y + camRight * FragPos.x) * skyboxDist;
     }
 
-    FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+    FragColor = vec4(0, 0, 0, 1);
 
     vec4 currClipSpacePos = projection * currView * vec4(worldPos, 1.0);
-    vec3 currScreenSpacePos = currClipSpacePos.xyz / currClipSpacePos.w;
+    vec2 currScreenSpacePos = currClipSpacePos.xy / currClipSpacePos.w;
 
     vec4 prevClipSpacePos = projection * prevView * vec4(worldPos, 1.0);
-    vec3 prevScreenSpacePos = prevClipSpacePos.xyz / prevClipSpacePos.w;
+    vec2 prevScreenSpacePos = prevClipSpacePos.xy / prevClipSpacePos.w;
 
-    vec3 motion = currScreenSpacePos - prevScreenSpacePos;
+    vec2 motion = currScreenSpacePos - prevScreenSpacePos;
 
-    FragColor.rgb = motion;
+    FragColor.rg = motion;
 }

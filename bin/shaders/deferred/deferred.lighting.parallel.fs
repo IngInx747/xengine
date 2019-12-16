@@ -20,6 +20,9 @@ uniform vec3 lightColor;
 uniform sampler2D lightShadowMap;
 uniform mat4 lightShadowViewProjection;
 
+uniform int UseSSAO;
+uniform sampler2D TexSSAO;
+
 void main()
 {
     vec3 worldPos   = texture(gPosition, TexCoord).xyz;
@@ -30,6 +33,11 @@ void main()
     float roughness = pbrParam.g;
     float ao        = pbrParam.b;
     
+    if (UseSSAO == 1)
+    {
+        ao *= texture(TexSSAO, TexCoord).r;
+    }
+
     // lighting input
     vec3 N = normalize(normal);
     vec3 V = normalize(camPos.xyz - worldPos); // view-space camera is (0, 0, 0): (0, 0, 0) - viewPos = -viewPos
@@ -47,10 +55,9 @@ void main()
     float shadow = ShadowFactor(lightShadowMap, fragPosLightSpace, N, L);
     
     // cook-torrance brdf
-    float NDF = DistributionGGX(N, H, roughness);        
-    float G   = GeometryGGX(max(dot(N, V), 0.0), max(dot(N, L), 0.0), roughness);      
-    vec3 F    = FresnelSchlick(max(dot(H, V), 0.0), F0);      
-    //vec3 F    = FresnelSchlick(clamp(dot(H, V), 0.0, 1.0), F0); 
+    float NDF = DistributionGGX(N, H, roughness);
+    float G   = GeometryGGX(max(dot(N, V), 0.0), max(dot(N, L), 0.0), roughness);
+    vec3 F    = FresnelSchlick(max(dot(H, V), 0.0), F0);
     
     vec3 kS = F;
     vec3 kD = vec3(1.0) - kS;
@@ -64,7 +71,7 @@ void main()
     float NdotL = max(dot(N, L), 0.0);                
     vec3 Lo = (kD * albedo / PI + specular) * radiance * NdotL * (1.0 - shadow); 
         
-    FragColor.rgb = Lo;
+    FragColor.rgb = Lo * ao;
     // FragColor.rgb = vec3(shadow);
     FragColor.a = 1.0;
 }

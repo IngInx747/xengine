@@ -67,9 +67,6 @@
     <Filter Include="graphics\uniform_buffer">
       <UniqueIdentifier>{adb5107e-55b1-43ba-9e98-236242eed652}</UniqueIdentifier>
     </Filter>
-    <Filter Include="graphics\shadow">
-      <UniqueIdentifier>{81bba52e-abf3-4183-866a-dfc46fb19d15}</UniqueIdentifier>
-    </Filter>
     <Filter Include="graphics\capture">
       <UniqueIdentifier>{8ee1fb36-5274-4b2c-863d-35a965a78497}</UniqueIdentifier>
     </Filter>
@@ -180,12 +177,6 @@
     <ClCompile Include="graphics\light\light.cpp">
       <Filter>graphics\light</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\light\parallel_light.cpp">
-      <Filter>graphics\light</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\light\point_light.cpp">
-      <Filter>graphics\light</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\command\render_command.cpp">
       <Filter>graphics\command</Filter>
     </ClCompile>
@@ -222,17 +213,8 @@
     <ClCompile Include="camera\camera.cpp">
       <Filter>camera</Filter>
     </ClCompile>
-    <ClCompile Include="camera\eular_camera.cpp">
-      <Filter>camera</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\uniform_buffer\uniform_buffer.cpp">
       <Filter>graphics\uniform_buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\shadow\shadow.cpp">
-      <Filter>graphics\shadow</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\shadow\parallel_shadow.cpp">
-      <Filter>graphics\shadow</Filter>
     </ClCompile>
     <ClCompile Include="graphics\uniform_buffer\uniform_block.cpp">
       <Filter>graphics\uniform_buffer</Filter>
@@ -257,6 +239,15 @@
     </ClCompile>
     <ClCompile Include="graphics\renderer\motion_blur_renderer.cpp">
       <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="model\object.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\light\shadow.cpp">
+      <Filter>graphics\light</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\smart_handle.cpp">
+      <Filter>utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -371,12 +362,6 @@
     <ClInclude Include="graphics\light\light.h">
       <Filter>graphics\light</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\light\parallel_light.h">
-      <Filter>graphics\light</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\light\point_light.h">
-      <Filter>graphics\light</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\command\render_command.h">
       <Filter>graphics\command</Filter>
     </ClInclude>
@@ -413,20 +398,11 @@
     <ClInclude Include="camera\camera.h">
       <Filter>camera</Filter>
     </ClInclude>
-    <ClInclude Include="camera\eular_camera.h">
-      <Filter>camera</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\uniform_buffer\uniform_buffer.h">
       <Filter>graphics\uniform_buffer</Filter>
     </ClInclude>
     <ClInclude Include="mesh\primitive.h">
       <Filter>mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\shadow\shadow.h">
-      <Filter>graphics\shadow</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\shadow\parallel_shadow.h">
-      <Filter>graphics\shadow</Filter>
     </ClInclude>
     <ClInclude Include="graphics\uniform_buffer\uniform_block.h">
       <Filter>graphics\uniform_buffer</Filter>
@@ -451,6 +427,15 @@
     </ClInclude>
     <ClInclude Include="graphics\particle_system\particle_system.h">
       <Filter>graphics\particle_system</Filter>
+    </ClInclude>
+    <ClInclude Include="model\object.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\light\shadow.h">
+      <Filter>graphics\light</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\smart_handle.h">
+      <Filter>utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -197,6 +197,6 @@ namespace xengine
 
 		topology = GL_TRIANGLES;
 
-		CommitData();
+		CommitGpuData();
 	}
 }

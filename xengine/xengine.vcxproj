@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="camera\camera.cpp" />
-    <ClCompile Include="camera\eular_camera.cpp" />
     <ClCompile Include="geometry\aabb.cpp" />
     <ClCompile Include="geometry\frustum.cpp" />
     <ClCompile Include="graphics\capture\cubic_capture.cpp" />
@@ -28,8 +27,7 @@
     <ClCompile Include="graphics\command\render_command_manager.cpp" />
     <ClCompile Include="graphics\frame_buffer\frame_buffer.cpp" />
     <ClCompile Include="graphics\light\light.cpp" />
-    <ClCompile Include="graphics\light\parallel_light.cpp" />
-    <ClCompile Include="graphics\light\point_light.cpp" />
+    <ClCompile Include="graphics\light\shadow.cpp" />
     <ClCompile Include="graphics\material\material.cpp" />
     <ClCompile Include="graphics\material\material_manager.cpp" />
     <ClCompile Include="graphics\particle_system\particle_system.cpp" />
@@ -46,8 +44,6 @@
     <ClCompile Include="graphics\renderer\ssao_renderer.cpp" />
     <ClCompile Include="graphics\shader\shader.cpp" />
     <ClCompile Include="graphics\shader\shader_manager.cpp" />
-    <ClCompile Include="graphics\shadow\parallel_shadow.cpp" />
-    <ClCompile Include="graphics\shadow\shadow.cpp" />
     <ClCompile Include="graphics\texture\texture.cpp" />
     <ClCompile Include="graphics\texture\texture_manager.cpp" />
     <ClCompile Include="graphics\uniform_buffer\uniform_block.cpp" />
@@ -61,6 +57,7 @@
     <ClCompile Include="mesh\primitive\torus.cpp" />
     <ClCompile Include="model\model.cpp" />
     <ClCompile Include="model\model_manager.cpp" />
+    <ClCompile Include="model\object.cpp" />
     <ClCompile Include="model\skybox.cpp" />
     <ClCompile Include="scene\scene.cpp" />
     <ClCompile Include="ui\ui.cpp" />
@@ -69,6 +66,7 @@
     <ClCompile Include="utility\file_system.cpp" />
     <ClCompile Include="utility\log.cpp" />
     <ClCompile Include="utility\random.cpp" />
+    <ClCompile Include="utility\smart_handle.cpp" />
     <ClCompile Include="utility\time.cpp" />
     <ClCompile Include="vendor\glad\glad.c" />
     <ClCompile Include="vendor\imgui\imgui.cpp" />
@@ -81,7 +79,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\camera.h" />
-    <ClInclude Include="camera\eular_camera.h" />
     <ClInclude Include="geometry\aabb.h" />
     <ClInclude Include="geometry\constant.h" />
     <ClInclude Include="geometry\frustum.h" />
@@ -90,8 +87,7 @@
     <ClInclude Include="graphics\command\render_command_manager.h" />
     <ClInclude Include="graphics\frame_buffer\frame_buffer.h" />
     <ClInclude Include="graphics\light\light.h" />
-    <ClInclude Include="graphics\light\parallel_light.h" />
-    <ClInclude Include="graphics\light\point_light.h" />
+    <ClInclude Include="graphics\light\shadow.h" />
     <ClInclude Include="graphics\material\material.h" />
     <ClInclude Include="graphics\material\material_manager.h" />
     <ClInclude Include="graphics\particle_system\particle_system.h" />
@@ -108,8 +104,6 @@
     <ClInclude Include="graphics\renderer\ssao_renderer.h" />
     <ClInclude Include="graphics\shader\shader.h" />
     <ClInclude Include="graphics\shader\shader_manager.h" />
-    <ClInclude Include="graphics\shadow\parallel_shadow.h" />
-    <ClInclude Include="graphics\shadow\shadow.h" />
     <ClInclude Include="graphics\texture\texture.h" />
     <ClInclude Include="graphics\texture\texture_manager.h" />
     <ClInclude Include="graphics\uniform_buffer\uniform_block.h" />
@@ -124,6 +118,7 @@
     <ClInclude Include="mesh\primitive\torus.h" />
     <ClInclude Include="model\model.h" />
     <ClInclude Include="model\model_manager.h" />
+    <ClInclude Include="model\object.h" />
     <ClInclude Include="model\skybox.h" />
     <ClInclude Include="scene\scene.h" />
     <ClInclude Include="ui\ui.h" />
@@ -132,6 +127,7 @@
     <ClInclude Include="utility\file_system.h" />
     <ClInclude Include="utility\log.h" />
     <ClInclude Include="utility\random.h" />
+    <ClInclude Include="utility\smart_handle.h" />
     <ClInclude Include="utility\time.h" />
     <ClInclude Include="vendor\glad\glad.h" />
     <ClInclude Include="vendor\glad\khrplatform.h" />

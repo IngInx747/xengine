@@ -43,7 +43,7 @@ namespace xengine
 		if (ImGui::CollapsingHeader("Lighting Options"))
 		{
 			ImGui::Checkbox("Irradiance Probe [WIP]", &RenderConfig::_config.useIrradianceGI);
-			ImGui::Checkbox("Parallel Shadow", &RenderConfig::_config.useShadows);
+			ImGui::Checkbox("Parallel Shadow", &RenderConfig::_config.useParallelShadow);
 			ImGui::Checkbox("Pt Lights Sphere", &RenderConfig::_config.useRenderLights);
 		}
 

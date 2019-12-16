@@ -23,14 +23,15 @@ namespace xengine
 		~Mesh();
 
 		inline unsigned int VAO() const { return vao; }
+		inline unsigned int IBO() const { return ibo; }
 		inline unsigned int Topology() const { return topology; }
 		inline unsigned int& Topology() { return topology; }
 
 		// Commit all buffers and attributes to GPU for rendering
-		void CommitData(bool flag = true);
+		void CommitGpuData(bool flag = true);
 
 		// Delete all buffers stored in GPU
-		void DeleteData();
+		void DeleteGpuData();
 
 	protected:
 		void commitDataInterleaved();
@@ -53,8 +54,8 @@ namespace xengine
 	protected:
 		// OpenGL stuff
 		unsigned int vao = 0;
-		unsigned int vbo;
-		unsigned int ibo;
+		unsigned int vbo = 0;
+		unsigned int ibo = 0;
 		unsigned int topology;
 	};
 }

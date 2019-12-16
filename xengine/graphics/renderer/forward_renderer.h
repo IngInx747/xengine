@@ -5,9 +5,9 @@
 
 #include <camera/camera.h>
 
-#include "../light/parallel_light.h"
-#include "../light/point_light.h"
+#include "../light/light.h"
 #include "../command/render_command.h"
+#include "../particle_system/particle_system.h"
 
 namespace xengine
 {
@@ -17,17 +17,20 @@ namespace xengine
 		ForwardRenderer();
 
 		// generate shadow maps of all parallel lights given a scene (shadow-cast commands)
-		void GenerateShadowParallelLights(const std::vector<RenderCommand>& commands, const std::vector<ParallelLight*>& lights, Camera* camera);
+		void GenerateParallelShadow(const std::vector<RenderCommand>& commands, const std::vector<ParallelLight*>& lights, Camera* camera);
 
 		// render emissive sphere of point lights
 		void RenderEmissionPointLights(const std::vector<PointLight*>& lights, Camera* camera, float radius = -1.0f);
 
 	public:
 		// set shadow maps of all parallel lights to FORWARD commands
-		static void SetShadowParallelLights(const std::vector<ParallelLight*>& lights, const std::vector<RenderCommand>& commands);
+		static void SetParallelShadow(const std::vector<ParallelLight*>& lights, const std::vector<RenderCommand>& commands);
 
 		// render a scene (forward commands)
 		static void RenderForwardCommands(const std::vector<RenderCommand>& commands);
+
+		//
+		static void RenderParticles(const std::vector<ParticleSystem*>& particles, Camera* camera);
 
 	private:
 		Shader* m_parallelShadowShader;

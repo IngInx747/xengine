@@ -4,16 +4,12 @@
 
 #include <vector>
 #include <memory>
-#include <unordered_set>
 
-#include <utility/counter.h>
 #include <graphics/texture/texture.h>
 #include <graphics/material/material.h>
 #include <mesh/mesh.h>
 #include <model/model.h>
-#include <graphics/light/point_light.h>
-#include <graphics/light/parallel_light.h>
-#include <graphics/renderer/ibl_renderer.h>
+#include <graphics/light/light.h>
 #include <graphics/particle_system/particle_system.h>
 
 namespace xengine

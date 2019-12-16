@@ -21,4 +21,10 @@ namespace xengine
 	{
 		return std::atomic_fetch_add(&m_count, 1);
 	}
+
+	unsigned long long Counter::Decrement()
+	{
+		if (m_count == 0) return 0;
+		return std::atomic_fetch_sub(&m_count, 1);
+	}
 }

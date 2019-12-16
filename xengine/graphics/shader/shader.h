@@ -42,7 +42,7 @@ namespace xengine
 		static void Unbind();
 
 		// delete program
-		void Destory();
+		void DeleteGpuData();
 
 		// return location of uniform variable, -1 if not exist
 		int GetUniformLocation(const std::string& name);
@@ -90,6 +90,8 @@ namespace xengine
 		unsigned int m_vs = 0; // vertex shader id
 		unsigned int m_gs = 0; // geometry shader id
 		unsigned int m_fs = 0; // fragment shader id
+		unsigned int m_ts = 0; // tessellation shader id
+		unsigned int m_cs = 0; // compute shader id
 
 		std::unordered_map<std::string, VarTableEntry> m_attributeTable;
 		std::unordered_map<std::string, VarTableEntry> m_uniformTable;

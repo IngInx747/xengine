@@ -14,8 +14,10 @@ namespace xengine
 	{
 	public:
 		CubicCapture();
+		CubicCapture(const CubicCapture& other);
+		CubicCapture & operator=(const CubicCapture& other);
+
 		CubicCapture(const glm::vec3& position);
-		~CubicCapture();
 
 		// bind one face of the cube map to be active render target
 		void BindFace(unsigned int face, unsigned int mipmap = 0);

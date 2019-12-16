@@ -14,6 +14,7 @@ namespace xengine
 		void Reset();
 		unsigned long long Value();
 		unsigned long long Increment();
+		unsigned long long Decrement();
 
 	private:
 		std::atomic<unsigned long long> m_count;

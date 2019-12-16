@@ -19,7 +19,7 @@ const int ScreenWidth = 1600;
 const int ScreenHeight = 900;
 bool keysPressed[1024];
 bool keysActive[1024];
-int sceneId = 1;
+int sceneId = 2;
 
 int main(int argc, char** argv)
 {
@@ -97,6 +97,7 @@ int main(int argc, char** argv)
 			// primary render pipeline
 			mainRenderer->Render(scene.get(), mainCamera, nullptr);
 
+			// ui
 			xengine::UI::Render();
 			if (xengine::UI::IsVisible()) glfwSetInputMode(mainWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 			else glfwSetInputMode(mainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

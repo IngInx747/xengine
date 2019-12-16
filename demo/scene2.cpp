@@ -22,15 +22,19 @@ void MyScene2::Initialize()
 	xengine::Texture* hdrMap = xengine::TextureManager::LoadHDR("sky env", "textures/backgrounds/colorful_studio.hdr");
 
 	// allocate image-based lighting renderer
-	ibl = std::make_shared<xengine::IblRenderer>();
-	ibl->GenerateEnvironment(hdrMap);
-	irradianceMap = ibl->GetIrradiance();
-	reflectionMap = ibl->GetReflection();
+	fbEnvironment = xengine::IblRenderer::CreateEnvironment(hdrMap);
+	xengine::CubeMap* envMap = fbEnvironment.GetColorAttachment(0);
+
+	fbIrradiance = xengine::IblRenderer::CreateIrradiance(envMap);
+	irradianceMap = fbIrradiance.GetColorAttachment(0);
+
+	fbReflection = xengine::IblRenderer::CreateReflection(envMap);
+	reflectionMap = fbReflection.GetColorAttachment(0);
 
 	// setup skybox
 	skybox.materials[0]->RegisterUniform("lodLevel", 1.5f);
 	skybox.SetScale(glm::vec3(1e20f)); // set skybox infinitely big (model size, not the cube)
-	skybox.SetCubeMap(ibl->GetEnvironment());
+	skybox.SetCubeMap(envMap);
 
 	// light
 	dir_light.direction = glm::vec3(0.0f, -1.0f, 0.0f);
@@ -39,7 +43,7 @@ void MyScene2::Initialize()
 	dir_light.UpdateShadowView(glm::vec3(0, -3, 0));
 
 	// particle
-	firework.Initialize({ 0, 0, 0 });
+	firework.Initialize();
 
 	InsertModel(&floor);
 	InsertModel(glock17);
@@ -63,4 +67,5 @@ void MyScene2::Update(float t, float dt)
 {
 	glock17->Rotate(dt, glm::vec3(0, 1, 0));
 	glock17_armed.Rotate(dt, glm::vec3(0, 1, 0));
+	firework.SetPosition(glm::vec3(std::cosf(t), 0, std::sinf(t)) * 1.0f);
 }

@@ -71,16 +71,19 @@ void MyScene1::Initialize()
 	xengine::Texture* hdrMap = xengine::TextureManager::LoadHDR("sky env", "textures/backgrounds/alley.hdr");
 
 	// allocate image-based lighting renderer
-	ibl = std::make_shared<xengine::IblRenderer>();
-	ibl->GenerateEnvironment(hdrMap);
-	irradianceMap = ibl->GetIrradiance();
-	reflectionMap = ibl->GetReflection();
+	fbEnvironment = xengine::IblRenderer::CreateEnvironment(hdrMap);
+	xengine::CubeMap* envMap = fbEnvironment.GetColorAttachment(0);
+
+	fbIrradiance = xengine::IblRenderer::CreateIrradiance(envMap);
+	irradianceMap = fbIrradiance.GetColorAttachment(0);
+
+	fbReflection = xengine::IblRenderer::CreateReflection(envMap);
+	reflectionMap = fbReflection.GetColorAttachment(0);
 
 	// setup skybox
 	skybox.materials[0]->RegisterUniform("lodLevel", 1.5f);
 	skybox.SetScale(glm::vec3(1e20f)); // set skybox infinitely big (model size, not the cube)
-	skybox.SetCubeMap(ibl->GetEnvironment());
-	//skybox.SetCubeMap(ibl->GetIrradiance());
+	skybox.SetCubeMap(envMap);
 
 	// scene
 	InsertModel(&torus_0);

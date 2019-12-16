@@ -25,7 +25,9 @@ public:
 	std::vector<xengine::PointLight> torchLights;
 
 	// ibl
-	std::shared_ptr<xengine::IblRenderer> ibl;
+	xengine::FrameBuffer fbEnvironment;
+	xengine::FrameBuffer fbIrradiance;
+	xengine::FrameBuffer fbReflection;
 };
 
 class MyScene2 : public xengine::Scene
@@ -46,10 +48,12 @@ public:
 	xengine::ParallelLight dir_light;
 
 	//
-	xengine::ParticleSystem firework;
+	xengine::PSFirework firework;
 
 	// ibl
-	std::shared_ptr<xengine::IblRenderer> ibl;
+	xengine::FrameBuffer fbEnvironment;
+	xengine::FrameBuffer fbIrradiance;
+	xengine::FrameBuffer fbReflection;
 };
 
 #endif // !SCENES_H

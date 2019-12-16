@@ -29,7 +29,7 @@ namespace xengine
 
 		topology = GL_TRIANGLES;
 
-		CommitData();
+		CommitGpuData();
 	}
 
 	Quad::Quad(float width, float height)
@@ -56,6 +56,6 @@ namespace xengine
 
 		topology = GL_TRIANGLES;
 
-		CommitData();
+		CommitGpuData();
 	}
 }

@@ -18,7 +18,7 @@ namespace xengine
 		AABB aabb;
 
 		glm::mat4 transform;
-		glm::mat4 prevTransform;
+		glm::mat4 prevTrans;
 
 		Mesh* mesh;
 		Material* material;

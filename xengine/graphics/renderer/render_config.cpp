@@ -5,7 +5,7 @@ namespace xengine
 	RenderConfig::Config::Config()
 	{
 		useIrradianceGI = true;
-		useShadows = true;
+		useParallelShadow = true;
 		useFlashLight = true;
 		useRenderLights = true;
 		useLightVolumes = true;

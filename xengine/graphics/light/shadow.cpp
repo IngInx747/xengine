@@ -1,4 +1,4 @@
-#include "parallel_shadow.h"
+#include "shadow.h"
 
 #include <vendor/glad/glad.h>
 #include <vendor/glm/glm.hpp>
@@ -6,9 +6,21 @@
 
 #include <geometry/constant.h>
 
-
 namespace xengine
 {
+	////////////////////////////////////////////////////////////////
+	// Shadow
+	////////////////////////////////////////////////////////////////
+
+	void Shadow::Resize(unsigned int width, unsigned int height)
+	{
+		m_shadowMap.Resize(width, height);
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Shadow: Parallel Shadow
+	////////////////////////////////////////////////////////////////
+
 	ParallelShadow::ParallelShadow()
 	{
 		// shadow affecting volumn
@@ -32,7 +44,7 @@ namespace xengine
 
 		// set shadow value on the border (optional)
 		SetBorderDepth(true);
-		
+
 		// set no color will be written to the shadow frame buffer (make sure it runs a depth-only pass) (optional)
 		m_shadowMap.Bind();
 		{

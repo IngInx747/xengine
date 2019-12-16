@@ -11,7 +11,6 @@
 #include "forward_renderer.h"
 
 #include "../texture/texture_manager.h"
-#include "../particle_system/particle_system.h"
 
 
 namespace xengine
@@ -154,8 +153,8 @@ namespace xengine
 					RenderCommand command;
 					command.mesh = model->meshes[i];
 					command.material = model->materials[i];
-					command.transform = model->transform.transform;
-					command.prevTransform = model->transform.prevTransform;
+					command.transform = model->transform;
+					command.prevTrans = model->prevTrans;
 					command.aabb.BuildFromTransform(command.mesh->aabb, command.transform);
 
 					commandManager.Push(command);
@@ -226,11 +225,11 @@ namespace xengine
 		}
 
 		/// shadow maps
-		if (RenderConfig::UseShadow())
+		if (RenderConfig::UseParallelShadow())
 		{
 			std::vector<RenderCommand> commands = commandManager.ShadowCastCommands();
 
-			forwardRenderer.GenerateShadowParallelLights(commands, scene->parallelLights, camera);
+			forwardRenderer.GenerateParallelShadow(commands, scene->parallelLights, camera);
 		}
 
 		/// per-lighting pass
@@ -252,10 +251,9 @@ namespace xengine
 			m_mainCanvas->Bind(); glViewport(0, 0, m_mainCanvas->Width(), m_mainCanvas->Height());
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-			if (scene->irradianceMap && scene->reflectionMap) deferredRenderer.RenderAmbientLight(
-				scene->irradianceMap, scene->reflectionMap, ssaoRenderer.GetAO());
+			deferredRenderer.RenderAmbientLight(scene->irradianceMap, scene->reflectionMap, ssaoRenderer.GetAO());
 
-			deferredRenderer.RenderParallelLights(scene->parallelLights, camera);
+			deferredRenderer.RenderParallelLights(scene->parallelLights, camera, ssaoRenderer.GetAO());
 
 			deferredRenderer.RenderPointLights(scene->pointLights, camera);
 		}
@@ -266,7 +264,7 @@ namespace xengine
 
 			std::vector<RenderCommand> commands = commandManager.ForwardCommands(camera);
 
-			ForwardRenderer::SetShadowParallelLights(scene->parallelLights, commands);
+			ForwardRenderer::SetParallelShadow(scene->parallelLights, commands);
 
 			m_mainCanvas->Bind(); glViewport(0, 0, m_mainCanvas->Width(), m_mainCanvas->Height());
 
@@ -281,15 +279,14 @@ namespace xengine
 			if (RenderConfig::UseRenderLights())
 				forwardRenderer.RenderEmissionPointLights(scene->pointLights, camera, 0.25f);
 
-			for (ParticleSystem* ps : scene->particles)
-				ps->Render();
+			forwardRenderer.RenderParticles(scene->particles, camera);
 		}
 
 		/// alpha pass
 		{
 			std::vector<RenderCommand> commands = commandManager.AlphaCommands(camera);
 
-			ForwardRenderer::SetShadowParallelLights(scene->parallelLights, commands);
+			ForwardRenderer::SetParallelShadow(scene->parallelLights, commands);
 
 			m_mainCanvas->Bind(); glViewport(0, 0, m_mainCanvas->Width(), m_mainCanvas->Height());
 
@@ -356,13 +353,16 @@ namespace xengine
 			}
 		}
 
-		// 10. blit to default frame buffer
+		/// end of frame
 		{
 			if (target)
 				Blit(m_mainCanvas, target, GL_COLOR_BUFFER_BIT);
 			else
 				Blit(m_mainCanvas, width, height, GL_COLOR_BUFFER_BIT);
 
+			// synchronize (store result by the end of current frame)
+			Blit(m_mainCanvas, m_swapCanvas, GL_COLOR_BUFFER_BIT);
+			
 			// restore front/back buffer pointers
 			m_mainCanvas = &m_framebuffer0;
 			m_swapCanvas = &m_framebuffer1;

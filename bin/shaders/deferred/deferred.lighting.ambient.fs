@@ -23,7 +23,6 @@ uniform sampler2D TexSSAO;
 
 void main()
 {
-    // extract data from GBuffer
     vec3 worldPos   = texture(gPosition, TexCoord).xyz;
     vec3 normal     = texture(gNormal, TexCoord).xyz;
     vec3 albedo     = texture(gAlbedo, TexCoord).rgb;

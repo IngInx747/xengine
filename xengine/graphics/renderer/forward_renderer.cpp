@@ -23,7 +23,7 @@ namespace xengine
 		m_sphere = MeshManager::LoadPrimitive("sphere", 16, 8);
 	}
 
-	void ForwardRenderer::GenerateShadowParallelLights(const std::vector<RenderCommand>& commands, const std::vector<ParallelLight*>& lights, Camera* camera)
+	void ForwardRenderer::GenerateParallelShadow(const std::vector<RenderCommand>& commands, const std::vector<ParallelLight*>& lights, Camera* camera)
 	{
 		Shader* shader = m_parallelShadowShader;
 
@@ -63,7 +63,7 @@ namespace xengine
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void ForwardRenderer::SetShadowParallelLights(const std::vector<ParallelLight*>& lights, const std::vector<RenderCommand>& commands)
+	void ForwardRenderer::SetParallelShadow(const std::vector<ParallelLight*>& lights, const std::vector<RenderCommand>& commands)
 	{
 		std::unordered_set<Shader*> shaders;
 
@@ -93,7 +93,7 @@ namespace xengine
 				if (lights[i]->useShadowCast)
 				{
 					shader->Bind();
-					shader->SetUniform("ShadowsEnabled", RenderConfig::UseShadow());
+					shader->SetUniform("UseParallelShadow", RenderConfig::UseParallelShadow());
 					shader->SetUniform("lightShadowViewProjection" + std::to_string(i + 1), lights[i]->shadow.GetViewProj());
 				}
 			}
@@ -138,6 +138,18 @@ namespace xengine
 			shader->SetUniform("lightColor", glm::normalize(light->color) * light->intensity * 0.25f);
 
 			RenderMesh(sphere);
+		}
+	}
+
+	void ForwardRenderer::RenderParticles(const std::vector<ParticleSystem*>& particles, Camera* camera)
+	{
+		for (ParticleSystem* ps : particles)
+		{
+			ps->UpdateTransform();
+
+			if (!camera->IntersectFrustum(ps->aabbGlobal)) continue;
+
+			ps->Render();
 		}
 	}
 }
