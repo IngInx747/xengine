@@ -3,6 +3,7 @@
 void MyScene1::Initialize()
 {
 	// mesh
+	xengine::Mesh* plane = xengine::MeshManager::LoadPrimitive("plane");
 	xengine::Mesh* sphere = xengine::MeshManager::LoadPrimitive("sphere", 256, 128);
 	xengine::Mesh* torus = xengine::MeshManager::LoadPrimitive("torus", 32, 32, 2.0f, 0.5f);
 
@@ -10,6 +11,9 @@ void MyScene1::Initialize()
 	xengine::Shader* shdPlasma = xengine::ShaderManager::LoadVF("plasma orb", "shaders/plasma_orb.vs", "shaders/plasma_orb.fs");
 
 	// material
+	xengine::Material* mtrMetal = xengine::MaterialManager::Get("deferred no TBN"); // "normal debug" "deferred"
+	mtrMetal->RegisterTexture("TexMetallic", xengine::TextureManager::Get("white"));
+
 	//xengine::Material* mtrTorus = xengine::MaterialManager::Get("deferred"); // "normal debug" "deferred"
 	xengine::Material* mtrTorus = xengine::MaterialManager::Get("deferred no TBN"); // "normal debug" "deferred"
 
@@ -23,6 +27,10 @@ void MyScene1::Initialize()
 	mtrPlasma->RegisterUniform("Speed", 0.083f);
 
 	// model
+	plane_0.InsertMesh(plane, mtrMetal);
+	plane_0.SetPosition(glm::vec3(0, -1, 0));
+	plane_0.SetScale(glm::vec3(10.0f));
+
 	torus_0.InsertMesh(torus, mtrTorus);
 	torus_1.InsertMesh(torus, mtrTorus);
 	torus_2.InsertMesh(torus, mtrTorus);
@@ -86,6 +94,7 @@ void MyScene1::Initialize()
 	skybox.SetCubeMap(envMap);
 
 	// scene
+	InsertModel(&plane_0);
 	InsertModel(&torus_0);
 	InsertModel(&plasmaOrb);
 	InsertModel(sponza);

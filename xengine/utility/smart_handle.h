@@ -34,11 +34,11 @@ namespace xengine
 		template <class T>
 		void Register(T* ptr)
 		{
-			m_memPtr = dynamic_cast<SharedMemory*>(ptr);
+			m_sharedMemoryPtr = dynamic_cast<SharedMemory*>(ptr);
 		}
 
 	private:
-		SharedMemory* m_memPtr;
+		SharedMemory* m_sharedMemoryPtr;
 	};
 }
 

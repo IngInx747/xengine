@@ -49,6 +49,7 @@ namespace xengine
 
 		if (ImGui::CollapsingHeader("Effect Options"))
 		{
+			ImGui::Checkbox("SSR", &RenderConfig::_config.useSSR);
 			ImGui::Checkbox("SSAO", &RenderConfig::_config.useSSAO);
 			ImGui::Checkbox("Bloom", &RenderConfig::_config.useBloom);
 			ImGui::Checkbox("Motion Blur", &RenderConfig::_config.useMotionBlur);

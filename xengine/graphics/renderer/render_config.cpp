@@ -15,6 +15,7 @@ namespace xengine
 		useVignette = true;
 		useBloom = true;
 		useSSAO = true;
+		useSSR = true;
 		useTXAA = false;
 		useMotionBlur = true;
 	}

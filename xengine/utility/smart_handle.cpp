@@ -40,40 +40,40 @@ namespace xengine
 
 	SharedHandle::SharedHandle(const SharedHandle & other)
 	{
-		m_memPtr = other.m_memPtr;
-		m_memPtr->IncreaseReference();
+		m_sharedMemoryPtr = other.m_sharedMemoryPtr;
+		m_sharedMemoryPtr->IncreaseReference();
 	}
 
 	SharedHandle & SharedHandle::operator=(const SharedHandle & other)
 	{
-		if (m_memPtr)
+		if (m_sharedMemoryPtr)
 		{
-			m_memPtr->DecreaseReference();
+			m_sharedMemoryPtr->DecreaseReference();
 
-			if (m_memPtr->ReferenceCount() == 0)
+			if (m_sharedMemoryPtr->ReferenceCount() == 0)
 			{
-				delete m_memPtr;
+				delete m_sharedMemoryPtr;
 			}
 		}
 
-		m_memPtr = other.m_memPtr;
-		m_memPtr->IncreaseReference();
+		m_sharedMemoryPtr = other.m_sharedMemoryPtr;
+		m_sharedMemoryPtr->IncreaseReference();
 
 		return *this;
 	}
 
 	SharedHandle::~SharedHandle()
 	{
-		if (m_memPtr)
+		if (m_sharedMemoryPtr)
 		{
-			m_memPtr->DecreaseReference();
+			m_sharedMemoryPtr->DecreaseReference();
 
-			if (m_memPtr->ReferenceCount() == 0)
+			if (m_sharedMemoryPtr->ReferenceCount() == 0)
 			{
-				delete m_memPtr;
+				delete m_sharedMemoryPtr;
 			}
 
-			m_memPtr = nullptr;
+			m_sharedMemoryPtr = nullptr;
 		}
 	}
 }

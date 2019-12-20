@@ -172,8 +172,6 @@ namespace xengine
 	std::shared_ptr<Texture> TextureManager::loadHDR(const std::string& filename)
 	{
 		std::shared_ptr<Texture> texture = std::make_shared<Texture>();
-		texture->attribute.filterMin = GL_LINEAR;
-		texture->attribute.mipmapping = false;
 
 		if (!stbi_is_hdr(filename.c_str()))
 		{
@@ -202,6 +200,7 @@ namespace xengine
 			}
 
 			texture->Generate2D(width, height, colorFormat, pixelFormat, GL_FLOAT, data);
+			texture->SetFilterMin(GL_LINEAR);
 			stbi_image_free(data);
 		}
 		else
@@ -251,7 +250,7 @@ namespace xengine
 			}
 		}
 
-		if (texture->attribute.mipmapping) glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+		if (texture->Mipmap()) glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
 		return texture;
 	}
@@ -330,10 +329,10 @@ namespace xengine
 			}
 		}
 
+		texture->Generate2D(width, height, colorFormat, pixelFormat, GL_UNSIGNED_BYTE, &data[0]);
+
 		texture->SetFilterMin(GL_NEAREST);
 		texture->SetFilterMax(GL_NEAREST);
-
-		texture->Generate2D(width, height, colorFormat, pixelFormat, GL_UNSIGNED_BYTE, &data[0]);
 
 		return texture;
 	}

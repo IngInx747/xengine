@@ -70,7 +70,7 @@ namespace xengine
 	{
 		if (!m_shadowMap.GetDepthStencilAttachment(0)) return;
 
-		m_shadowMap.GetDepthStencilAttachment(0)->SetWrapMode(GL_CLAMP_TO_BORDER);
+		m_shadowMap.GetDepthStencilAttachment(0)->SetWrapSTR(GL_CLAMP_TO_BORDER);
 
 		m_shadowMap.GetDepthStencilAttachment(0)->Bind();
 		{

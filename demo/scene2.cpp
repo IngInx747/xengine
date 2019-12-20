@@ -3,7 +3,11 @@
 void MyScene2::Initialize()
 {
 	xengine::Mesh* plane = xengine::MeshManager::LoadPrimitive("plane");
+
 	xengine::Material* mtrPlane = xengine::MaterialManager::Get("deferred");
+	mtrPlane->RegisterTexture("TexAlbedo", xengine::TextureManager::LoadTexture2D("checkerboard", "textures/checkerboard.png", GL_RGB));
+	xengine::Material* mtrMetal = xengine::MaterialManager::Get("deferred");
+	mtrMetal->RegisterTexture("TexMetallic", xengine::TextureManager::Get("white"));
 
 	// models
 	glock17 = xengine::ModelManager::LoadFromObj("glock17", "meshes/glock17/Glock_17.obj");
@@ -14,9 +18,14 @@ void MyScene2::Initialize()
 	glock17_armed.SetPosition(glm::vec3(0.0, 0.0, -2.0));
 	glock17_armed.SetScale(glm::vec3(0.1f));
 
-	floor.InsertMesh(plane, mtrPlane);
-	floor.SetPosition(glm::vec3(0.0, -2.0, 0.0));
-	floor.SetScale(glm::vec3(10.0f));
+	floor.InsertMesh(plane, mtrMetal);
+	floor.SetPosition(glm::vec3(0.0, -10.0, 0.0));
+	floor.SetScale(glm::vec3(100.0f));
+
+	wall.InsertMesh(plane, mtrPlane);
+	wall.SetPosition(glm::vec3(0.0, 40.0, -10.0));
+	wall.SetRotation(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	wall.SetScale(glm::vec3(100.0f));
 
 	// environment capture
 	xengine::Texture* hdrMap = xengine::TextureManager::LoadHDR("sky env", "textures/backgrounds/colorful_studio.hdr");
@@ -46,6 +55,7 @@ void MyScene2::Initialize()
 	firework.Initialize();
 
 	InsertModel(&floor);
+	InsertModel(&wall);
 	InsertModel(glock17);
 	InsertModel(&glock17_armed);
 	InsertModel(&skybox);

@@ -1,7 +1,6 @@
 #ifndef BRDF_GLSL
 #define BRDF_GLSL
-// ----------------------------------------------------------------------------
-// GGX/Throwbridge-Reitz
+
 float DistributionGGX(vec3 N, vec3 H, float roughness)
 {
 	float a = roughness*roughness;
@@ -16,8 +15,6 @@ float DistributionGGX(vec3 N, vec3 H, float roughness)
 	return nom / (denom + 1e-10);
 }
 
-// ----------------------------------------------------------------------------
-// TODO(Joey): get proper names of the options/functions
 float GeometryGGXSchlick(float NdotV, float roughness)
 {
 	float r = (roughness + 1.0);
@@ -28,8 +25,7 @@ float GeometryGGXSchlick(float NdotV, float roughness)
 	
 	return nom / denom;
 }
-// ----------------------------------------------------------------------------
-// NOTE(Joey): for IBL we use a different k (see unreal course notes)
+
 float GeometryGGXSchlickIBL(float NdotV, float roughness)
 {
 	float a = roughness*roughness;
@@ -40,7 +36,7 @@ float GeometryGGXSchlickIBL(float NdotV, float roughness)
 	
 	return nom / denom;
 }
-// ----------------------------------------------------------------------------
+
 float GeometryGGX(float NdotV, float NdotL, float roughness)
 {
 	float ggx2 = GeometryGGXSchlick(NdotV, roughness);
@@ -48,7 +44,7 @@ float GeometryGGX(float NdotV, float NdotL, float roughness)
 	
 	return ggx1 * ggx2;
 }
-// ----------------------------------------------------------------------------
+
 float GeometryGGXIBL(float NdotV, float NdotL, float roughness)
 {
 	float ggx1 = GeometryGGXSchlickIBL(NdotV, roughness);
@@ -56,19 +52,20 @@ float GeometryGGXIBL(float NdotV, float NdotL, float roughness)
 	
 	return ggx1 * ggx2;
 }
-// ----------------------------------------------------------------------------
+
 vec3 FresnelSchlick(float cosTheta, vec3 F0)
 {
 	return F0 + (1.0 - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
 }
-// ----------------------------------------------------------------------------
+
 vec3 FresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
 {
 	return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
 }
-// ----------------------------------------------------------------------------
+
 vec3 FresnelSphericalGaussian(float cosTheta, vec3 F0)
 {
 	return F0 + (1.0 - F0) * pow(2.0, (-5.55473 * cosTheta - 6.98316 * cosTheta));
 }
+
 #endif

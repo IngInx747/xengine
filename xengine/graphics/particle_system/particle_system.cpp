@@ -143,9 +143,9 @@ namespace xengine
 		for (unsigned int i = 0; i < 1000; i++)
 			noises.push_back({ dice(), dice(), dice() });
 
-		m_noise.attribute.wrapS = GL_REPEAT;
-		m_noise.attribute.filterMin = GL_LINEAR;
-		m_noise.Generate1D(1000, GL_RGB, GL_RGB, GL_FLOAT, &noises[0]);
+		m_noise.Generate1D(137, GL_RGB, GL_RGB, GL_FLOAT, &noises[0]);
+		m_noise.SetWrapS(GL_REPEAT);
+		m_noise.SetFilterMin(GL_LINEAR);
 
 		m_particleTexture = TextureManager::Get("white");
 	}

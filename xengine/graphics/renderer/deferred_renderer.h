@@ -30,6 +30,9 @@ namespace xengine
 		// render deferred ambient light (Image-based lighting environment)
 		void RenderAmbientLight(CubeMap* irradiance, CubeMap* reflection, Texture * ao);
 
+		// render reflect light (Screen-space reflection)
+		void RenderReflectLight(Texture* last_frame);
+
 		inline FrameBuffer* GetFrameBuffer() { return &m_gBuffer; }
 		inline Texture* GetTexPosition() { return m_gBuffer.GetColorAttachment(0); }
 		inline Texture* GetTexNormal() { return m_gBuffer.GetColorAttachment(1); }
@@ -47,6 +50,7 @@ namespace xengine
 		Shader* m_parallelLightShader; // deferred parallel light shader
 		Shader* m_pointLightShader; // deferred point light shader
 		Shader* m_ambientLightShader; // deferred ambient light shader
+		Shader* m_reflectLightShader; // deferred reflect light shader
 
 		// related primitives
 		Mesh* m_quad; // mesh for g-buffer quad sampling (parallel light)

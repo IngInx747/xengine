@@ -2,38 +2,48 @@
 #ifndef XE_TEXTURE_H
 #define XE_TEXTURE_H
 
+#include <utility/smart_handle.h>
+
 namespace xengine
 {
-	class Texture
+	class TextureMemory : public SharedMemory
 	{
 	public:
-		struct Attribute
-		{
-			unsigned int target;      // what type of texture
-			unsigned int width;       // texture width
-			unsigned int height;      // texture height
-			unsigned int depth;       // texture depth
-			unsigned int colorFormat; // number of color components (internal format)
-			unsigned int pixelFormat; // the format each texel is stored (format)
-			unsigned int dataType;    // data format
-			unsigned int filterMin;   // what filter method to use during minification
-			unsigned int filterMax;   // what filter method to use during magnification
-			unsigned int wrapS;       // wrapping method of the S coordinate
-			unsigned int wrapT;       // wrapping method of the T coordinate
-			unsigned int wrapR;       // wrapping method of the R coordinate
-			bool mipmapping;
+		TextureMemory();
+		virtual ~TextureMemory();
 
-			Attribute();
-		};
+		// Note: As the struct holds unique resource, instance copy is not allowed
+		TextureMemory(const TextureMemory& other) = delete;
+		TextureMemory & operator=(const TextureMemory& other) = delete;
+
+		void Generate(); // allocate memory on GPU
+		void Destory(); // free memory on GPU
 
 	public:
-		Texture();
-		~Texture();
+		unsigned int m_id = 0;    // texture object
+		unsigned int target;      // what type of texture
+		unsigned int width = 0;   // texture width
+		unsigned int height = 0;  // texture height
+		unsigned int depth = 0;   // texture depth
+		unsigned int colorFormat; // number of color components (internal format)
+		unsigned int pixelFormat; // the format each texel is stored (format)
+		unsigned int dataType;    // data format
+		unsigned int filterMin;   // what filter method to use during minification
+		unsigned int filterMax;   // what filter method to use during magnification
+		unsigned int wrapS;       // wrapping method of the S coordinate
+		unsigned int wrapT;       // wrapping method of the T coordinate
+		unsigned int wrapR;       // wrapping method of the R coordinate
+		bool mipmapping;
+	};
 
-		inline unsigned int ID() const { return m_id; }
-		inline unsigned int Width() const { return attribute.width; }
-		inline unsigned int Height() const { return attribute.height; }
-		inline unsigned int Depth() const { return attribute.depth; }
+	class Texture : public SharedHandle
+	{
+	public:
+		Texture();
+		virtual ~Texture();
+
+		Texture(const Texture& other);
+		Texture & operator=(const Texture& other);
 
 		// bind texture, activate texture in shaders if unit is given
 		void Bind(int unit = -1);
@@ -60,20 +70,33 @@ namespace xengine
 		void GenerateCube(unsigned int width, unsigned int height, unsigned int format, unsigned int data_type, unsigned int face, unsigned char* data);
 
 		// update relevant texture state
-		void SetWrapMode(unsigned int wrapMode);
 		void SetFilterMin(unsigned int filter);
 		void SetFilterMax(unsigned int filter);
+		void SetWrapSTR(unsigned int wrapMode);
+		void SetWrapS(unsigned int wrapMode);
+		void SetWrapT(unsigned int wrapMode);
+		void SetWrapR(unsigned int wrapMode);
+		void SetMipmap(bool mipmap);
 
-		void EnableMipmap();
-
-		// delete data from memory
-		void DeleteGpuData();
-
-	public:
-		Attribute attribute;
+		inline unsigned int ID() const { return m_ptr->m_id; }
+		inline unsigned int Target() const { return m_ptr->target; }
+		inline unsigned int Width() const { return m_ptr->width; }
+		inline unsigned int Height() const { return m_ptr->height; }
+		inline unsigned int Depth() const { return m_ptr->depth; }
+		inline unsigned int FilterMin() const { return m_ptr->filterMin; }
+		inline unsigned int FilterMax() const { return m_ptr->filterMax; }
+		inline unsigned int WrapS() const { return m_ptr->wrapS; }
+		inline unsigned int WrapT() const { return m_ptr->wrapT; }
+		inline unsigned int WrapR() const { return m_ptr->wrapR; }
+		inline bool Mipmap() const { return m_ptr->mipmapping; }
 
 	private:
-		unsigned int m_id = 0;
+		void allocateMemory(); // allocate shared memory
+		void generateObject(); // generate OGL object
+		void generate();
+
+	private:
+		TextureMemory* m_ptr = nullptr;
 	};
 
 	using CubeMap = Texture;

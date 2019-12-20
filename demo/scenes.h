@@ -13,6 +13,7 @@ public:
 
 public:
 	// models
+	xengine::Model plane_0;
 	xengine::Model torus_0;
 	xengine::Model torus_1;
 	xengine::Model torus_2;
@@ -43,6 +44,7 @@ public:
 	xengine::Model glock17_armed;
 	xengine::Skybox skybox;
 	xengine::Model floor;
+	xengine::Model wall;
 
 	// lights
 	xengine::ParallelLight dir_light;

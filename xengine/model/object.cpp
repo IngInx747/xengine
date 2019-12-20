@@ -21,9 +21,9 @@ namespace xengine
 		dirty = true;
 	}
 
-	void GeometryObject::SetRotation(float angle, const glm::vec3& axis)
+	void GeometryObject::SetRotation(float radians, const glm::vec3& axis)
 	{
-		rotation = glm::rotate(glm::quat{}, angle, axis);
+		rotation = glm::rotate(glm::quat{}, radians, axis);
 		dirty = true;
 	}
 
@@ -39,9 +39,9 @@ namespace xengine
 		dirty = true;
 	}
 
-	void GeometryObject::Rotate(float angle, const glm::vec3& axis)
+	void GeometryObject::Rotate(float radians, const glm::vec3& axis)
 	{
-		rotation = glm::rotate(rotation, angle, axis);
+		rotation = glm::rotate(rotation, radians, axis);
 		dirty = true;
 	}
 

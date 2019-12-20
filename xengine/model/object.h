@@ -16,14 +16,14 @@ namespace xengine
 
 		// set transform
 		virtual void SetPosition(const glm::vec3& position);
-		virtual void SetRotation(float angle, const glm::vec3& axis);
+		virtual void SetRotation(float radians, const glm::vec3& axis);
 		virtual void SetScale(const glm::vec3& scale);
 
 		// make a displacement based on current position
 		virtual void Move(const glm::vec3& position);
 
 		// make a rotation based on current posture
-		virtual void Rotate(float angle, const glm::vec3& axis);
+		virtual void Rotate(float radians, const glm::vec3& axis);
 
 		// make a scaling based on current size
 		virtual void Scale(const glm::vec3& scale);

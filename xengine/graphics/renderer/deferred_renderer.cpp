@@ -63,6 +63,14 @@ namespace xengine
 		m_pointLightShader->SetUniform("gPbrParam", 3);
 		m_pointLightShader->Unbind();
 
+		m_reflectLightShader = ShaderManager::LoadVF("deferred reflect", "shaders/deferred/deferred.quad.vs", "shaders/deferred/deferred.lighting.reflect.fs");
+		m_reflectLightShader->Bind();
+		m_reflectLightShader->SetUniform("gPosition", 0);
+		m_reflectLightShader->SetUniform("gNormal", 1);
+		m_reflectLightShader->SetUniform("gPbrParam", 2);
+		m_reflectLightShader->SetUniform("LastImage", 3);
+		m_reflectLightShader->Unbind();
+
 		m_quad = MeshManager::LoadPrimitive("quad");
 		m_sphere = MeshManager::LoadPrimitive("sphere", 16, 8);
 	}
@@ -125,13 +133,13 @@ namespace xengine
 
 		Shader* shader = m_parallelLightShader;
 
-		shader->Bind();
-		shader->SetUniform("UseParallelShadow", RenderConfig::UseParallelShadow());
-		shader->SetUniform("UseSSAO", RenderConfig::UseSSAO());
-
 		OglStatus::SetDepthTest(GL_FALSE);
 		OglStatus::SetBlend(GL_TRUE);
 		OglStatus::SetBlendFunc(GL_ONE, GL_ONE);
+
+		shader->Bind();
+		shader->SetUniform("UseParallelShadow", RenderConfig::UseParallelShadow());
+		shader->SetUniform("UseSSAO", RenderConfig::UseSSAO());
 
 		for (ParallelLight* light : lights)
 		{
@@ -145,11 +153,11 @@ namespace xengine
 			RenderMesh(m_quad);
 		}
 
+		shader->Unbind();
+
 		OglStatus::SetBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 		OglStatus::SetBlend(GL_FALSE);
 		OglStatus::SetDepthTest(GL_TRUE);
-
-		shader->Unbind();
 	}
 
 	void DeferredRenderer::RenderPointLights(const std::vector<PointLight*>& lights, Camera * camera)
@@ -161,8 +169,6 @@ namespace xengine
 
 		Shader* shader = m_pointLightShader;
 
-		shader->Bind();
-
 		OglStatus::SetDepthTest(GL_FALSE);
 		OglStatus::SetBlend(GL_TRUE);
 		OglStatus::SetBlendFunc(GL_ONE, GL_ONE);
@@ -170,6 +176,8 @@ namespace xengine
 		// Note: We only render the back hemisphere, instead of the front one.
 		// If we render the front one, lighting will fail when observer enters light volumn.
 		OglStatus::SetCullFace(GL_FRONT);
+
+		shader->Bind();
 
 		for (PointLight* light : lights)
 		{
@@ -188,13 +196,13 @@ namespace xengine
 			RenderMesh(m_sphere);
 		}
 
+		shader->Unbind();
+
 		OglStatus::SetCullFace(GL_BACK);
 
 		OglStatus::SetBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 		OglStatus::SetBlend(GL_FALSE);
 		OglStatus::SetDepthTest(GL_TRUE);
-
-		shader->Unbind();
 	}
 
 	void DeferredRenderer::RenderAmbientLight(CubeMap * irradiance, CubeMap * reflection, Texture * ao)
@@ -210,12 +218,43 @@ namespace xengine
 
 		Shader* shader = m_ambientLightShader;
 
+		OglStatus::SetDepthTest(GL_FALSE);
+		OglStatus::SetBlend(GL_TRUE);
+		OglStatus::SetBlendFunc(GL_ONE, GL_ONE);
+
 		shader->Bind();
 		shader->SetUniform("UseSSAO", RenderConfig::UseSSAO());
-		shader->SetUniform("UseSSR", RenderConfig::UseSSR());
 
 		RenderMesh(m_quad);
 
 		shader->Unbind();
+
+		OglStatus::SetBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+		OglStatus::SetBlend(GL_FALSE);
+		OglStatus::SetDepthTest(GL_TRUE);
+	}
+
+	void DeferredRenderer::RenderReflectLight(Texture * last_frame)
+	{
+		GetTexPosition()->Bind(0); // gPositionMetallic
+		GetTexNormal()->Bind(1); // gNormalRoughness
+		GetTexPbrParam()->Bind(2); // gPbrParam
+		last_frame->Bind(3); // LastImage
+
+		Shader* shader = m_reflectLightShader;
+
+		OglStatus::SetDepthTest(GL_FALSE);
+		OglStatus::SetBlend(GL_TRUE);
+		OglStatus::SetBlendFunc(GL_ONE, GL_ONE);
+
+		shader->Bind();
+
+		RenderMesh(m_quad);
+
+		shader->Unbind();
+
+		OglStatus::SetBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+		OglStatus::SetBlend(GL_FALSE);
+		OglStatus::SetDepthTest(GL_TRUE);
 	}
 }

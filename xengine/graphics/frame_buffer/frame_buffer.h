@@ -30,19 +30,16 @@ namespace xengine
 		unsigned int height = 0;
 		unsigned int fbo = 0; // frame buffer object
 		unsigned int rbo = 0; // render buffer object (optional)
-		std::vector<std::shared_ptr<Texture>> attachments; // texture attachments
-		std::vector<Texture*> colors; // color attachments
-		std::vector<Texture*> depths; // depth / depth-stencil attachments
+		std::vector<Texture> colors; // color attachments
+		std::vector<Texture> depths; // depth / depth-stencil attachments
 	};
 
 	class FrameBuffer : public SharedHandle
 	{
 	public:
 		FrameBuffer();
-		~FrameBuffer();
+		virtual ~FrameBuffer();
 
-		// Note: Instance copy is disabled.
-		// GPU data handle should exist in only one instance.
 		FrameBuffer(const FrameBuffer& other);
 		FrameBuffer & operator=(const FrameBuffer& other);
 
@@ -103,24 +100,10 @@ namespace xengine
 		inline unsigned int Height() const { return m_ptr->height; }
 
 	private:
-		FrameBufferMemory* m_ptr = nullptr;
+		void generate();
 
-		// fbo (frame buffer object)
-		//unsigned int m_fbo = 0;
-		//
-		//// rbo (render buffer object)
-		//unsigned int m_rbo = 0; // optional
-		//
-		//// texture attachments
-		//std::vector<std::shared_ptr<Texture>> m_attachments;
-		//
-		//// color attachments
-		//std::vector<Texture*> m_colors;
-		//
-		//// depth / depth-stencil attachments
-		//std::vector<Texture*> m_depths;
-		//unsigned int width;
-		//unsigned int height;
+	private:
+		FrameBufferMemory* m_ptr = nullptr;
 	};
 }
 

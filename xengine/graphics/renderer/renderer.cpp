@@ -68,7 +68,7 @@ namespace xengine
 			unsigned int size;
 			unsigned int offset = 0;
 
-			size = static_cast<unsigned int>(sizeof(glm::mat4) * 4 + sizeof(glm::vec4) * 4);
+			size = static_cast<unsigned int>(sizeof(glm::mat4) * 6 + sizeof(glm::vec4) * 4);
 			blockCamera.Register(&ubCamera);
 			blockCamera.SetBlock(offset, size);
 			offset += size;
@@ -105,6 +105,8 @@ namespace xengine
 		blockCamera.CommitData(camera->GetProjection() * camera->GetPrevView());
 		blockCamera.CommitData(camera->GetProjection());
 		blockCamera.CommitData(camera->GetView());
+		blockCamera.CommitData(glm::inverse(camera->GetProjection()));
+		blockCamera.CommitData(glm::inverse(camera->GetView()));
 
 		blockCamera.CommitData(camera->GetPosition());
 		blockCamera.CommitData(camera->GetForward());
@@ -251,6 +253,8 @@ namespace xengine
 			m_mainCanvas->Bind(); glViewport(0, 0, m_mainCanvas->Width(), m_mainCanvas->Height());
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
+			if (RenderConfig::UseSSR()) deferredRenderer.RenderReflectLight(m_swapCanvas->GetColorAttachment(0));
+
 			deferredRenderer.RenderAmbientLight(scene->irradianceMap, scene->reflectionMap, ssaoRenderer.GetAO());
 
 			deferredRenderer.RenderParallelLights(scene->parallelLights, camera, ssaoRenderer.GetAO());
@@ -355,17 +359,20 @@ namespace xengine
 
 		/// end of frame
 		{
-			if (target)
-				Blit(m_mainCanvas, target, GL_COLOR_BUFFER_BIT);
-			else
-				Blit(m_mainCanvas, width, height, GL_COLOR_BUFFER_BIT);
-
 			// synchronize (store result by the end of current frame)
 			Blit(m_mainCanvas, m_swapCanvas, GL_COLOR_BUFFER_BIT);
 			
 			// restore front/back buffer pointers
 			m_mainCanvas = &m_framebuffer0;
 			m_swapCanvas = &m_framebuffer1;
+
+			// blit final result
+			// Note: This step MUST be done at the END of rendering as the target frame buffer
+			// is bound to DRAW after that.
+			if (target)
+				Blit(m_mainCanvas, target, GL_COLOR_BUFFER_BIT); // blit to assigned frame buffer
+			else
+				Blit(m_mainCanvas, width, height, GL_COLOR_BUFFER_BIT); // blit to default frame buffer
 		}
 	}
 }

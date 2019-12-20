@@ -109,7 +109,7 @@ namespace xengine
 
 		CubeMap* cubeMap = capture.captures.GetColorAttachment(0);
 		cubeMap->SetFilterMin(GL_LINEAR_MIPMAP_LINEAR);
-		cubeMap->EnableMipmap();
+		cubeMap->SetMipmap(true);
 
 		for (unsigned int mip = 0; mip < 5; ++mip)
 		{

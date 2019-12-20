@@ -24,6 +24,8 @@ uniform vec3 gVelocityOriginal;
 uniform vec3 gGrativityAccel;
 uniform sampler1D gRandomTexture;
 
+const int NumNoiseSample = 137;
+
 #define PARTICLE_TYPE_LAUNCHER 0
 #define PARTICLE_TYPE_SHELL 1
 #define PARTICLE_TYPE_SECONDARY_SHELL 2
@@ -43,7 +45,7 @@ void main()
     {
         if (Age >= gLauncherLifetime)
         {
-            float coord = (gTime % 1000) * 0.001;
+            float coord = (gTime % NumNoiseSample) * 0.001;
             vec3 Dir = GetRandomDir(coord);
             Dir.y = max(Dir.y, 0.5);
 
@@ -88,7 +90,7 @@ void main()
             {
                 for (int i = 0 ; i < 10 ; i++)
                 {
-                    float coord = ((gTime + i * i) % 1000) * 0.001;
+                    float coord = ((gTime + i * i) % NumNoiseSample) * 0.001;
                     vec3 Dir = GetRandomDir(coord);
 
                     Position1 = Position0[0];

@@ -160,7 +160,7 @@ namespace xengine
 			material->type = Material::DEFERRED;
 			material->RegisterTexture("TexAlbedo", TextureManager::Get("chessboard"));
 			material->RegisterTexture("TexNormal", TextureManager::Get("normal"));
-			material->RegisterTexture("TexMetallic", TextureManager::Get("black")); // default: perfect metallic
+			material->RegisterTexture("TexMetallic", TextureManager::Get("black")); // default: no metallic
 			material->RegisterTexture("TexRoughness", TextureManager::Get("chessboard"));
 			material->RegisterTexture("TexAO", TextureManager::Get("white")); // default: no AO
 
