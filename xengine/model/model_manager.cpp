@@ -7,7 +7,7 @@
 #include <geometry/constant.h>
 #include <utility/log.h>
 #include <mesh/mesh_manager.h>
-#include <graphics/material/material_manager.h>
+#include <graphics/material_manager.h>
 
 namespace xengine
 {

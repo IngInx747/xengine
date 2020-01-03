@@ -4,8 +4,8 @@
 
 #include <memory>
 
-#include <graphics/shader/shader.h>
-#include <graphics/texture/texture.h>
+#include <graphics/shader.h>
+#include <graphics/texture.h>
 
 #include "model.h"
 

@@ -1,11 +1,42 @@
 #pragma once
-#ifndef XE_MESH_COMMON_H
-#define XE_MESH_COMMON_H
+#ifndef XE_MESH_PRIMITIVE_H
+#define XE_MESH_PRIMITIVE_H
 
-#include "primitive/quad.h"
-#include "primitive/cube.h"
-#include "primitive/plane.h"
-#include "primitive/sphere.h"
-#include "primitive/torus.h"
+#include "mesh.h"
 
-#endif // !XE_MESH_COMMON_H
+namespace xengine
+{
+	class Quad : public Mesh
+	{
+	public:
+		Quad();
+		Quad(float width, float height);
+	};
+
+	class Plane : public Mesh
+	{
+	public:
+		Plane();
+		//Plane(unsigned int xseg, unsigned int yseg);
+	};
+
+	class Cube : public Mesh
+	{
+	public:
+		Cube();
+	};
+
+	class Sphere : public Mesh
+	{
+	public:
+		Sphere(unsigned int xseg, unsigned int yseg);
+	};
+
+	class Torus : public Mesh
+	{
+	public:
+		Torus(unsigned int xseg, unsigned int yseg, float r1, float r2);
+	};
+}
+
+#endif // !XE_MESH_PRIMITIVE_H

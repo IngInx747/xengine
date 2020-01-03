@@ -5,12 +5,12 @@
 #include <vector>
 #include <memory>
 
-#include <graphics/texture/texture.h>
-#include <graphics/material/material.h>
+#include <graphics/texture.h>
+#include <graphics/material.h>
 #include <mesh/mesh.h>
 #include <model/model.h>
-#include <graphics/light/light.h>
-#include <graphics/particle_system/particle_system.h>
+#include <graphics/light.h>
+#include <graphics/particle_system.h>
 
 namespace xengine
 {

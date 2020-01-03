@@ -15,11 +15,11 @@
 #include <model/model_manager.h>
 #include <scene/scene.h>
 #include <camera/camera.h>
-#include <graphics/shader/shader_manager.h>
-#include <graphics/texture/texture_manager.h>
-#include <graphics/material/material_manager.h>
-#include <graphics/renderer/renderer.h>
-#include <graphics/renderer/ibl_renderer.h>
+#include <graphics/shader_manager.h>
+#include <graphics/texture_manager.h>
+#include <graphics/material_manager.h>
+#include <graphics/renderer.h>
+#include <graphics/ibl_renderer.h>
 #include <ui/ui.h>
 
 namespace xengine

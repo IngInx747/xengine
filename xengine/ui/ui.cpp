@@ -2,7 +2,7 @@
 
 #include <vendor/GLFW/glfw3.h>
 
-#include <graphics/renderer/render_config.h>
+#include <graphics/render_config.h>
 
 namespace xengine
 {

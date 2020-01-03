@@ -4,7 +4,7 @@
 #include <vendor/glm/glm.hpp>
 
 #include <mesh/mesh_manager.h>
-#include <graphics/material/material_manager.h>
+#include <graphics/material_manager.h>
 
 namespace xengine
 {

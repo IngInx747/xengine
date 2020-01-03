@@ -123,7 +123,7 @@ void main()
     vec3 pbrParam = texture(gPbrParam, TexCoord).rgb;
     float metallic = pbrParam.r;
     float roughness = pbrParam.g;
-    if (metallic < 0.01) discard;
+    if (metallic < 0.5) discard;
 
     vec3 worldPos = texture(gPosition, TexCoord).xyz;
     vec3 worldNor = texture(gNormal, TexCoord).xyz;
@@ -137,7 +137,7 @@ void main()
     vec4 screenSpacePos = viewProjection * vec4(worldPos, 1.0);
     float spec = screenSpacePos.z / screenSpacePos.w;
     vec3 jitt = mix(vec3(0.0), vec3(WorldSpaceHash(worldPos)), spec);
-    float noise_factor = 0.01 + roughness * 0.05; // basic + enhancement
+    float noise_factor = 0.0001 + roughness * 0.05; // basic + enhancement
 
     // Ray tracing
     vec3 ray_org = worldPos;

@@ -28,9 +28,6 @@
     <Filter Include="geometry">
       <UniqueIdentifier>{19032a0a-e4e8-4894-ac06-ad5b17f4e143}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mesh\primitive">
-      <UniqueIdentifier>{d9607d5e-6c7d-4623-bdf1-9b69b3a12002}</UniqueIdentifier>
-    </Filter>
     <Filter Include="graphics\platform">
       <UniqueIdentifier>{ed7a2836-27eb-4d5b-9843-3740009cf6b1}</UniqueIdentifier>
     </Filter>
@@ -117,42 +114,6 @@
     <ClCompile Include="mesh\mesh.cpp">
       <Filter>mesh</Filter>
     </ClCompile>
-    <ClCompile Include="mesh\primitive\cube.cpp">
-      <Filter>mesh\primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh\primitive\plane.cpp">
-      <Filter>mesh\primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh\primitive\quad.cpp">
-      <Filter>mesh\primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh\primitive\sphere.cpp">
-      <Filter>mesh\primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh\primitive\torus.cpp">
-      <Filter>mesh\primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\material\material.cpp">
-      <Filter>graphics\material</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\material\material_manager.cpp">
-      <Filter>graphics\material</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\shader\shader.cpp">
-      <Filter>graphics\shader</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\shader\shader_manager.cpp">
-      <Filter>graphics\shader</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\texture\texture.cpp">
-      <Filter>graphics\texture</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\texture\texture_manager.cpp">
-      <Filter>graphics\texture</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\platform\ogl_status.cpp">
-      <Filter>graphics\platform</Filter>
-    </ClCompile>
     <ClCompile Include="scene\scene.cpp">
       <Filter>scene</Filter>
     </ClCompile>
@@ -171,59 +132,11 @@
     <ClCompile Include="model\model_manager.cpp">
       <Filter>model</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\frame_buffer\frame_buffer.cpp">
-      <Filter>graphics\frame_buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\light\light.cpp">
-      <Filter>graphics\light</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\command\render_command.cpp">
-      <Filter>graphics\command</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\command\render_command_manager.cpp">
-      <Filter>graphics\command</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\renderer\renderer.cpp">
-      <Filter>graphics\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\renderer\general_renderer.cpp">
-      <Filter>graphics\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\renderer\deferred_renderer.cpp">
-      <Filter>graphics\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\renderer\forward_renderer.cpp">
-      <Filter>graphics\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\renderer\ssao_renderer.cpp">
-      <Filter>graphics\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\renderer\bloom_renderer.cpp">
-      <Filter>graphics\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\renderer\post_renderer.cpp">
-      <Filter>graphics\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\renderer\render_config.cpp">
-      <Filter>graphics\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="xengine.cpp">
       <Filter>xengine</Filter>
     </ClCompile>
     <ClCompile Include="camera\camera.cpp">
       <Filter>camera</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\uniform_buffer\uniform_buffer.cpp">
-      <Filter>graphics\uniform_buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\uniform_buffer\uniform_block.cpp">
-      <Filter>graphics\uniform_buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\capture\cubic_capture.cpp">
-      <Filter>graphics\capture</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\renderer\ibl_renderer.cpp">
-      <Filter>graphics\renderer</Filter>
     </ClCompile>
     <ClCompile Include="ui\ui.cpp">
       <Filter>ui</Filter>
@@ -234,20 +147,98 @@
     <ClCompile Include="vendor\imgui\imgui_impl_opengl3.cpp">
       <Filter>vendor\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\particle_system\particle_system.cpp">
-      <Filter>graphics\particle_system</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\renderer\motion_blur_renderer.cpp">
-      <Filter>graphics\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="model\object.cpp">
       <Filter>model</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\light\shadow.cpp">
-      <Filter>graphics\light</Filter>
-    </ClCompile>
     <ClCompile Include="utility\smart_handle.cpp">
       <Filter>utility</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\bloom_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\deferred_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\downsample_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\forward_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\gaussian_blur_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\general_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\ibl_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\motion_blur_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\post_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\ssao_renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\cubic_capture.cpp">
+      <Filter>graphics\capture</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\render_command.cpp">
+      <Filter>graphics\command</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\render_command_manager.cpp">
+      <Filter>graphics\command</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\frame_buffer.cpp">
+      <Filter>graphics\frame_buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\light.cpp">
+      <Filter>graphics\light</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\shadow.cpp">
+      <Filter>graphics\light</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\material.cpp">
+      <Filter>graphics\material</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\material_manager.cpp">
+      <Filter>graphics\material</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\particle_system.cpp">
+      <Filter>graphics\particle_system</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\ogl_status.cpp">
+      <Filter>graphics\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\uniform_block.cpp">
+      <Filter>graphics\uniform_buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\uniform_buffer.cpp">
+      <Filter>graphics\uniform_buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\texture.cpp">
+      <Filter>graphics\texture</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\texture_manager.cpp">
+      <Filter>graphics\texture</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\shader.cpp">
+      <Filter>graphics\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\shader_manager.cpp">
+      <Filter>graphics\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\renderer.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\render_config.cpp">
+      <Filter>graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh\primitive.cpp">
+      <Filter>mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -302,42 +293,6 @@
     <ClInclude Include="geometry\constant.h">
       <Filter>geometry</Filter>
     </ClInclude>
-    <ClInclude Include="mesh\primitive\cube.h">
-      <Filter>mesh\primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh\primitive\plane.h">
-      <Filter>mesh\primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh\primitive\quad.h">
-      <Filter>mesh\primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh\primitive\sphere.h">
-      <Filter>mesh\primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh\primitive\torus.h">
-      <Filter>mesh\primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\material\material.h">
-      <Filter>graphics\material</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\material\material_manager.h">
-      <Filter>graphics\material</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\shader\shader.h">
-      <Filter>graphics\shader</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\shader\shader_manager.h">
-      <Filter>graphics\shader</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\texture\texture.h">
-      <Filter>graphics\texture</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\texture\texture_manager.h">
-      <Filter>graphics\texture</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\platform\ogl_status.h">
-      <Filter>graphics\platform</Filter>
-    </ClInclude>
     <ClInclude Include="scene\scene.h">
       <Filter>scene</Filter>
     </ClInclude>
@@ -356,62 +311,14 @@
     <ClInclude Include="model\model_manager.h">
       <Filter>model</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\frame_buffer\frame_buffer.h">
-      <Filter>graphics\frame_buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\light\light.h">
-      <Filter>graphics\light</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\command\render_command.h">
-      <Filter>graphics\command</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\command\render_command_manager.h">
-      <Filter>graphics\command</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\renderer\renderer.h">
-      <Filter>graphics\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\renderer\general_renderer.h">
-      <Filter>graphics\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\renderer\deferred_renderer.h">
-      <Filter>graphics\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\renderer\forward_renderer.h">
-      <Filter>graphics\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\renderer\ssao_renderer.h">
-      <Filter>graphics\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\renderer\bloom_renderer.h">
-      <Filter>graphics\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\renderer\post_renderer.h">
-      <Filter>graphics\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\renderer\render_config.h">
-      <Filter>graphics\renderer</Filter>
-    </ClInclude>
     <ClInclude Include="xengine.h">
       <Filter>xengine</Filter>
     </ClInclude>
     <ClInclude Include="camera\camera.h">
       <Filter>camera</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\uniform_buffer\uniform_buffer.h">
-      <Filter>graphics\uniform_buffer</Filter>
-    </ClInclude>
     <ClInclude Include="mesh\primitive.h">
       <Filter>mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\uniform_buffer\uniform_block.h">
-      <Filter>graphics\uniform_buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\capture\cubic_capture.h">
-      <Filter>graphics\capture</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\renderer\ibl_renderer.h">
-      <Filter>graphics\renderer</Filter>
     </ClInclude>
     <ClInclude Include="ui\ui.h">
       <Filter>ui</Filter>
@@ -422,20 +329,95 @@
     <ClInclude Include="vendor\imgui\imgui_impl_opengl3.h">
       <Filter>vendor\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\renderer\motion_blur_renderer.h">
-      <Filter>graphics\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\particle_system\particle_system.h">
-      <Filter>graphics\particle_system</Filter>
-    </ClInclude>
     <ClInclude Include="model\object.h">
       <Filter>model</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\light\shadow.h">
-      <Filter>graphics\light</Filter>
-    </ClInclude>
     <ClInclude Include="utility\smart_handle.h">
       <Filter>utility</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\bloom_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\deferred_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\downsample_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\forward_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gaussian_blur_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\general_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\ibl_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\motion_blur_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\post_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\ssao_renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\cubic_capture.h">
+      <Filter>graphics\capture</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\render_command.h">
+      <Filter>graphics\command</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\render_command_manager.h">
+      <Filter>graphics\command</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\frame_buffer.h">
+      <Filter>graphics\frame_buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\light.h">
+      <Filter>graphics\light</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\shadow.h">
+      <Filter>graphics\light</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\material.h">
+      <Filter>graphics\material</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\material_manager.h">
+      <Filter>graphics\material</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\particle_system.h">
+      <Filter>graphics\particle_system</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\ogl_status.h">
+      <Filter>graphics\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\uniform_buffer.h">
+      <Filter>graphics\uniform_buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\uniform_block.h">
+      <Filter>graphics\uniform_buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\texture_manager.h">
+      <Filter>graphics\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\texture.h">
+      <Filter>graphics\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\shader_manager.h">
+      <Filter>graphics\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\shader.h">
+      <Filter>graphics\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\renderer.h">
+      <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\render_config.h">
+      <Filter>graphics\renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

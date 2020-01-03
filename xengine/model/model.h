@@ -9,7 +9,7 @@
 #include <vendor/glm/gtc/quaternion.hpp>
 
 #include <mesh/mesh.h>
-#include <graphics/material/material.h>
+#include <graphics/material.h>
 
 #include "object.h"
 
