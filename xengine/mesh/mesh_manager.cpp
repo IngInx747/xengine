@@ -33,11 +33,11 @@ namespace xengine
 
 	void MeshManager::Clear()
 	{
-		ClearScene();
+		ClearLocal();
 		ClearPrimitives();
 	}
 
-	void MeshManager::ClearScene()
+	void MeshManager::ClearLocal()
 	{
 		_meshTable.clear();
 		_meshes.clear();

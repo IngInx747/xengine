@@ -18,10 +18,16 @@ namespace xengine
 	{
 	public:
 		Scene();
+		~Scene();
 
-		virtual void Initialize() {}
-		virtual void Clear() {}
-		virtual void Update(float t, float dt) {}
+		// load resources required by the scene
+		virtual void Initialize();
+
+		// clear resources owned by the scene
+		virtual void Clear();
+
+		// update scene
+		virtual void Update(float t, float dt);
 
 		// model
 		void InsertModel(Model* model, bool isStill = false);
@@ -33,8 +39,6 @@ namespace xengine
 
 		// particle
 		void AddParticle(ParticleSystem* particle);
-
-	private:
 
 	public:
 		// all models in the scene
@@ -52,8 +56,8 @@ namespace xengine
 		std::vector<ParticleSystem*> particles;
 
 		// ambient (IBL) (bad practice to put a big module in general scene class)
-		CubeMap* irradianceMap;
-		CubeMap* reflectionMap;
+		CubeMap irradianceMap;
+		CubeMap reflectionMap;
 	};
 }
 

@@ -33,8 +33,8 @@ namespace xengine
 		static void RenderParticles(const std::vector<ParticleSystem*>& particles, Camera* camera);
 
 	private:
-		Shader* m_parallelShadowShader;
-		Shader* m_volumnLightShader;
+		Shader m_parallelShadowShader;
+		Shader m_volumnLightShader;
 
 		Mesh* m_sphere;
 	};

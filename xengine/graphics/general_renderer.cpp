@@ -18,7 +18,7 @@ namespace xengine
 
 	void RenderMesh(Mesh * mesh, Material * material)
 	{
-		material->shader->Bind();
+		material->shader.Bind();
 
 		// flush all active ogl settings
 		material->UpdateOglStatus(); // note: OglStatus may lock to prevent from being modified

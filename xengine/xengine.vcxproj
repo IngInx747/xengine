@@ -25,10 +25,8 @@
     <ClCompile Include="graphics\bloom_renderer.cpp" />
     <ClCompile Include="graphics\cubic_capture.cpp" />
     <ClCompile Include="graphics\deferred_renderer.cpp" />
-    <ClCompile Include="graphics\downsample_renderer.cpp" />
     <ClCompile Include="graphics\forward_renderer.cpp" />
     <ClCompile Include="graphics\frame_buffer.cpp" />
-    <ClCompile Include="graphics\gaussian_blur_renderer.cpp" />
     <ClCompile Include="graphics\general_renderer.cpp" />
     <ClCompile Include="graphics\ibl_renderer.cpp" />
     <ClCompile Include="graphics\light.cpp" />
@@ -83,10 +81,8 @@
     <ClInclude Include="graphics\bloom_renderer.h" />
     <ClInclude Include="graphics\cubic_capture.h" />
     <ClInclude Include="graphics\deferred_renderer.h" />
-    <ClInclude Include="graphics\downsample_renderer.h" />
     <ClInclude Include="graphics\forward_renderer.h" />
     <ClInclude Include="graphics\frame_buffer.h" />
-    <ClInclude Include="graphics\gaussian_blur_renderer.h" />
     <ClInclude Include="graphics\general_renderer.h" />
     <ClInclude Include="graphics\ibl_renderer.h" />
     <ClInclude Include="graphics\light.h" />

@@ -45,13 +45,13 @@ namespace xengine
 		m_target.Resize(width, height);
 	}
 
-	void MotionBlurRenderer::Generate(Texture * gPosition, Camera* camera)
+	void MotionBlurRenderer::Generate(const Texture & gPosition, Camera* camera)
 	{
 		m_target.Bind();
 		glViewport(0, 0, m_target.Width(), m_target.Height());
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		gPosition->Bind(0); // TexSrc
+		gPosition.Bind(0); // TexSrc
 
 		m_captureShader.Bind();
 		m_captureShader.SetUniform("camPos", camera->GetPosition());
@@ -69,10 +69,10 @@ namespace xengine
 		m_target.Unbind();
 	}
 
-	void MotionBlurRenderer::Render(Texture * source)
+	void MotionBlurRenderer::Render(const Texture & source)
 	{
-		source->Bind(0); // TexSrc
-		m_target.GetColorAttachment(0)->Bind(1); // TexMotion
+		source.Bind(0); // TexSrc
+		m_target.GetColorAttachment(0).Bind(1); // TexMotion
 
 		m_postShader.Bind();
 
@@ -81,7 +81,7 @@ namespace xengine
 		m_postShader.Unbind();
 	}
 
-	void MotionBlurRenderer::AttachMotion(Texture * source)
+	void MotionBlurRenderer::AttachMotion(const Texture & source)
 	{
 		m_target.Bind();
 		glViewport(0, 0, m_target.Width(), m_target.Height());
@@ -90,7 +90,7 @@ namespace xengine
 		OglStatus::SetBlend(GL_TRUE);
 		OglStatus::SetBlendFunc(GL_ONE, GL_ONE);
 
-		source->Bind(0); // TexSrc
+		source.Bind(0); // TexSrc
 
 		m_blitShader.Bind();
 

@@ -38,7 +38,7 @@ namespace xengine
 		}
 
 	private:
-		SharedMemory* m_sharedMemoryPtr;
+		SharedMemory* m_sharedMemoryPtr = nullptr;
 	};
 }
 

@@ -1,5 +1,7 @@
 #include "frame_buffer.h"
 
+#include <cassert>
+
 #include <vendor/glad/glad.h>
 
 #include <utility/log.h>
@@ -75,27 +77,47 @@ namespace xengine
 		return *this;
 	}
 
-	void FrameBuffer::generate()
+	void FrameBuffer::allocateMemory()
 	{
 		if (m_ptr) return;
 
 		m_ptr = new FrameBufferMemory;
-
 		SharedHandle::Register(m_ptr);
+	}
 
+	void FrameBuffer::generateObject()
+	{
 		m_ptr->Generate();
 	}
 
-	Texture* FrameBuffer::GetColorAttachment(unsigned int i)
+	void FrameBuffer::generate()
 	{
-		if (i >= m_ptr->colors.size()) return nullptr;
-		return &m_ptr->colors[i];
+		allocateMemory();
+		generateObject();
 	}
 
-	Texture* FrameBuffer::GetDepthStencilAttachment(unsigned int i)
+	Texture & FrameBuffer::GetColorAttachment(unsigned int i)
 	{
-		if (i >= m_ptr->depths.size()) return nullptr;
-		return &m_ptr->depths[i];
+		assert(i < m_ptr->colors.size());
+		return m_ptr->colors[i];
+	}
+
+	const Texture & FrameBuffer::GetColorAttachment(unsigned int i) const
+	{
+		assert(i < m_ptr->colors.size());
+		return m_ptr->colors[i];
+	}
+
+	Texture & FrameBuffer::GetDepthStencilAttachment(unsigned int i)
+	{
+		assert(i < m_ptr->depths.size());
+		return m_ptr->depths[i];
+	}
+
+	const Texture & FrameBuffer::GetDepthStencilAttachment(unsigned int i) const
+	{
+		assert(i < m_ptr->depths.size());
+		return m_ptr->depths[i];
 	}
 
 	void FrameBuffer::Bind()

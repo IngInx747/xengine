@@ -13,32 +13,38 @@ namespace xengine
 	// Util
 	////////////////////////////////////////////////////////////////
 
-	static void bloom_blur_pingpong_op(Texture* src, FrameBuffer* dst, FrameBuffer* medium, Shader* shader, Mesh* quad, unsigned int count)
+	static void bloom_blur_pingpong_op(
+		const Texture & src,
+		FrameBuffer & dst,
+		FrameBuffer & medium,
+		Shader & shader,
+		Mesh* quad,
+		unsigned int count)
 	{
 		// pick pre-defined render targets for blur based on render size
-		FrameBuffer* rt_horizontal = medium;
+		FrameBuffer& rt_horizontal = medium;
 
 		// use destination as vertical render target of ping-pong algorithm
-		FrameBuffer* rt_vertical = dst;
+		FrameBuffer& rt_vertical = dst;
 
-		glViewport(0, 0, dst->Width(), dst->Height());
+		glViewport(0, 0, dst.Width(), dst.Height());
 
 		bool flag = true; // last is horizontal
-		shader->Bind();
+		shader.Bind();
 
 		for (unsigned int i = 0; i < count; ++i, flag = !flag)
 		{
-			shader->SetUniform("bHorizontal", flag);
+			shader.SetUniform("bHorizontal", flag);
 
 			if (i == 0)
-				src->Bind(0);
+				src.Bind(0);
 			else if (flag)
-				rt_vertical->GetColorAttachment(0)->Bind(0);
+				rt_vertical.GetColorAttachment(0).Bind(0);
 			else
-				rt_horizontal->GetColorAttachment(0)->Bind(0);
+				rt_horizontal.GetColorAttachment(0).Bind(0);
 
-			if (flag) rt_horizontal->Bind();
-			else rt_vertical->Bind();
+			if (flag) rt_horizontal.Bind();
+			else rt_vertical.Bind();
 
 			RenderMesh(quad);
 		}
@@ -118,34 +124,34 @@ namespace xengine
 		m_origin.Resize(w2, h2);
 	}
 
-	void BloomRenderer::Generate(Texture * source)
+	void BloomRenderer::Generate(const Texture & source)
 	{
 		m_origin.Bind();
 		glViewport(0, 0, m_origin.Width(), m_origin.Height());
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		source->Bind(0); // TexSrc
+		source.Bind(0); // TexSrc
 
 		m_filterShader.Bind();
 
 		RenderMesh(m_quad);
-		bloom_blur_pingpong_op(m_origin.GetColorAttachment(0), &m_target0, &m_medium0, &m_blurShader, m_quad, 8);
-		bloom_blur_pingpong_op(m_output0, &m_target1, &m_medium1, &m_blurShader, m_quad, 8);
-		bloom_blur_pingpong_op(m_output1, &m_target2, &m_medium2, &m_blurShader, m_quad, 8);
-		bloom_blur_pingpong_op(m_output2, &m_target3, &m_medium3, &m_blurShader, m_quad, 8);
+		bloom_blur_pingpong_op(m_origin.GetColorAttachment(0), m_target0, m_medium0, m_blurShader, m_quad, 8);
+		bloom_blur_pingpong_op(m_output0, m_target1, m_medium1, m_blurShader, m_quad, 8);
+		bloom_blur_pingpong_op(m_output1, m_target2, m_medium2, m_blurShader, m_quad, 8);
+		bloom_blur_pingpong_op(m_output2, m_target3, m_medium3, m_blurShader, m_quad, 8);
 
 		m_filterShader.Unbind();
 
 		m_origin.Unbind(); // also unbind all other frame buffers used in this pass
 	}
 
-	void BloomRenderer::Render(Texture * source)
+	void BloomRenderer::Render(const Texture & source)
 	{
-		source->Bind(0); // TexSrc
-		m_output0->Bind(1);
-		m_output1->Bind(2);
-		m_output2->Bind(3);
-		m_output3->Bind(4);
+		source.Bind(0); // TexSrc
+		m_output0.Bind(1);
+		m_output1.Bind(2);
+		m_output2.Bind(3);
+		m_output3.Bind(4);
 
 		m_postShader.Bind();
 

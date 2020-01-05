@@ -16,13 +16,13 @@ namespace xengine
 		SSAORenderer();
 
 		// get ambient occlusion result
-		inline Texture* GetAO() { return m_output; }
+		inline const Texture & GetAO() { return m_output; }
 
 		// resize frame buffer
 		void Resize(unsigned int width, unsigned int height);
 
 		// generate the ambient occlusion layout
-		void Generate(Texture* gPosition, Texture* gNormal, Camera* camera);
+		void Generate(const Texture & gPosition, const Texture & gNormal, Camera* camera);
 
 	private:
 		// render target(s)
@@ -32,7 +32,7 @@ namespace xengine
 		Shader m_shader;
 
 		// render result(s)
-		Texture* m_output;
+		Texture m_output;
 
 		// related mesh(es)
 		Mesh* m_quad;

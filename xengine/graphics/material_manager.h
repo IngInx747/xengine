@@ -13,16 +13,23 @@ namespace xengine
 	class MaterialManager
 	{
 	public:
+		// initialize shader manager (load default resources)
 		static void Initialize();
+
+		// clear resources
 		static void Clear();
-		static void ClearScene();
-		static void ClearDefault();
+
+		// clear local resources (loaded with scene)
+		static void ClearLocal();
+
+		// clear global resources (default resources or shared by multiple scenes)
+		static void ClearGlobal();
 
 		// load a anonymous material into scene-specific resources
-		static Material* Load(Shader* shader);
+		static Material* Load(const Shader& shader);
 
 		// load a named material into scene-specific resources
-		static Material* Load(const std::string& name, Shader* shader);
+		static Material* Load(const std::string& name, const Shader& shader);
 
 		// search for a named material loaded previously (if not exist, search in default resources)
 		static Material* Get(const std::string& name);
@@ -37,7 +44,7 @@ namespace xengine
 		static Material* LoadFromModel(aiMaterial* aMaterial, const std::string& directory, aiMesh* aMesh);
 
 	private:
-		static std::shared_ptr<Material> loadMaterial(Shader* shader);
+		static std::shared_ptr<Material> loadMaterial(const Shader& shader);
 
 		static void generateDefaultMaterial();
 
@@ -48,6 +55,7 @@ namespace xengine
 		// lookup tables
 		static std::unordered_map<std::string, Material*> _materialTable;
 
+	private:
 		// material templates
 		static std::vector<std::shared_ptr<Material>> _defaultMaterials;
 

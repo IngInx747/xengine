@@ -17,7 +17,7 @@ namespace xengine
 		materials[0] = MaterialManager::Get("skybox");
 	}
 
-	void Skybox::SetCubeMap(CubeMap* cubemap)
+	void Skybox::SetCubeMap(const CubeMap& cubemap)
 	{
 		materials[0]->RegisterTexture("background", cubemap);
 	}

@@ -12,23 +12,23 @@
 
 namespace xengine
 {
-	Shader* IblRenderer::_environmentCaptureShader = nullptr; // convert HDR environment 2D texture to environment cubemap
-	Shader* IblRenderer::_irradianceCaptureShader = nullptr; // generate the irradiance cubemap from environment cubemap
-	Shader* IblRenderer::_reflectionCaptureShader = nullptr; // generate the reflection cubemap from environment cubemap
+	Shader IblRenderer::_environmentCaptureShader; // convert HDR environment 2D texture to environment cubemap
+	Shader IblRenderer::_irradianceCaptureShader; // generate the irradiance cubemap from environment cubemap
+	Shader IblRenderer::_reflectionCaptureShader; // generate the reflection cubemap from environment cubemap
 
 	Mesh* IblRenderer::_quad = nullptr;
 	Mesh* IblRenderer::_cube = nullptr;
 	Mesh* IblRenderer::_sphere = nullptr;
 
-	Texture* IblRenderer::_brdfIntegrationMap = nullptr;
+	Texture IblRenderer::_brdfIntegrationMap;
 	FrameBuffer IblRenderer::_brdfIntegrationMapBuffer;
 
 	void IblRenderer::Initialize()
 	{
 		// shaders
-		_environmentCaptureShader = ShaderManager::LoadVF("pbr:environment", "shaders/pbr/pbr.sampler.cube.vs", "shaders/pbr/pbr.environment.fs");
-		_irradianceCaptureShader = ShaderManager::LoadVF("pbr:irradiance", "shaders/pbr/pbr.sampler.cube.vs", "shaders/pbr/pbr.capture.irradiance.fs");
-		_reflectionCaptureShader = ShaderManager::LoadVF("pbr:reflection", "shaders/pbr/pbr.sampler.cube.vs", "shaders/pbr/pbr.capture.reflection.fs");
+		_environmentCaptureShader = ShaderManager::LoadGlobalVF("pbr:environment", "shaders/pbr/pbr.sampler.cube.vs", "shaders/pbr/pbr.environment.fs");
+		_irradianceCaptureShader = ShaderManager::LoadGlobalVF("pbr:irradiance", "shaders/pbr/pbr.sampler.cube.vs", "shaders/pbr/pbr.capture.irradiance.fs");
+		_reflectionCaptureShader = ShaderManager::LoadGlobalVF("pbr:reflection", "shaders/pbr/pbr.sampler.cube.vs", "shaders/pbr/pbr.capture.reflection.fs");
 
 		// meshes
 		_quad = MeshManager::LoadPrimitive("quad");
@@ -39,7 +39,7 @@ namespace xengine
 		generateNormalRoughnessLookup();
 	}
 
-	FrameBuffer IblRenderer::CreateEnvironment(Texture * environment)
+	FrameBuffer IblRenderer::CreateEnvironment(const Texture& environment)
 	{
 		Material material(_environmentCaptureShader);
 		material.RegisterTexture("environment", environment);
@@ -57,10 +57,10 @@ namespace xengine
 
 			Camera* camera = &capture.cameras[i];
 
-			material.shader->Bind();
-			material.shader->SetUniform("projection", camera->GetProjection());
-			material.shader->SetUniform("view", camera->GetView());
-			material.shader->SetUniform("camPos", camera->GetPosition());
+			material.shader.Bind();
+			material.shader.SetUniform("projection", camera->GetProjection());
+			material.shader.SetUniform("view", camera->GetView());
+			material.shader.SetUniform("camPos", camera->GetPosition());
 
 			RenderMesh(_cube, &material);
 		}
@@ -68,7 +68,7 @@ namespace xengine
 		return capture.captures;
 	}
 
-	FrameBuffer IblRenderer::CreateIrradiance(CubeMap * environment)
+	FrameBuffer IblRenderer::CreateIrradiance(const CubeMap& environment)
 	{
 		Material material(_irradianceCaptureShader);
 		material.RegisterTexture("environment", environment);
@@ -86,10 +86,10 @@ namespace xengine
 
 			Camera* camera = &capture.cameras[i];
 
-			material.shader->Bind();
-			material.shader->SetUniform("projection", camera->GetProjection());
-			material.shader->SetUniform("view", camera->GetView());
-			material.shader->SetUniform("camPos", camera->GetPosition());
+			material.shader.Bind();
+			material.shader.SetUniform("projection", camera->GetProjection());
+			material.shader.SetUniform("view", camera->GetView());
+			material.shader.SetUniform("camPos", camera->GetPosition());
 
 			RenderMesh(_cube, &material);
 		}
@@ -97,7 +97,7 @@ namespace xengine
 		return capture.captures;
 	}
 
-	FrameBuffer IblRenderer::CreateReflection(CubeMap * environment)
+	FrameBuffer IblRenderer::CreateReflection(const CubeMap& environment)
 	{
 		Material material(_reflectionCaptureShader);
 		material.RegisterTexture("environment", environment);
@@ -107,9 +107,9 @@ namespace xengine
 		CubicCapture capture;
 		capture.GenerateCubeMap(128);
 
-		CubeMap* cubeMap = capture.captures.GetColorAttachment(0);
-		cubeMap->SetFilterMin(GL_LINEAR_MIPMAP_LINEAR);
-		cubeMap->SetMipmap(true);
+		CubeMap & cubeMap = capture.captures.GetColorAttachment(0);
+		cubeMap.SetFilterMin(GL_LINEAR_MIPMAP_LINEAR);
+		cubeMap.SetMipmap(true);
 
 		for (unsigned int mip = 0; mip < 5; ++mip)
 		{
@@ -126,10 +126,10 @@ namespace xengine
 
 				Camera* camera = &capture.cameras[i];
 
-				material.shader->Bind();
-				material.shader->SetUniform("projection", camera->GetProjection());
-				material.shader->SetUniform("view", camera->GetView());
-				material.shader->SetUniform("camPos", camera->GetPosition());
+				material.shader.Bind();
+				material.shader.SetUniform("projection", camera->GetProjection());
+				material.shader.SetUniform("view", camera->GetView());
+				material.shader.SetUniform("camPos", camera->GetPosition());
 
 				RenderMesh(_cube, &material);
 			}
@@ -148,9 +148,9 @@ namespace xengine
 		glViewport(0, 0, _brdfIntegrationMapBuffer.Width(), _brdfIntegrationMapBuffer.Height());
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		Shader *shader = ShaderManager::LoadVF("pbr:integration", "shaders/pbr/pbr.sampler.quad.vs", "shaders/pbr/pbr.brdf_integration.fs");
+		Shader shader = ShaderManager::LoadGlobalVF("pbr:integration", "shaders/pbr/pbr.sampler.quad.vs", "shaders/pbr/pbr.brdf_integration.fs");
 
-		shader->Bind();
+		shader.Bind();
 
 		RenderMesh(_quad);
 

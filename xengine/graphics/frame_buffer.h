@@ -59,16 +59,18 @@ namespace xengine
 		void BindCubeMapFaceDepthAttachment(unsigned int attachment_id, unsigned int face);
 
 		// unbind / bind to default frame buffer
-		static void Unbind();
+		void Unbind();
 
 		// resize buffer, re-allocate memory for attachments
 		void Resize(unsigned int width, unsigned int height);
 
 		// get i-th color attachment, null if not available
-		Texture* GetColorAttachment(unsigned int i);
+		Texture & GetColorAttachment(unsigned int i);
+		const Texture & GetColorAttachment(unsigned int i) const;
 
 		// get depth / depth-stencil attachment, null if not available
-		Texture* GetDepthStencilAttachment(unsigned int i);
+		Texture & GetDepthStencilAttachment(unsigned int i);
+		const Texture & GetDepthStencilAttachment(unsigned int i) const;
 
 		// 2D
 
@@ -95,14 +97,18 @@ namespace xengine
 		// generate cube map depth attachment alone (for point light shadow map)
 		void GenerateCubeMapDepthAttachment(unsigned int width, unsigned int height, unsigned int data_type, unsigned int num_attachment = 1);
 
+		explicit operator bool() const { return m_ptr && m_ptr->fbo; }
+
 		inline unsigned int ID() const { return m_ptr->fbo; }
 		inline unsigned int Width() const { return m_ptr->width; }
 		inline unsigned int Height() const { return m_ptr->height; }
 
-	private:
+	protected:
+		void allocateMemory(); // allocate shared memory
+		void generateObject(); // generate OGL object
 		void generate();
 
-	private:
+	protected:
 		FrameBufferMemory* m_ptr = nullptr;
 	};
 }

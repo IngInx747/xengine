@@ -8,7 +8,6 @@ class MyScene1 : public xengine::Scene
 {
 public:
 	void Initialize();
-	void Clear();
 	void Update(float t, float dt);
 
 public:
@@ -35,7 +34,6 @@ class MyScene2 : public xengine::Scene
 {
 public:
 	void Initialize();
-	void Clear();
 	void Update(float t, float dt);
 
 public:

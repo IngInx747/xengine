@@ -28,11 +28,11 @@ void MyScene2::Initialize()
 	wall.SetScale(glm::vec3(100.0f));
 
 	// environment capture
-	xengine::Texture* hdrMap = xengine::TextureManager::LoadHDR("sky env", "textures/backgrounds/colorful_studio.hdr");
+	xengine::Texture hdrMap = xengine::TextureManager::LoadHDR("sky env", "textures/backgrounds/colorful_studio.hdr");
 
 	// allocate image-based lighting renderer
 	fbEnvironment = xengine::IblRenderer::CreateEnvironment(hdrMap);
-	xengine::CubeMap* envMap = fbEnvironment.GetColorAttachment(0);
+	xengine::CubeMap envMap = fbEnvironment.GetColorAttachment(0);
 
 	fbIrradiance = xengine::IblRenderer::CreateIrradiance(envMap);
 	irradianceMap = fbIrradiance.GetColorAttachment(0);
@@ -63,14 +63,6 @@ void MyScene2::Initialize()
 	AddLight(&dir_light);
 
 	AddParticle(&firework);
-}
-
-void MyScene2::Clear()
-{
-	xengine::ModelManager::ClearScene();
-	xengine::MeshManager::ClearScene();
-	xengine::MaterialManager::ClearScene();
-	xengine::TextureManager::ClearScene();
 }
 
 void MyScene2::Update(float t, float dt)

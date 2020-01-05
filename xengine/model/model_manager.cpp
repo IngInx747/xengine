@@ -24,17 +24,17 @@ namespace xengine
 
 	void ModelManager::Clear()
 	{
-		ClearScene();
-		ClearDefault();
+		ClearLocal();
+		ClearGlobal();
 	}
 
-	void ModelManager::ClearScene()
+	void ModelManager::ClearLocal()
 	{
 		_modelTable.clear();
 		_models.clear();
 	}
 
-	void ModelManager::ClearDefault()
+	void ModelManager::ClearGlobal()
 	{
 		_defaultModelTable.clear();
 		_defaultModels.clear();

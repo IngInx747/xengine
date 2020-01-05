@@ -25,13 +25,13 @@ namespace xengine
 		void Resize(unsigned int width, unsigned int height);
 
 		// generate effect
-		void Generate(Texture* source, Camera* camera);
+		void Generate(const Texture & source, Camera* camera);
 
 		// cast effect onto target
-		void Render(Texture* source);
+		void Render(const Texture & source);
 
 		// attach another motion texture
-		void AttachMotion(Texture* source);
+		void AttachMotion(const Texture & source);
 
 	private:
 		// result buffer(s)

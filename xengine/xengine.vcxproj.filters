@@ -159,13 +159,7 @@
     <ClCompile Include="graphics\deferred_renderer.cpp">
       <Filter>graphics\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\downsample_renderer.cpp">
-      <Filter>graphics\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\forward_renderer.cpp">
-      <Filter>graphics\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\gaussian_blur_renderer.cpp">
       <Filter>graphics\renderer</Filter>
     </ClCompile>
     <ClCompile Include="graphics\general_renderer.cpp">
@@ -341,13 +335,7 @@
     <ClInclude Include="graphics\deferred_renderer.h">
       <Filter>graphics\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\downsample_renderer.h">
-      <Filter>graphics\renderer</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\forward_renderer.h">
-      <Filter>graphics\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\gaussian_blur_renderer.h">
       <Filter>graphics\renderer</Filter>
     </ClInclude>
     <ClInclude Include="graphics\general_renderer.h">

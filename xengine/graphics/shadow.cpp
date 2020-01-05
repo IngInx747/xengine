@@ -70,14 +70,14 @@ namespace xengine
 	{
 		if (!m_shadowMap.GetDepthStencilAttachment(0)) return;
 
-		m_shadowMap.GetDepthStencilAttachment(0)->SetWrapSTR(GL_CLAMP_TO_BORDER);
+		m_shadowMap.GetDepthStencilAttachment(0).SetWrapSTR(GL_CLAMP_TO_BORDER);
 
-		m_shadowMap.GetDepthStencilAttachment(0)->Bind();
+		m_shadowMap.GetDepthStencilAttachment(0).Bind();
 		{
 			float depth = flag ? 1.0f : 0.0f;
 			float borderColor[] = { depth, depth, depth, depth };
 			glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 		}
-		m_shadowMap.GetDepthStencilAttachment(0)->Unbind();
+		m_shadowMap.GetDepthStencilAttachment(0).Unbind();
 	}
 }

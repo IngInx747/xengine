@@ -19,7 +19,7 @@ namespace xengine
 			m_deferredCommands.begin(),
 			m_deferredCommands.end(),
 			[](const RenderCommand& a, const RenderCommand& b) {
-			return a.material->shader->ID() < b.material->shader->ID();
+			return a.material->shader.ID() < b.material->shader.ID();
 		});
 
 		// custom shader
@@ -27,7 +27,7 @@ namespace xengine
 			m_forwardCommands.begin(),
 			m_forwardCommands.end(),
 			[](const RenderCommand& a, const RenderCommand& b) {
-			return a.material->shader->ID() < b.material->shader->ID();
+			return a.material->shader.ID() < b.material->shader.ID();
 		});
 	}
 

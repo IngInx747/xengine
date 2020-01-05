@@ -1,8 +1,35 @@
 #include "scene.h"
 
+#include <graphics/shader_manager.h>
+#include <graphics/texture_manager.h>
+#include <graphics/material_manager.h>
+#include <mesh/mesh_manager.h>
+#include <model/model_manager.h>
+
 namespace xengine
 {
 	Scene::Scene()
+	{
+	}
+
+	Scene::~Scene()
+	{
+	}
+
+	void Scene::Initialize()
+	{
+	}
+
+	void Scene::Clear()
+	{
+		ModelManager::ClearLocal();
+		MeshManager::ClearLocal();
+		MaterialManager::ClearLocal();
+		TextureManager::ClearLocal();
+		ShaderManager::ClearLocal();
+	}
+
+	void Scene::Update(float t, float dt)
 	{
 	}
 

@@ -44,7 +44,7 @@ namespace xengine
 
 		virtual void SetPosition(const glm::vec3& position);
 
-		void SetParticleTexture(Texture* texture) { m_particleTexture = texture; }
+		void SetParticleTexture(const Texture& texture);
 
 	private:
 		void updateParticles();
@@ -63,7 +63,7 @@ namespace xengine
 		Shader m_particleRenderShader; // render particles with billboarding
 		Shader m_particleUpdateShader; // calculate particles
 
-		Texture* m_particleTexture; // texture on every particle
+		Texture m_particleTexture; // texture on every particle
 		Texture m_noise; // random noise
 	};
 }

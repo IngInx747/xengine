@@ -18,15 +18,19 @@ namespace xengine
 {
 	ForwardRenderer::ForwardRenderer()
 	{
-		m_parallelShadowShader = ShaderManager::LoadVF("shadow directional", "shaders/shadow_cast.vs", "shaders/shadow_cast.fs");
-		m_volumnLightShader = ShaderManager::LoadVF("volumn light", "shaders/light.vs", "shaders/light.fs");
+		m_parallelShadowShader.AttachVertexShader(ReadShaderSource("shaders/shadow_cast.vs"));
+		m_parallelShadowShader.AttachFragmentShader(ReadShaderSource("shaders/shadow_cast.fs"));
+		m_parallelShadowShader.GenerateAndLink();
+
+		m_volumnLightShader.AttachVertexShader(ReadShaderSource("shaders/light.vs"));
+		m_volumnLightShader.AttachFragmentShader(ReadShaderSource("shaders/light.fs"));
+		m_volumnLightShader.GenerateAndLink();
+
 		m_sphere = MeshManager::LoadPrimitive("sphere", 16, 8);
 	}
 
 	void ForwardRenderer::GenerateParallelShadow(const std::vector<RenderCommand>& commands, const std::vector<ParallelLight*>& lights, Camera* camera)
 	{
-		Shader* shader = m_parallelShadowShader;
-
 		OglStatus::SetCullFace(GL_FRONT); // no need to render front-facing triangles
 
 		for (ParallelLight* light : lights)
@@ -44,16 +48,16 @@ namespace xengine
 			glViewport(0, 0, shadow.GetFrameBuffer()->Width(), shadow.GetFrameBuffer()->Height());
 			glClear(GL_DEPTH_BUFFER_BIT); // each light's framebuffer need be refreshed per frame
 
-			shader->Bind();
-			shader->SetUniform("projection", shadow.GetProj());
-			shader->SetUniform("view", shadow.GetView());
+			m_parallelShadowShader.Bind();
+			m_parallelShadowShader.SetUniform("projection", shadow.GetProj());
+			m_parallelShadowShader.SetUniform("view", shadow.GetView());
 
 			// we only care about depth info so we don't use RenderCommand(...) which is more expensive
 			for (const RenderCommand& command : commands)
 			{
 				if (!light->shadow.GetCamera()->IntersectFrustum(command.aabb)) continue;
 
-				shader->SetUniform("model", command.transform);
+				m_parallelShadowShader.SetUniform("model", command.transform);
 				RenderMesh(command.mesh);
 			}
 		}
@@ -82,7 +86,7 @@ namespace xengine
 				}
 
 				// find out relevant shaders
-				shaders.insert(material->shader);
+				shaders.insert(&material->shader);
 			}
 		}
 
@@ -107,8 +111,8 @@ namespace xengine
 			Material* material = command.material;
 			Mesh* mesh = command.mesh;
 
-			material->shader->Bind();
-			material->shader->SetUniform("model", command.transform);
+			material->shader.Bind();
+			material->shader.SetUniform("model", command.transform);
 
 			RenderMesh(mesh, material);
 		}
@@ -116,10 +120,9 @@ namespace xengine
 
 	void ForwardRenderer::RenderEmissionPointLights(const std::vector<PointLight*>& lights, Camera* camera, float radius)
 	{
-		Shader* shader = m_volumnLightShader;
 		Mesh* sphere = m_sphere;
 
-		shader->Bind();
+		m_volumnLightShader.Bind();
 
 		for (PointLight* light : lights)
 		{
@@ -134,8 +137,8 @@ namespace xengine
 			glm::mat4 scale = glm::scale(glm::mat4{}, glm::vec3(volumnRadius));
 			model = translate * scale;
 
-			shader->SetUniform("model", model);
-			shader->SetUniform("lightColor", glm::normalize(light->color) * light->intensity * 0.25f);
+			m_volumnLightShader.SetUniform("model", model);
+			m_volumnLightShader.SetUniform("lightColor", glm::normalize(light->color) * light->intensity * 0.25f);
 
 			RenderMesh(sphere);
 		}

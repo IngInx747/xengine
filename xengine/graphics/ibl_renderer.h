@@ -23,31 +23,31 @@ namespace xengine
 		static void Initialize();
 
 		// generate environment cube map from given 2D HDR environment texture
-		static FrameBuffer CreateEnvironment(Texture* environment);
+		static FrameBuffer CreateEnvironment(const Texture& environment);
 
 		// generate irradiance cube map from captured environment cube map
-		static FrameBuffer CreateIrradiance(CubeMap* environment);
+		static FrameBuffer CreateIrradiance(const CubeMap& environment);
 
 		// generate reflection cube map from captured environment cube map
-		static FrameBuffer CreateReflection(CubeMap* environment);
+		static FrameBuffer CreateReflection(const CubeMap& environment);
 
-		static Texture* GetBrdfIntegrationMap() { return _brdfIntegrationMap; }
+		static const Texture & GetBrdfIntegrationMap() { return _brdfIntegrationMap; }
 
 	private:
 		static void generateNormalRoughnessLookup();
 
 	private:
 		// related shaders
-		static Shader* _environmentCaptureShader; // convert HDR environment 2D texture to environment cubemap
-		static Shader* _irradianceCaptureShader; // generate the irradiance cubemap from environment cubemap
-		static Shader* _reflectionCaptureShader; // generate the reflection cubemap from environment cubemap
+		static Shader _environmentCaptureShader; // convert HDR environment 2D texture to environment cubemap
+		static Shader _irradianceCaptureShader; // generate the irradiance cubemap from environment cubemap
+		static Shader _reflectionCaptureShader; // generate the reflection cubemap from environment cubemap
 
 		// related meshes
 		static Mesh* _quad;
 		static Mesh* _cube;
 		static Mesh* _sphere;
 
-		static Texture* _brdfIntegrationMap; // pre-calculated normal-roughness lookup texture
+		static Texture _brdfIntegrationMap; // pre-calculated normal-roughness lookup texture
 		static FrameBuffer _brdfIntegrationMapBuffer; // pre-calculated normal-roughness lookup frame buffer
 	};
 }

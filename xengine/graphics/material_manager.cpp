@@ -26,39 +26,39 @@ namespace xengine
 
 	void MaterialManager::Clear()
 	{
-		ClearScene();
-		ClearDefault();
+		ClearLocal();
+		ClearGlobal();
 	}
 
-	void MaterialManager::ClearScene()
+	void MaterialManager::ClearLocal()
 	{
 		_materialTable.clear();
 		_materials.clear();
 	}
 
-	void MaterialManager::ClearDefault()
+	void MaterialManager::ClearGlobal()
 	{
 		_defaultMaterialTable.clear();
 		_defaultMaterials.clear();
 	}
 
-	Material* MaterialManager::Load(Shader* shader)
+	Material* MaterialManager::Load(const Shader& shader)
 	{
 		std::shared_ptr<Material> material = loadMaterial(shader);
 
 		if (!material)
 		{
-			Log::Message("[MaterialManager] Material \"" + std::to_string(shader->ID()) + "\" loading failed", Log::ERROR);
+			Log::Message("[MaterialManager] Material \"" + std::to_string(shader.ID()) + "\" loading failed", Log::ERROR);
 			return nullptr;
 		}
 
-		Log::Message("[MaterialManager] Material \"" + std::to_string(shader->ID()) + "\" loaded successfully", Log::INFO);
+		Log::Message("[MaterialManager] Material \"" + std::to_string(shader.ID()) + "\" loaded successfully", Log::INFO);
 		_materials.push_back(material);
 
 		return material.get();
 	}
 
-	Material* MaterialManager::Load(const std::string& name, Shader* shader)
+	Material* MaterialManager::Load(const std::string& name, const Shader& shader)
 	{
 		// search for scene-specific resources
 		auto it = _materialTable.find(name);
@@ -124,7 +124,7 @@ namespace xengine
 		return CopyFromOther(material);
 	}
 
-	std::shared_ptr<Material> MaterialManager::loadMaterial(Shader* shader)
+	std::shared_ptr<Material> MaterialManager::loadMaterial(const Shader& shader)
 	{
 		std::shared_ptr<Material> material = std::make_shared<Material>(shader);
 		return material;
@@ -136,7 +136,7 @@ namespace xengine
 		{
 			std::string name{ "deferred" };
 
-			Shader* shader = ShaderManager::LoadVF(name, "shaders/deferred/g_buffer.vs", "shaders/deferred/g_buffer.fs", { "MESH_TBN" });
+			Shader shader = ShaderManager::LoadGlobalVF(name, "shaders/deferred/g_buffer.vs", "shaders/deferred/g_buffer.fs", { "MESH_TBN" });
 
 			std::shared_ptr<Material> material = loadMaterial(shader);
 			material->type = Material::DEFERRED;
@@ -154,7 +154,7 @@ namespace xengine
 		{
 			std::string name{ "deferred no TBN" };
 
-			Shader* shader = ShaderManager::LoadVF(name, "shaders/deferred/g_buffer.vs", "shaders/deferred/g_buffer.fs");
+			Shader shader = ShaderManager::LoadGlobalVF(name, "shaders/deferred/g_buffer.vs", "shaders/deferred/g_buffer.fs");
 
 			std::shared_ptr<Material> material = loadMaterial(shader);
 			material->type = Material::DEFERRED;
@@ -169,29 +169,29 @@ namespace xengine
 		}
 
 		// glass (deferred pipeline NOT OK due to transparency sorting)
-		{
-			std::string name{ "glass" };
-
-			Shader* shader = ShaderManager::LoadVF(name, "shaders/forward_render.vs", "shaders/forward_render.fs", { "ALPHA_BLEND" });
-
-			std::shared_ptr<Material> material = loadMaterial(shader);
-			material->type = Material::FORWARD;
-			material->RegisterTexture("TexAlbedo", TextureManager::LoadTexture2D("glass albedo", "textures/glass.png", GL_RGBA));
-			material->RegisterTexture("TexNormal", TextureManager::LoadTexture2D("glass normal", "textures/pbr/plastic/normal.png", GL_RGBA));
-			material->RegisterTexture("TexMetallic", TextureManager::LoadTexture2D("glass metallic", "textures/pbr/plastic/metallic.png", GL_RGBA));
-			material->RegisterTexture("TexRoughness", TextureManager::LoadTexture2D("glass roughness", "textures/pbr/plastic/roughness.png", GL_RGBA));
-			material->RegisterTexture("TexAO", TextureManager::LoadTexture2D("glass ao", "textures/pbr/plastic/ao.png", GL_RGBA));
-			material->attribute.bBlend = true;
-
-			_defaultMaterials.push_back(material);
-			_defaultMaterialTable[name] = material.get();
-		}
+		//{
+		//	std::string name{ "glass" };
+		//
+		//	Shader* shader = ShaderManager::LoadGlobalVF(name, "shaders/forward_render.vs", "shaders/forward_render.fs", { "ALPHA_BLEND" });
+		//
+		//	std::shared_ptr<Material> material = loadMaterial(shader);
+		//	material->type = Material::FORWARD;
+		//	material->RegisterTexture("TexAlbedo", TextureManager::LoadTexture2D("glass albedo", "textures/glass.png", GL_RGBA));
+		//	material->RegisterTexture("TexNormal", TextureManager::LoadTexture2D("glass normal", "textures/pbr/plastic/normal.png", GL_RGBA));
+		//	material->RegisterTexture("TexMetallic", TextureManager::LoadTexture2D("glass metallic", "textures/pbr/plastic/metallic.png", GL_RGBA));
+		//	material->RegisterTexture("TexRoughness", TextureManager::LoadTexture2D("glass roughness", "textures/pbr/plastic/roughness.png", GL_RGBA));
+		//	material->RegisterTexture("TexAO", TextureManager::LoadTexture2D("glass ao", "textures/pbr/plastic/ao.png", GL_RGBA));
+		//	material->attribute.bBlend = true;
+		//
+		//	_defaultMaterials.push_back(material);
+		//	_defaultMaterialTable[name] = material.get();
+		//}
 
 		// alpha blend
 		{
 			std::string name{ "alpha blend" };
 
-			Shader* shader = ShaderManager::LoadVF(name, "shaders/forward_render.vs", "shaders/forward_render.fs", { "ALPHA_BLEND" });
+			Shader shader = ShaderManager::LoadGlobalVF(name, "shaders/forward_render.vs", "shaders/forward_render.fs", { "ALPHA_BLEND" });
 
 			std::shared_ptr<Material> material = loadMaterial(shader);
 			material->type = Material::FORWARD;
@@ -205,7 +205,7 @@ namespace xengine
 		{
 			std::string name{ "alpha discard" };
 
-			Shader* shader = ShaderManager::LoadVF(name, "shaders/forward_render.vs", "shaders/forward_render.fs", { "ALPHA_DISCARD" });
+			Shader shader = ShaderManager::LoadGlobalVF(name, "shaders/forward_render.vs", "shaders/forward_render.fs", { "ALPHA_DISCARD" });
 
 			std::shared_ptr<Material> material = loadMaterial(shader);
 			material->type = Material::FORWARD;
@@ -219,7 +219,7 @@ namespace xengine
 		{
 			std::string name{ "skybox" };
 
-			Shader* shader = ShaderManager::LoadVF("background", "shaders/background.vs", "shaders/background.fs");
+			Shader shader = ShaderManager::LoadGlobalVF("background", "shaders/background.vs", "shaders/background.fs");
 
 			std::shared_ptr<Material> material = loadMaterial(shader);
 			material->RegisterUniform("Exposure", 1.0f);
@@ -235,7 +235,7 @@ namespace xengine
 		// normal vector debug
 		{
 			std::string name{ "normal debug" };
-			Shader* shader = ShaderManager::LoadVF(name, "shaders/debug_forward.vs", "shaders/debug_forward.fs");
+			Shader shader = ShaderManager::LoadGlobalVF(name, "shaders/debug_forward.vs", "shaders/debug_forward.fs");
 
 			std::shared_ptr<Material> material = loadMaterial(shader);
 			material->type = Material::FORWARD;
@@ -289,7 +289,7 @@ namespace xengine
 			aMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aPath);
 			std::string filename = processPath(&aPath, directory);
 
-			Texture* texture = TextureManager::LoadTexture2D(filename, filename, alpha ? GL_RGBA : GL_RGB, true);
+			Texture texture = TextureManager::LoadTexture2D(filename, filename, alpha ? GL_RGBA : GL_RGB, true);
 			if (texture) material->RegisterTexture("TexAlbedo", texture);
 		}
 
@@ -299,7 +299,7 @@ namespace xengine
 			aMaterial->GetTexture(aiTextureType_DISPLACEMENT, 0, &aPath);
 			std::string filename = processPath(&aPath, directory);
 
-			Texture* texture = TextureManager::LoadTexture2D(filename, filename, GL_RGBA, false);
+			Texture texture = TextureManager::LoadTexture2D(filename, filename, GL_RGBA, false);
 			if (texture) material->RegisterTexture("TexNormal", texture);
 		}
 
@@ -309,7 +309,7 @@ namespace xengine
 			aMaterial->GetTexture(aiTextureType_SPECULAR, 0, &aPath);
 			std::string filename = processPath(&aPath, directory);
 
-			Texture* texture = TextureManager::LoadTexture2D(filename, filename, GL_RGBA, false);
+			Texture texture = TextureManager::LoadTexture2D(filename, filename, GL_RGBA, false);
 			if (texture) material->RegisterTexture("TexMetallic", texture);
 		}
 
@@ -319,7 +319,7 @@ namespace xengine
 			aMaterial->GetTexture(aiTextureType_SHININESS, 0, &aPath);
 			std::string filename = processPath(&aPath, directory);
 
-			Texture* texture = TextureManager::LoadTexture2D(filename, filename, GL_RGBA, false);
+			Texture texture = TextureManager::LoadTexture2D(filename, filename, GL_RGBA, false);
 			if (texture) material->RegisterTexture("TexRoughness", texture);
 		}
 
@@ -329,7 +329,7 @@ namespace xengine
 			aMaterial->GetTexture(aiTextureType_AMBIENT, 0, &aPath);
 			std::string filename = processPath(&aPath, directory);
 
-			Texture* texture = TextureManager::LoadTexture2D(filename, filename, GL_RGBA, false);
+			Texture texture = TextureManager::LoadTexture2D(filename, filename, GL_RGBA, false);
 			if (texture) material->RegisterTexture("TexAO", texture);
 		}
 

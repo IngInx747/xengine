@@ -47,9 +47,10 @@ namespace xengine
 
 		// bind texture, activate texture in shaders if unit is given
 		void Bind(int unit = -1);
+		void Bind(int unit = -1) const;
 
 		// unbind texture
-		void Unbind();
+		void Unbind() const;
 
 		// resize texture, re-allocate memory
 		void Resize(unsigned int width, unsigned int height = 0, unsigned int depth = 0);
@@ -78,6 +79,8 @@ namespace xengine
 		void SetWrapR(unsigned int wrapMode);
 		void SetMipmap(bool mipmap);
 
+		explicit operator bool() const { return m_ptr && m_ptr->m_id; }
+
 		inline unsigned int ID() const { return m_ptr->m_id; }
 		inline unsigned int Target() const { return m_ptr->target; }
 		inline unsigned int Width() const { return m_ptr->width; }
@@ -90,12 +93,12 @@ namespace xengine
 		inline unsigned int WrapR() const { return m_ptr->wrapR; }
 		inline bool Mipmap() const { return m_ptr->mipmapping; }
 
-	private:
+	protected:
 		void allocateMemory(); // allocate shared memory
 		void generateObject(); // generate OGL object
 		void generate();
 
-	private:
+	protected:
 		TextureMemory* m_ptr = nullptr;
 	};
 

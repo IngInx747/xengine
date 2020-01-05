@@ -18,15 +18,15 @@ namespace xengine
 		void Resize(unsigned int width, unsigned int height);
 
 		// generate effect
-		void Generate(Texture* source);
+		void Generate(const Texture & source);
 
 		// cast effect onto target
-		void Render(Texture* source);
+		void Render(const Texture & source);
 
-		inline Texture* GetSample_1_2() { return m_output0; }
-		inline Texture* GetSample_1_4() { return m_output1; }
-		inline Texture* GetSample_1_8() { return m_output2; }
-		inline Texture* GetSample_1_16() { return m_output3; }
+		inline const Texture & GetSample_1_2() { return m_output0; }
+		inline const Texture & GetSample_1_4() { return m_output1; }
+		inline const Texture & GetSample_1_8() { return m_output2; }
+		inline const Texture & GetSample_1_16() { return m_output3; }
 
 	private:
 		// result buffer(s)
@@ -48,10 +48,10 @@ namespace xengine
 		Shader m_postShader;
 
 		// render result(s)
-		Texture* m_output0;
-		Texture* m_output1;
-		Texture* m_output2;
-		Texture* m_output3;
+		Texture m_output0;
+		Texture m_output1;
+		Texture m_output2;
+		Texture m_output3;
 
 		// canvas
 		Mesh* m_quad;

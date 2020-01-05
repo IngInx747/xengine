@@ -8,7 +8,7 @@ void MyScene1::Initialize()
 	xengine::Mesh* torus = xengine::MeshManager::LoadPrimitive("torus", 32, 32, 2.0f, 0.5f);
 
 	// shader
-	xengine::Shader* shdPlasma = xengine::ShaderManager::LoadVF("plasma orb", "shaders/plasma_orb.vs", "shaders/plasma_orb.fs");
+	xengine::Shader shdPlasma = xengine::ShaderManager::LoadLocalVF("plasma orb", "shaders/plasma_orb.vs", "shaders/plasma_orb.fs");
 
 	// material
 	xengine::Material* mtrMetal = xengine::MaterialManager::Get("deferred no TBN"); // "normal debug" "deferred"
@@ -76,11 +76,11 @@ void MyScene1::Initialize()
 	torchLights.push_back(torch);
 
 	// environment capture
-	xengine::Texture* hdrMap = xengine::TextureManager::LoadHDR("sky env", "textures/backgrounds/alley.hdr");
+	xengine::Texture hdrMap = xengine::TextureManager::LoadHDR("sky env", "textures/backgrounds/alley.hdr");
 
 	// allocate image-based lighting renderer
 	fbEnvironment = xengine::IblRenderer::CreateEnvironment(hdrMap);
-	xengine::CubeMap* envMap = fbEnvironment.GetColorAttachment(0);
+	xengine::CubeMap envMap = fbEnvironment.GetColorAttachment(0);
 
 	fbIrradiance = xengine::IblRenderer::CreateIrradiance(envMap);
 	irradianceMap = fbIrradiance.GetColorAttachment(0);
@@ -104,14 +104,6 @@ void MyScene1::Initialize()
 	AddLight(&torchLights[1]);
 	AddLight(&torchLights[2]);
 	AddLight(&torchLights[3]);
-}
-
-void MyScene1::Clear()
-{
-	xengine::ModelManager::ClearScene();
-	xengine::MeshManager::ClearScene();
-	xengine::MaterialManager::ClearScene();
-	xengine::TextureManager::ClearScene();
 }
 
 void MyScene1::Update(float t, float dt)

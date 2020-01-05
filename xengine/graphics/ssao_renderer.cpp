@@ -34,9 +34,9 @@ namespace xengine
 			kernel.push_back(sample);
 		}
 
-		std::vector<glm::vec3> noises;
+		std::vector<glm::vec4> noises;
 		for (unsigned int i = 0; i < 16; i++)
-			noises.push_back({ dice() * 2.0 - 1.0, dice() * 2.0 - 1.0, 0.0f });
+			noises.push_back({ dice() * 2.0 - 1.0, dice() * 2.0 - 1.0, 0.0f, 1.0f });
 
 		m_shader.AttachVertexShader(ReadShaderSource("shaders/effect/effect.quad.vs"));
 		m_shader.AttachFragmentShader(ReadShaderSource("shaders/effect/effect.ssao.capture.fs"));
@@ -67,14 +67,14 @@ namespace xengine
 		m_shader.Unbind();
 	}
 
-	void SSAORenderer::Generate(Texture * gPosition, Texture * gNormal, Camera * camera)
+	void SSAORenderer::Generate(const Texture & gPosition, const Texture & gNormal, Camera * camera)
 	{
 		m_target.Bind();
 		glViewport(0, 0, m_target.Width(), m_target.Height());
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		gPosition->Bind(0);
-		gNormal->Bind(1);
+		gPosition.Bind(0);
+		gNormal.Bind(1);
 		m_noise.Bind(2);
 
 		m_shader.Bind();

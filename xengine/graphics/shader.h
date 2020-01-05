@@ -8,6 +8,8 @@
 
 #include <vendor/glm/common.hpp>
 
+#include <utility/smart_handle.h>
+
 namespace xengine
 {
 	unsigned int CreateShader(const std::string& source, unsigned int type); // create a shader of TYPE
@@ -21,7 +23,41 @@ namespace xengine
 	// insert precompile flag to shader source
 	std::string InsertShaderDefine(const std::string& source, const std::vector<std::string>& defines);
 
-	class Shader
+	class ShaderMomory : public SharedMemory
+	{
+	public:
+		struct VarTableEntry
+		{
+			unsigned int type;
+			unsigned int size;
+			unsigned int location;
+		};
+
+	public:
+		ShaderMomory();
+		virtual ~ShaderMomory();
+
+		// Note: As the struct holds unique resource, instance copy is not allowed
+		ShaderMomory(const ShaderMomory& other) = delete;
+		ShaderMomory & operator=(const ShaderMomory& other) = delete;
+
+		void Generate(); // allocate memory on GPU
+		void Destory(); // free memory on GPU
+		
+	public:
+		unsigned int m_id = 0; // shader program id
+
+		unsigned int m_vs = 0; // vertex shader id
+		unsigned int m_gs = 0; // geometry shader id
+		unsigned int m_fs = 0; // fragment shader id
+		unsigned int m_ts = 0; // tessellation shader id
+		unsigned int m_cs = 0; // compute shader id
+
+		std::unordered_map<std::string, VarTableEntry> m_attributeTable;
+		std::unordered_map<std::string, VarTableEntry> m_uniformTable;
+	};
+
+	class Shader : public SharedHandle
 	{
 	public:
 		struct VarTableEntry
@@ -33,16 +69,17 @@ namespace xengine
 
 	public:
 		Shader();
-		~Shader();
+		virtual ~Shader();
+
+		Shader(const Shader& other);
+		Shader & operator=(const Shader& other);
 
 		// use the shader program (make this shader as current active)
 		void Bind();
+		void Bind() const;
 		
 		// stop using the shader program
-		static void Unbind();
-
-		// delete program
-		void DeleteGpuData();
+		void Unbind() const;
 
 		// return location of uniform variable, -1 if not exist
 		int GetUniformLocation(const std::string& name);
@@ -82,20 +119,31 @@ namespace xengine
 		// query active uniforms and store result to lookup hash table
 		void QueryActiveUniforms();
 
-		inline unsigned int ID() const { return m_id; }
+		explicit operator bool() const { return m_ptr && m_ptr->m_id; }
+
+		inline unsigned int ID() const { return m_ptr->m_id; }
 
 	protected:
-		unsigned int m_id = 0; // shader program id
+		void allocateMemory(); // allocate shared memory
+		void generateObject(); // generate OGL object
+		void generate();
 
-		unsigned int m_vs = 0; // vertex shader id
-		unsigned int m_gs = 0; // geometry shader id
-		unsigned int m_fs = 0; // fragment shader id
-		unsigned int m_ts = 0; // tessellation shader id
-		unsigned int m_cs = 0; // compute shader id
-
-		std::unordered_map<std::string, VarTableEntry> m_attributeTable;
-		std::unordered_map<std::string, VarTableEntry> m_uniformTable;
+	protected:
+		ShaderMomory* m_ptr = nullptr;
 	};
+
+	// load a vertex-fragment shader program
+	Shader LoadShaderVF(
+		const std::string& vsPath,
+		const std::string& fsPath,
+		const std::vector<std::string>& defines);
+
+	// load a vertex-geometry-fragment shader program
+	Shader LoadShaderVGF(
+		const std::string& vsPath,
+		const std::string& gsPath,
+		const std::string& fsPath,
+		const std::vector<std::string>& defines);
 }
 
 #endif // !XE_SHADER_H

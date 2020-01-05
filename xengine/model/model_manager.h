@@ -14,8 +14,8 @@ namespace xengine
 	public:
 		static void Initialize();
 		static void Clear();
-		static void ClearScene();
-		static void ClearDefault();
+		static void ClearLocal();
+		static void ClearGlobal();
 
 		// load model from wave-front file
 		static Model* LoadFromObj(const std::string& name, const std::string& path, bool use_dft_mtr = true);

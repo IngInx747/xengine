@@ -159,6 +159,11 @@ namespace xengine
 		m_particleUpdateShader.Unbind();
 	}
 
+	void PSFirework::SetParticleTexture(const Texture & texture)
+	{
+		m_particleTexture = texture;
+	}
+
 	void PSFirework::Reset()
 	{
 		m_time = 0;
@@ -232,7 +237,7 @@ namespace xengine
 	{
 		m_particleRenderShader.Bind();
 
-		m_particleTexture->Bind(0); // gColorMap
+		m_particleTexture.Bind(0); // gColorMap
 
 		glBindVertexArray(m_vaos[m_currId]);
 

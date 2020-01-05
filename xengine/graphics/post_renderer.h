@@ -16,11 +16,11 @@ namespace xengine
 		PostRenderer();
 
 		// integrate both pre and post lighting effects
-		void GenerateEffect(Texture* source);
+		void GenerateEffect(const Texture & source);
 
 	private:
 		// relates shader(s)
-		Shader* m_shader;
+		Shader m_shader;
 
 		// related mesh(es)
 		Mesh* m_quad;

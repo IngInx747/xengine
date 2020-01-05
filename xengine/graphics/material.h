@@ -42,7 +42,7 @@ namespace xengine
 		};
 
 	public:
-		struct Attribute
+		struct OglAttribute
 		{
 			// ogl: depth test
 			bool bDepthTest;
@@ -56,7 +56,7 @@ namespace xengine
 
 			// ogl: blend
 			bool bBlend;
-			unsigned int eBlendSrc; // pre-multiplied alpha
+			unsigned int eBlendSrc;
 			unsigned int eBlendDst;
 			unsigned int eBlendEq;
 
@@ -64,7 +64,7 @@ namespace xengine
 			bool bShadowCast;
 			bool bShadowRecv;
 
-			Attribute();
+			OglAttribute();
 		};
 
 		struct VarTableEntry
@@ -93,14 +93,15 @@ namespace xengine
 		struct TexTableEntry
 		{
 			unsigned int unit;
-			Texture* texture;
+			Texture texture;
 		};
 
 	public:
-		Material(Shader* shader);
+		Material();
+		Material(const Shader& shader);
 
 		// register a texture that sent to shader before rendering (unit allocated automatically)
-		void RegisterTexture(const std::string& name, Texture* texture);
+		void RegisterTexture(const std::string& name, const Texture& texture);
 
 		// register a parameter that sent to shader before rendering
 		void RegisterUniform(const std::string& name, bool value);
@@ -121,10 +122,10 @@ namespace xengine
 		unsigned int type;
 
 		// OpenGL render config
-		Attribute attribute;
+		OglAttribute attribute;
 
 		// corresponding shader
-		Shader* shader;
+		Shader shader;
 
 	private:
 		// shader uniforms table (better store model-dependent but time-irrelevant params)

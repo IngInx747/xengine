@@ -86,7 +86,6 @@ namespace xengine
 		if (m_ptr) return;
 
 		m_ptr = new TextureMemory;
-
 		SharedHandle::Register(m_ptr);
 	}
 
@@ -107,7 +106,13 @@ namespace xengine
 		glBindTexture(m_ptr->target, m_ptr->m_id);
 	}
 
-	void Texture::Unbind()
+	void Texture::Bind(int unit) const
+	{
+		if (unit >= 0) glActiveTexture(GL_TEXTURE0 + unit);
+		glBindTexture(m_ptr->target, m_ptr->m_id);
+	}
+
+	void Texture::Unbind() const
 	{
 		glBindTexture(m_ptr->target, 0);
 	}

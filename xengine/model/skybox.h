@@ -17,7 +17,7 @@ namespace xengine
 		Skybox();
 
 		// set background cube map
-		void SetCubeMap(CubeMap* cubemap);
+		void SetCubeMap(const CubeMap& cubemap);
 	};
 }
 

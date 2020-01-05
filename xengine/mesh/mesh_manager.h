@@ -17,7 +17,7 @@ namespace xengine
 	public:
 		static void Initialize();
 		static void Clear();
-		static void ClearScene();
+		static void ClearLocal();
 		static void ClearPrimitives();
 
 		// load primitive

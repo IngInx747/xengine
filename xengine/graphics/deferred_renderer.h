@@ -22,23 +22,23 @@ namespace xengine
 		void Generate(const std::vector<RenderCommand>& commands);
 
 		// render deferred parallel lights
-		void RenderParallelLights(const std::vector<ParallelLight*>& lights, Camera* camera, Texture * ao);
+		void RenderParallelLights(const std::vector<ParallelLight*>& lights, Camera* camera, const Texture & ao);
 
 		// render deferred volumn point lights
 		void RenderPointLights(const std::vector<PointLight*>& lights, Camera* camera);
 
 		// render deferred ambient light (Image-based lighting environment)
-		void RenderAmbientLight(CubeMap* irradiance, CubeMap* reflection, Texture * ao);
+		void RenderAmbientLight(const CubeMap & irradiance, const CubeMap & reflection, const Texture & ao);
 
 		// render reflect light (Screen-space reflection)
-		void RenderReflectLight(Texture* last_frame);
+		void RenderReflectLight(const Texture & last_frame);
 
 		inline FrameBuffer* GetFrameBuffer() { return &m_gBuffer; }
-		inline Texture* GetTexPosition() { return m_gBuffer.GetColorAttachment(0); }
-		inline Texture* GetTexNormal() { return m_gBuffer.GetColorAttachment(1); }
-		inline Texture* GetTexAlbedo() { return m_gBuffer.GetColorAttachment(2); }
-		inline Texture* GetTexPbrParam() { return m_gBuffer.GetColorAttachment(3); }
-		inline Texture* GetTexMotion() { return m_gBuffer.GetColorAttachment(4); }
+		inline const Texture & GetTexPosition() { return m_gBuffer.GetColorAttachment(0); }
+		inline const Texture & GetTexNormal() { return m_gBuffer.GetColorAttachment(1); }
+		inline const Texture & GetTexAlbedo() { return m_gBuffer.GetColorAttachment(2); }
+		inline const Texture & GetTexPbrParam() { return m_gBuffer.GetColorAttachment(3); }
+		inline const Texture & GetTexMotion() { return m_gBuffer.GetColorAttachment(4); }
 
 	public:
 
@@ -47,10 +47,10 @@ namespace xengine
 		FrameBuffer m_gBuffer; // geometry buffer
 
 		// related shaders
-		Shader* m_parallelLightShader; // deferred parallel light shader
-		Shader* m_pointLightShader; // deferred point light shader
-		Shader* m_ambientLightShader; // deferred ambient light shader
-		Shader* m_reflectLightShader; // deferred reflect light shader
+		Shader m_parallelLightShader; // deferred parallel light shader
+		Shader m_pointLightShader; // deferred point light shader
+		Shader m_ambientLightShader; // deferred ambient light shader
+		Shader m_reflectLightShader; // deferred reflect light shader
 
 		// related primitives
 		Mesh* m_quad; // mesh for g-buffer quad sampling (parallel light)

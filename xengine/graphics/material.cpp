@@ -13,7 +13,7 @@ namespace xengine
 	// Material attribute
 	////////////////////////////////////////////////////////////////
 
-	Material::Attribute::Attribute()
+	Material::OglAttribute::OglAttribute()
 	{
 		bDepthTest = GL_TRUE;
 		bDepthWrite = GL_TRUE;
@@ -33,13 +33,17 @@ namespace xengine
 	// Material
 	////////////////////////////////////////////////////////////////
 
-	Material::Material(Shader* shader)
+	Material::Material()
+	{
+	}
+
+	Material::Material(const Shader& shader)
 		:
 		type(TYPE::FORWARD),
 		shader(shader)
 	{}
 
-	void Material::RegisterTexture(const std::string& name, Texture* texture)
+	void Material::RegisterTexture(const std::string& name, const Texture& texture)
 	{
 		auto itn = textureTable.find(name);
 
@@ -132,14 +136,14 @@ namespace xengine
 
 	void Material::UpdateShaderUniforms()
 	{
-		shader->Bind();
+		shader.Bind();
 
 		for (const auto& mp : textureTable)
 		{
 			if (!mp.second.texture) continue;
 
-			mp.second.texture->Bind(mp.second.unit);
-			shader->SetUniform(mp.first, mp.second.unit);
+			mp.second.texture.Bind(mp.second.unit);
+			shader.SetUniform(mp.first, mp.second.unit);
 		}
 
 		for (const auto& mp : uniformTable)
@@ -147,31 +151,31 @@ namespace xengine
 			switch (mp.second.type)
 			{
 			case Material::BOOL:
-				shader->SetUniform(mp.first, mp.second.bVal);
+				shader.SetUniform(mp.first, mp.second.bVal);
 				break;
 			case Material::INT:
-				shader->SetUniform(mp.first, mp.second.iVal);
+				shader.SetUniform(mp.first, mp.second.iVal);
 				break;
 			case Material::FLOAT:
-				shader->SetUniform(mp.first, mp.second.fVal);
+				shader.SetUniform(mp.first, mp.second.fVal);
 				break;
 			case Material::VEC2:
-				shader->SetUniform(mp.first, mp.second.vec2);
+				shader.SetUniform(mp.first, mp.second.vec2);
 				break;
 			case Material::VEC3:
-				shader->SetUniform(mp.first, mp.second.vec3);
+				shader.SetUniform(mp.first, mp.second.vec3);
 				break;
 			case Material::VEC4:
-				shader->SetUniform(mp.first, mp.second.vec4);
+				shader.SetUniform(mp.first, mp.second.vec4);
 				break;
 			case Material::MAT2:
-				shader->SetUniform(mp.first, mp.second.mat2);
+				shader.SetUniform(mp.first, mp.second.mat2);
 				break;
 			case Material::MAT3:
-				shader->SetUniform(mp.first, mp.second.mat3);
+				shader.SetUniform(mp.first, mp.second.mat3);
 				break;
 			case Material::MAT4:
-				shader->SetUniform(mp.first, mp.second.mat4);
+				shader.SetUniform(mp.first, mp.second.mat4);
 				break;
 			default:
 				break;
