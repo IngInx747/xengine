@@ -244,11 +244,11 @@ namespace xengine
 			indices[i * 3 + 2] = aMesh->mFaces[i].mIndices[2];
 		}
 
-		mesh->aabb.BuildFromVertices(positions);
+		mesh->Commit();
+
+		mesh->Aabb().BuildFromVertices(positions);
 
 		mesh->Topology() = GL_TRIANGLES;
-
-		mesh->CommitGpuData();
 
 		_meshes.push_back(mesh);
 		//_meshTable[name] = mesh.get();

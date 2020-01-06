@@ -10,11 +10,6 @@ namespace xengine
 	{
 	public:
 		TextureMemory();
-		virtual ~TextureMemory();
-
-		// Note: As the struct holds unique resource, instance copy is not allowed
-		TextureMemory(const TextureMemory& other) = delete;
-		TextureMemory & operator=(const TextureMemory& other) = delete;
 
 		void Generate(); // allocate memory on GPU
 		void Destory(); // free memory on GPU
@@ -36,15 +31,9 @@ namespace xengine
 		bool mipmapping;
 	};
 
-	class Texture : public SharedHandle
+	class Texture : public SharedHandle<TextureMemory>
 	{
 	public:
-		Texture();
-		virtual ~Texture();
-
-		Texture(const Texture& other);
-		Texture & operator=(const Texture& other);
-
 		// bind texture, activate texture in shaders if unit is given
 		void Bind(int unit = -1);
 		void Bind(int unit = -1) const;
@@ -93,13 +82,13 @@ namespace xengine
 		inline unsigned int WrapR() const { return m_ptr->wrapR; }
 		inline bool Mipmap() const { return m_ptr->mipmapping; }
 
-	protected:
-		void allocateMemory(); // allocate shared memory
-		void generateObject(); // generate OGL object
-		void generate();
+	//protected:
+	//	void allocateMemory(); // allocate shared memory
+	//	void generateObject(); // generate OGL object
+	//	void generate();
 
 	protected:
-		TextureMemory* m_ptr = nullptr;
+		//TextureMemory* m_ptr = nullptr;
 	};
 
 	using CubeMap = Texture;

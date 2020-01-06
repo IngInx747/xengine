@@ -13,6 +13,7 @@ namespace xengine
 
 	SharedMemory::~SharedMemory()
 	{
+		Destory();
 	}
 
 	void SharedMemory::IncreaseReference()
@@ -30,50 +31,15 @@ namespace xengine
 		return m_counter.Value();
 	}
 
+	void SharedMemory::Generate()
+	{
+	}
+
+	void SharedMemory::Destory()
+	{
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Shared Handle
 	////////////////////////////////////////////////////////////////
-
-	SharedHandle::SharedHandle()
-	{
-	}
-
-	SharedHandle::SharedHandle(const SharedHandle & other)
-	{
-		m_sharedMemoryPtr = other.m_sharedMemoryPtr;
-		m_sharedMemoryPtr->IncreaseReference();
-	}
-
-	SharedHandle & SharedHandle::operator=(const SharedHandle & other)
-	{
-		if (m_sharedMemoryPtr)
-		{
-			m_sharedMemoryPtr->DecreaseReference();
-
-			if (m_sharedMemoryPtr->ReferenceCount() == 0)
-			{
-				delete m_sharedMemoryPtr;
-			}
-		}
-
-		m_sharedMemoryPtr = other.m_sharedMemoryPtr;
-		m_sharedMemoryPtr->IncreaseReference();
-
-		return *this;
-	}
-
-	SharedHandle::~SharedHandle()
-	{
-		if (m_sharedMemoryPtr)
-		{
-			m_sharedMemoryPtr->DecreaseReference();
-
-			if (m_sharedMemoryPtr->ReferenceCount() == 0)
-			{
-				delete m_sharedMemoryPtr;
-			}
-
-			m_sharedMemoryPtr = nullptr;
-		}
-	}
 }

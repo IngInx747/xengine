@@ -155,7 +155,7 @@ namespace xengine
 					command.material = model->materials[i];
 					command.transform = model->transform;
 					command.prevTrans = model->prevTrans;
-					command.aabb.BuildFromTransform(command.mesh->aabb, command.transform);
+					command.aabb.BuildFromTransform(command.mesh->Aabb(), command.transform);
 
 					commandManager.Push(command);
 				}

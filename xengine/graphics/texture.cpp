@@ -29,11 +29,6 @@ namespace xengine
 		mipmapping = true;
 	}
 
-	TextureMemory::~TextureMemory()
-	{
-		Destory();
-	}
-
 	void TextureMemory::Generate()
 	{
 		if (!m_id)
@@ -56,49 +51,6 @@ namespace xengine
 	////////////////////////////////////////////////////////////////
 	// Texture
 	////////////////////////////////////////////////////////////////
-
-	Texture::Texture()
-		:
-		SharedHandle()
-	{
-	}
-
-	Texture::~Texture()
-	{
-	}
-
-	Texture::Texture(const Texture & other)
-		:
-		SharedHandle(other)
-	{
-		m_ptr = other.m_ptr;
-	}
-
-	Texture & Texture::operator=(const Texture & other)
-	{
-		this->SharedHandle::operator=(other);
-		m_ptr = other.m_ptr;
-		return *this;
-	}
-
-	void Texture::allocateMemory()
-	{
-		if (m_ptr) return;
-
-		m_ptr = new TextureMemory;
-		SharedHandle::Register(m_ptr);
-	}
-
-	void Texture::generateObject()
-	{
-		m_ptr->Generate();
-	}
-
-	void Texture::generate()
-	{
-		allocateMemory();
-		generateObject();
-	}
 
 	void Texture::Bind(int unit)
 	{

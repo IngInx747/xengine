@@ -234,6 +234,12 @@
     <ClCompile Include="mesh\primitive.cpp">
       <Filter>mesh</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\shader_loader.cpp">
+      <Filter>graphics\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\texture_loader.cpp">
+      <Filter>graphics\texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utility\configure.h">
@@ -406,6 +412,12 @@
     </ClInclude>
     <ClInclude Include="graphics\render_config.h">
       <Filter>graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\shader_loader.h">
+      <Filter>graphics\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\texture_loader.h">
+      <Filter>graphics\texture</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

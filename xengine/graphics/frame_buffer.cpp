@@ -12,17 +12,6 @@ namespace xengine
 	// Frame Buffer Unique Instance
 	////////////////////////////////////////////////////////////////
 
-	FrameBufferMemory::FrameBufferMemory()
-		:
-		SharedMemory()
-	{
-	}
-
-	FrameBufferMemory::~FrameBufferMemory()
-	{
-		Destory();
-	}
-
 	void FrameBufferMemory::Generate()
 	{
 		if (!fbo)
@@ -52,49 +41,6 @@ namespace xengine
 	////////////////////////////////////////////////////////////////
 	// Frame Buffer
 	////////////////////////////////////////////////////////////////
-
-	FrameBuffer::FrameBuffer()
-		:
-		SharedHandle()
-	{
-	}
-
-	FrameBuffer::~FrameBuffer()
-	{
-	}
-
-	FrameBuffer::FrameBuffer(const FrameBuffer & other)
-		:
-		SharedHandle(other)
-	{
-		m_ptr = other.m_ptr;
-	}
-
-	FrameBuffer & FrameBuffer::operator=(const FrameBuffer & other)
-	{
-		this->SharedHandle::operator=(other);
-		m_ptr = other.m_ptr;
-		return *this;
-	}
-
-	void FrameBuffer::allocateMemory()
-	{
-		if (m_ptr) return;
-
-		m_ptr = new FrameBufferMemory;
-		SharedHandle::Register(m_ptr);
-	}
-
-	void FrameBuffer::generateObject()
-	{
-		m_ptr->Generate();
-	}
-
-	void FrameBuffer::generate()
-	{
-		allocateMemory();
-		generateObject();
-	}
 
 	Texture & FrameBuffer::GetColorAttachment(unsigned int i)
 	{

@@ -2,6 +2,8 @@
 
 #include <utility/log.h>
 
+#include "shader_loader.h"
+
 namespace xengine
 {
 	std::unordered_map<std::string, Shader> ShaderManager::g_localTable{};

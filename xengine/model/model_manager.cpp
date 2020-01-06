@@ -112,7 +112,7 @@ namespace xengine
 
 			node->meshes.push_back(mesh);
 			node->materials.push_back(material);
-			node->aabbLocal.UnionAABB(mesh->aabb); // update local bounding box
+			node->aabbLocal.UnionAABB(mesh->Aabb()); // update local bounding box
 		}
 
 		for (unsigned int i = 0; i < aNode->mNumChildren; ++i)

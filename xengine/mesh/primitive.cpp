@@ -29,9 +29,8 @@ namespace xengine
 			2,   3,   0
 		};
 
-		topology = GL_TRIANGLES;
-
-		CommitGpuData();
+		Commit();
+		m_ptr->topology = GL_TRIANGLES;
 	}
 
 	Quad::Quad(float width, float height)
@@ -56,9 +55,8 @@ namespace xengine
 			2,   3,   0
 		};
 
-		topology = GL_TRIANGLES;
-
-		CommitGpuData();
+		Commit();
+		m_ptr->topology = GL_TRIANGLES;
 	}
 
 	Plane::Plane()
@@ -103,11 +101,9 @@ namespace xengine
 			2,   3,   0
 		};
 
-		aabb.BuildFromVertices(positions);
-
-		topology = GL_TRIANGLES;
-
-		CommitGpuData();
+		Commit();
+		m_ptr->topology = GL_TRIANGLES;
+		m_ptr->aabb.BuildFromVertices(positions);
 	}
 
 	Cube::Cube()
@@ -298,11 +294,9 @@ namespace xengine
 			22,  23,  20,
 		};
 
-		aabb.BuildFromVertices(positions);
-
-		topology = GL_TRIANGLES;
-
-		CommitGpuData();
+		Commit();
+		m_ptr->aabb.BuildFromVertices(positions);
+		m_ptr->topology = GL_TRIANGLES;
 	}
 
 	Sphere::Sphere(unsigned int xseg, unsigned int yseg)
@@ -341,11 +335,9 @@ namespace xengine
 			}
 		}
 
-		aabb.BuildFromVertices(positions);
-
-		topology = GL_TRIANGLES;
-
-		CommitGpuData();
+		Commit();
+		m_ptr->topology = GL_TRIANGLES;
+		m_ptr->aabb.BuildFromVertices(positions);
 	}
 
 	Torus::Torus(unsigned int xseg, unsigned int yseg, float r1, float r2)
@@ -388,10 +380,8 @@ namespace xengine
 			}
 		}
 
-		aabb.BuildFromVertices(positions);
-
-		topology = GL_TRIANGLES;
-
-		CommitGpuData();
+		Commit();
+		m_ptr->topology = GL_TRIANGLES;
+		m_ptr->aabb.BuildFromVertices(positions);
 	}
 }

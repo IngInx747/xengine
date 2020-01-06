@@ -66,24 +66,6 @@ namespace xengine
 			unsigned char color2[4]);
 
 	private:
-		// load a 2D texture
-		static Texture loadTexture2D(const std::string& filename, unsigned int colorFormat, bool srgb);
-
-		// load a high-dynamical-range texture
-		static Texture loadHDR(const std::string& filename);
-
-		// load a cubic texture from specific files
-		static CubeMap loadCubeMap(
-			const std::string& filenameTop,
-			const std::string& filenameBottom,
-			const std::string& filenameLeft,
-			const std::string& filenameRight,
-			const std::string& filenameFront,
-			const std::string& filenameBack);
-
-		// load a cubic texture from folder (filenames should be named "right", "top", etc., to specify facing direction)
-		static CubeMap loadCubeMap(const std::string& folder);
-
 		static void generateDefaultTexture();
 
 	private:

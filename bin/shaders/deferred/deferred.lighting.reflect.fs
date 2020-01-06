@@ -116,14 +116,14 @@ vec2 RayTraceMarch(vec3 ray_org, vec3 ray_dir, float march_step)
     return vec2(0, 0);
 }
 
-const float rsFalloff = 3.0; // reflection Specular Falloff Exponent
-
 void main()
 {
     vec3 pbrParam = texture(gPbrParam, TexCoord).rgb;
     float metallic = pbrParam.r;
     float roughness = pbrParam.g;
-    if (metallic < 0.5) discard;
+
+    float reflect_falloff = pow(metallic, 3.0);
+    if (reflect_falloff < 0.1) discard;
 
     vec3 worldPos = texture(gPosition, TexCoord).xyz;
     vec3 worldNor = texture(gNormal, TexCoord).xyz;
@@ -163,7 +163,7 @@ void main()
     // Effect
     vec2 delta_coord = smoothstep(0.2, 0.6, abs(vec2(0.5, 0.5) - pixel_hit_coord));
     float screen_edge_factor = clamp(1.0 - (delta_coord.x + delta_coord.y), 0.0, 1.0);
-    float reflect_factor = pow(metallic, rsFalloff) * screen_edge_factor;
+    float reflect_factor = reflect_falloff * screen_edge_factor;
 
     // Get color
     vec3 reflectColor = texture(LastImage, pixel_hit_coord).rgb * fresnel_factor * clamp(reflect_factor, 0.0, 1.0);

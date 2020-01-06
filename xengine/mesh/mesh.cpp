@@ -4,89 +4,71 @@
 
 namespace xengine
 {
-	Mesh::Mesh()
-	{}
+	////////////////////////////////////////////////////////////////
+	// Mesh Unique Instance
+	////////////////////////////////////////////////////////////////
 
-	Mesh::Mesh(
-		const std::vector<glm::vec3>& positions,
-		const std::vector<unsigned int>& indices)
-		:
-		positions(positions),
-		indices(indices),
-		aabb(positions)
-	{}
-
-	Mesh::Mesh(
-		const std::vector<glm::vec3>& positions,
-		const std::vector<glm::vec2>& texCoords,
-		const std::vector<unsigned int>& indices)
-		:
-		positions(positions),
-		texCoords(texCoords),
-		indices(indices),
-		aabb(positions)
-	{}
-
-	Mesh::Mesh(
-		const std::vector<glm::vec3>& positions,
-		const std::vector<glm::vec2>& texCoords,
-		const std::vector<glm::vec3>& normals,
-		const std::vector<unsigned int>& indices)
-		:
-		positions(positions),
-		texCoords(texCoords),
-		normals(normals),
-		indices(indices),
-		aabb(positions)
-	{}
-
-	Mesh::Mesh(
-		const std::vector<glm::vec3>& positions,
-		const std::vector<glm::vec2>& texCoords,
-		const std::vector<glm::vec3>& normals,
-		const std::vector<glm::vec3>& tangents,
-		const std::vector<glm::vec3>& bitangents,
-		const std::vector<unsigned int>& indices)
-		:
-		positions(positions),
-		texCoords(texCoords),
-		normals(normals),
-		tangents(tangents),
-		bitangents(bitangents),
-		indices(indices),
-		aabb(positions)
-	{}
-
-	Mesh::~Mesh()
+	void MeshMomory::Generate()
 	{
-		DeleteGpuData();
 	}
 
-	void Mesh::CommitGpuData(bool flag)
+	void MeshMomory::Destory()
 	{
+		if (vao)
+		{
+			glDeleteVertexArrays(1, &vao);
+			vao = 0;
+		}
+
+		if (vbo)
+		{
+			glDeleteBuffers(1, &vbo);
+			vbo = 0;
+		}
+
+		if (ibo)
+		{
+			glDeleteBuffers(1, &ibo);
+			ibo = 0;
+		}
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Mesh
+	////////////////////////////////////////////////////////////////
+
+	void Mesh::Commit(bool flag)
+	{
+		generate();
+
+		m_ptr->numVertices = static_cast<unsigned int>(positions.size());
+		m_ptr->numIndices = static_cast<unsigned int>(indices.size());
+		m_ptr->aabb.BuildFromVertices(positions);
+
 		// process buffer data as interleaved or seperate when specified
 		if (flag)
 		{
-			commitDataInterleaved();
+			commitOglVertexInter();
 		}
 		else
 		{
-			commitDataBatch();
+			commitOglVertexBatch();
 		}
 
+		positions.clear();
 		texCoords.clear();
 		normals.clear();
 		tangents.clear();
 		bitangents.clear();
+		indices.clear();
 	}
 
-	void Mesh::commitDataInterleaved()
+	void Mesh::commitOglVertexInter()
 	{
-		if (!vao)
+		if (!m_ptr->vao)
 		{
-			glGenVertexArrays(1, &vao);
-			glGenBuffers(1, &vbo);
-			glGenBuffers(1, &ibo);
+			glGenVertexArrays(1, &m_ptr->vao);
+			glGenBuffers(1, &m_ptr->vbo);
 		}
 
 		std::vector<float> data;
@@ -125,13 +107,14 @@ namespace xengine
 			}
 		}
 
-		glBindVertexArray(vao);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBindVertexArray(m_ptr->vao);
+		glBindBuffer(GL_ARRAY_BUFFER, m_ptr->vbo);
 		glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
 
 		if (indices.size() > 0)
 		{
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+			glGenBuffers(1, &m_ptr->ibo);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ptr->ibo);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 		}
 
@@ -178,13 +161,12 @@ namespace xengine
 		glBindVertexArray(0);
 	}
 
-	void Mesh::commitDataBatch()
+	void Mesh::commitOglVertexBatch()
 	{
-		if (!vao)
+		if (!m_ptr->vao)
 		{
-			glGenVertexArrays(1, &vao);
-			glGenBuffers(1, &vbo);
-			glGenBuffers(1, &ibo);
+			glGenVertexArrays(1, &m_ptr->vao);
+			glGenBuffers(1, &m_ptr->vbo);
 		}
 
 		std::vector<float> data;
@@ -223,13 +205,14 @@ namespace xengine
 			data.push_back(bitangents[i].z);
 		}
 
-		glBindVertexArray(vao);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBindVertexArray(m_ptr->vao);
+		glBindBuffer(GL_ARRAY_BUFFER, m_ptr->vbo);
 		glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
 
 		if (indices.size() > 0)
 		{
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+			glGenBuffers(1, &m_ptr->ibo);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ptr->ibo);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 		}
 
@@ -268,26 +251,5 @@ namespace xengine
 		}
 
 		glBindVertexArray(0);
-	}
-
-	void Mesh::DeleteGpuData()
-	{
-		if (vao)
-		{
-			glDeleteVertexArrays(1, &vao);
-			vao = 0;
-		}
-
-		if(vbo)
-		{
-			glDeleteBuffers(1, &vbo);
-			vbo = 0;
-		}
-
-		if(ibo)
-		{
-			glDeleteBuffers(1, &ibo);
-			ibo = 0;
-		}
 	}
 }

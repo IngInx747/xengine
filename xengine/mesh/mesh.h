@@ -8,55 +8,62 @@
 #include <vendor/glm/common.hpp>
 
 #include <geometry/aabb.h>
+#include <utility/smart_handle.h>
 
 namespace xengine
 {
-	class Mesh
+	class MeshMomory : public SharedMemory
 	{
 	public:
-		Mesh();
-		Mesh(const std::vector<glm::vec3>& positions, const std::vector<unsigned int>& indices);
-		Mesh(const std::vector<glm::vec3>& positions, const std::vector<glm::vec2>& texCoords, const std::vector<unsigned int>& indices);
-		Mesh(const std::vector<glm::vec3>& positions, const std::vector<glm::vec2>& texCoords, const std::vector<glm::vec3>& normals, const std::vector<unsigned int>& indices);
-		Mesh(const std::vector<glm::vec3>& positions, const std::vector<glm::vec2>& texCoords, const std::vector<glm::vec3>& normals, const std::vector<glm::vec3>& tangents, const std::vector<glm::vec3>& bitangents, const std::vector<unsigned int>& indices);
-
-		~Mesh();
-
-		inline unsigned int VAO() const { return vao; }
-		inline unsigned int IBO() const { return ibo; }
-		inline unsigned int Topology() const { return topology; }
-		inline unsigned int& Topology() { return topology; }
-
-		// Commit all buffers and attributes to GPU for rendering
-		void CommitGpuData(bool flag = true);
-
-		// Delete all buffers stored in GPU
-		void DeleteGpuData();
-
-	protected:
-		void commitDataInterleaved();
-		void commitDataBatch();
+		void Generate(); // allocate memory on GPU
+		void Destory(); // free memory on GPU
 
 	public:
-		// mesh data
-		std::vector<glm::vec3> positions;
-		std::vector<glm::vec2> texCoords;
-		std::vector<glm::vec3> normals;
-		std::vector<glm::vec3> tangents;
-		std::vector<glm::vec3> bitangents;
-
-		// indices (optional)
-		std::vector<unsigned int> indices;
-
 		// bounding box
 		AABB aabb;
 
-	protected:
 		// OpenGL stuff
 		unsigned int vao = 0;
 		unsigned int vbo = 0;
 		unsigned int ibo = 0;
 		unsigned int topology;
+
+		// geometry info
+		unsigned int numVertices = 0;
+		unsigned int numIndices = 0;
+	};
+
+	class Mesh : public SharedHandle<MeshMomory>
+	{
+	public:
+		// Commit data to all resources
+		void Commit(bool flag = true);
+
+		inline unsigned int VAO() const { return m_ptr->vao; }
+		inline unsigned int IBO() const { return m_ptr->ibo; }
+		inline unsigned int NumVtx() const { return m_ptr->numVertices; }
+		inline unsigned int NumIds() const { return m_ptr->numIndices; }
+		inline unsigned int Topology() const { return m_ptr->topology; }
+		inline const AABB & Aabb() const { return m_ptr->aabb; }
+
+		inline unsigned int& Topology() { return m_ptr->topology; }
+		inline AABB & Aabb() { return m_ptr->aabb; }
+
+	protected:
+		// commit vertices data to GPU in an interleaved way
+		void commitOglVertexInter();
+
+		// commit vertices data to GPU separately (in batch)
+		void commitOglVertexBatch();
+
+	public:
+		// register mesh data
+		std::vector<glm::vec3> positions;
+		std::vector<glm::vec2> texCoords;
+		std::vector<glm::vec3> normals;
+		std::vector<glm::vec3> tangents;
+		std::vector<glm::vec3> bitangents;
+		std::vector<unsigned int> indices;
 	};
 }
 #endif // !XE_MESH_H

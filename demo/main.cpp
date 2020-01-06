@@ -69,6 +69,10 @@ int main(int argc, char** argv)
 			MyScene2* myScene = dynamic_cast<MyScene2*>(scene.get());
 			scene->Initialize();
 		}
+		else if (sceneId == 3)
+		{
+			scene = std::make_shared<xengine::Scene>();
+		}
 
 		if (!scene) break;
 		sceneId = 0;

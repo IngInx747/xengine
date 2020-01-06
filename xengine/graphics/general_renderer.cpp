@@ -9,9 +9,9 @@ namespace xengine
 		glBindVertexArray(mesh->VAO());
 
 		if (mesh->IBO())
-			glDrawElements(mesh->Topology(), static_cast<GLsizei>(mesh->indices.size()), GL_UNSIGNED_INT, 0);
+			glDrawElements(mesh->Topology(), mesh->NumIds(), GL_UNSIGNED_INT, 0);
 		else
-			glDrawArrays(mesh->Topology(), 0, static_cast<GLsizei>(mesh->positions.size()));
+			glDrawArrays(mesh->Topology(), 0, mesh->NumVtx());
 
 		glBindVertexArray(0);
 	}

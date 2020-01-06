@@ -15,15 +15,8 @@ namespace xengine
 	class FrameBufferMemory : public SharedMemory
 	{
 	public:
-		FrameBufferMemory();
-		virtual ~FrameBufferMemory();
-
-		// Note: As the struct holds unique resource, instance copy is not allowed
-		FrameBufferMemory(const FrameBufferMemory& other) = delete;
-		FrameBufferMemory & operator=(const FrameBufferMemory& other) = delete;
-
-		void Generate(); // allocate memory on GPU
-		void Destory(); // free memory on GPU
+		virtual void Generate(); // allocate memory on GPU
+		virtual void Destory(); // free memory on GPU
 
 	public:
 		unsigned int width = 0;
@@ -34,14 +27,14 @@ namespace xengine
 		std::vector<Texture> depths; // depth / depth-stencil attachments
 	};
 
-	class FrameBuffer : public SharedHandle
+	class FrameBuffer : public SharedHandle<FrameBufferMemory>
 	{
 	public:
-		FrameBuffer();
-		virtual ~FrameBuffer();
-
-		FrameBuffer(const FrameBuffer& other);
-		FrameBuffer & operator=(const FrameBuffer& other);
+		//FrameBuffer();
+		//virtual ~FrameBuffer();
+		//
+		//FrameBuffer(const FrameBuffer& other);
+		//FrameBuffer & operator=(const FrameBuffer& other);
 
 		// bind the fbo
 		void Bind();
@@ -102,14 +95,6 @@ namespace xengine
 		inline unsigned int ID() const { return m_ptr->fbo; }
 		inline unsigned int Width() const { return m_ptr->width; }
 		inline unsigned int Height() const { return m_ptr->height; }
-
-	protected:
-		void allocateMemory(); // allocate shared memory
-		void generateObject(); // generate OGL object
-		void generate();
-
-	protected:
-		FrameBufferMemory* m_ptr = nullptr;
 	};
 }
 

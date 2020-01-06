@@ -34,13 +34,6 @@ namespace xengine
 		};
 
 	public:
-		ShaderMomory();
-		virtual ~ShaderMomory();
-
-		// Note: As the struct holds unique resource, instance copy is not allowed
-		ShaderMomory(const ShaderMomory& other) = delete;
-		ShaderMomory & operator=(const ShaderMomory& other) = delete;
-
 		void Generate(); // allocate memory on GPU
 		void Destory(); // free memory on GPU
 		
@@ -57,7 +50,7 @@ namespace xengine
 		std::unordered_map<std::string, VarTableEntry> m_uniformTable;
 	};
 
-	class Shader : public SharedHandle
+	class Shader : public SharedHandle<ShaderMomory>
 	{
 	public:
 		struct VarTableEntry
@@ -68,12 +61,6 @@ namespace xengine
 		};
 
 	public:
-		Shader();
-		virtual ~Shader();
-
-		Shader(const Shader& other);
-		Shader & operator=(const Shader& other);
-
 		// use the shader program (make this shader as current active)
 		void Bind();
 		void Bind() const;
@@ -122,28 +109,7 @@ namespace xengine
 		explicit operator bool() const { return m_ptr && m_ptr->m_id; }
 
 		inline unsigned int ID() const { return m_ptr->m_id; }
-
-	protected:
-		void allocateMemory(); // allocate shared memory
-		void generateObject(); // generate OGL object
-		void generate();
-
-	protected:
-		ShaderMomory* m_ptr = nullptr;
 	};
-
-	// load a vertex-fragment shader program
-	Shader LoadShaderVF(
-		const std::string& vsPath,
-		const std::string& fsPath,
-		const std::vector<std::string>& defines);
-
-	// load a vertex-geometry-fragment shader program
-	Shader LoadShaderVGF(
-		const std::string& vsPath,
-		const std::string& gsPath,
-		const std::string& fsPath,
-		const std::vector<std::string>& defines);
 }
 
 #endif // !XE_SHADER_H

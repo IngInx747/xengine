@@ -9,7 +9,7 @@ namespace xengine
 	{
 		meshes.push_back(mesh);
 		materials.push_back(material);
-		aabbLocal.UnionAABB(mesh->aabb);
+		aabbLocal.UnionAABB(mesh->Aabb());
 	}
 
 	void Model::InsertChild(Model* node)

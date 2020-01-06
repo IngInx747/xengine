@@ -41,10 +41,12 @@
     <ClCompile Include="graphics\render_command_manager.cpp" />
     <ClCompile Include="graphics\render_config.cpp" />
     <ClCompile Include="graphics\shader.cpp" />
+    <ClCompile Include="graphics\shader_loader.cpp" />
     <ClCompile Include="graphics\shader_manager.cpp" />
     <ClCompile Include="graphics\shadow.cpp" />
     <ClCompile Include="graphics\ssao_renderer.cpp" />
     <ClCompile Include="graphics\texture.cpp" />
+    <ClCompile Include="graphics\texture_loader.cpp" />
     <ClCompile Include="graphics\texture_manager.cpp" />
     <ClCompile Include="graphics\uniform_block.cpp" />
     <ClCompile Include="graphics\uniform_buffer.cpp" />
@@ -97,10 +99,12 @@
     <ClInclude Include="graphics\render_command_manager.h" />
     <ClInclude Include="graphics\render_config.h" />
     <ClInclude Include="graphics\shader.h" />
+    <ClInclude Include="graphics\shader_loader.h" />
     <ClInclude Include="graphics\shader_manager.h" />
     <ClInclude Include="graphics\shadow.h" />
     <ClInclude Include="graphics\ssao_renderer.h" />
     <ClInclude Include="graphics\texture.h" />
+    <ClInclude Include="graphics\texture_loader.h" />
     <ClInclude Include="graphics\texture_manager.h" />
     <ClInclude Include="graphics\uniform_block.h" />
     <ClInclude Include="graphics\uniform_buffer.h" />
