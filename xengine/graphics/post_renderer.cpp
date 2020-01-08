@@ -28,7 +28,7 @@ namespace xengine
 		m_shader.SetUniform("Sepia", RenderConfig::UseSepia());
 		m_shader.SetUniform("Vignette", RenderConfig::UseVignette());
 
-		RenderMesh(m_quad);
+		RenderMesh(&m_quad);
 
 		m_shader.Unbind();
 	}

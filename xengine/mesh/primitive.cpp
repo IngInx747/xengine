@@ -103,7 +103,6 @@ namespace xengine
 
 		Commit();
 		m_ptr->topology = GL_TRIANGLES;
-		m_ptr->aabb.BuildFromVertices(positions);
 	}
 
 	Cube::Cube()
@@ -295,7 +294,6 @@ namespace xengine
 		};
 
 		Commit();
-		m_ptr->aabb.BuildFromVertices(positions);
 		m_ptr->topology = GL_TRIANGLES;
 	}
 
@@ -337,7 +335,6 @@ namespace xengine
 
 		Commit();
 		m_ptr->topology = GL_TRIANGLES;
-		m_ptr->aabb.BuildFromVertices(positions);
 	}
 
 	Torus::Torus(unsigned int xseg, unsigned int yseg, float r1, float r2)
@@ -382,6 +379,5 @@ namespace xengine
 
 		Commit();
 		m_ptr->topology = GL_TRIANGLES;
-		m_ptr->aabb.BuildFromVertices(positions);
 	}
 }

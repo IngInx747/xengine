@@ -109,8 +109,8 @@ namespace xengine
 		{
 			for (const RenderCommand& command : commands)
 			{
-				Material* material = command.material;
-				Mesh* mesh = command.mesh;
+				Material * material = command.material;
+				Mesh * mesh = command.mesh;
 
 				material->shader.Bind();
 				material->shader.SetUniform("model", command.transform);
@@ -156,7 +156,7 @@ namespace xengine
 			m_parallelLightShader.SetUniform("lightColor", glm::normalize(light->color) * light->intensity);
 			m_parallelLightShader.SetUniform("lightShadowViewProjection", shadow.GetViewProj());
 
-			RenderMesh(m_quad);
+			RenderMesh(&m_quad);
 		}
 
 		m_parallelLightShader.Unbind();
@@ -197,7 +197,7 @@ namespace xengine
 			m_pointLightShader.SetUniform("lightRadius", light->radius);
 			m_pointLightShader.SetUniform("lightColor", glm::normalize(light->color) * light->intensity);
 
-			RenderMesh(m_sphere);
+			RenderMesh(&m_sphere);
 		}
 
 		m_pointLightShader.Unbind();
@@ -227,7 +227,7 @@ namespace xengine
 		m_ambientLightShader.Bind();
 		m_ambientLightShader.SetUniform("UseSSAO", RenderConfig::UseSSAO());
 
-		RenderMesh(m_quad);
+		RenderMesh(&m_quad);
 
 		m_ambientLightShader.Unbind();
 
@@ -249,7 +249,7 @@ namespace xengine
 
 		m_reflectLightShader.Bind();
 
-		RenderMesh(m_quad);
+		RenderMesh(&m_quad);
 
 		m_reflectLightShader.Unbind();
 

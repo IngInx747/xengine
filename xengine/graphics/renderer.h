@@ -30,7 +30,7 @@ namespace xengine
 		void Resize(unsigned width, unsigned int height);
 
 		// render scene to target frame buffer (default frame if target not given)
-		void Render(Scene* scene, Camera* camera, FrameBuffer* target);
+		void Render(Scene* scene, Camera* camera, FrameBuffer && target);
 
 	public:
 		static void Initialize();
@@ -72,10 +72,10 @@ namespace xengine
 		PostRenderer postRenderer;
 
 		// related frame buffer(s)
-		FrameBuffer m_framebuffer0; // primary frame buffer
-		FrameBuffer m_framebuffer1; // secondary frame buffer
-		FrameBuffer* m_mainCanvas;
-		FrameBuffer* m_swapCanvas;
+		//FrameBuffer m_framebuffer0; // primary frame buffer
+		//FrameBuffer m_framebuffer1; // secondary frame buffer
+		FrameBuffer m_mainCanvas;
+		FrameBuffer m_swapCanvas;
 
 	private:
 		// uniform buffer objects

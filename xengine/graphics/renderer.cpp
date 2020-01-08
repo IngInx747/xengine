@@ -36,22 +36,18 @@ namespace xengine
 		/// primary frame buffer
 
 		// 1 color attachment
-		m_framebuffer0.GenerateColorAttachments(1, 1, GL_HALF_FLOAT, 1);
+		m_mainCanvas.GenerateColorAttachments(1, 1, GL_HALF_FLOAT, 1);
 
 		// 1 render buffer for depth test (in the case depth value is not needed by other routines)
-		m_framebuffer0.GenerateDepthRenderBuffer(1, 1);
+		m_mainCanvas.GenerateDepthRenderBuffer(1, 1);
 
 		// depth attachment (in the case depth value is needed)
 		//m_canvas.GenerateDepthAttachment(1, 1, GL_HALF_FLOAT);
 
-		m_mainCanvas = &m_framebuffer0;
-
 		/// secondary frame buffer
 
 		// 1 color attachment
-		m_framebuffer1.GenerateColorAttachments(1, 1, GL_HALF_FLOAT, 1);
-
-		m_swapCanvas = &m_framebuffer1;
+		m_swapCanvas.GenerateColorAttachments(1, 1, GL_HALF_FLOAT, 1);
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -150,9 +146,7 @@ namespace xengine
 				// generate a render command and push to queue
 				for (size_t i = 0; i < model->meshes.size(); ++i)
 				{
-					RenderCommand command;
-					command.mesh = model->meshes[i];
-					command.material = model->materials[i];
+					RenderCommand command(&model->meshes[i], model->materials[i]);
 					command.transform = model->transform;
 					command.prevTrans = model->prevTrans;
 					command.aabb.BuildFromTransform(command.mesh->Aabb(), command.transform);
@@ -187,8 +181,8 @@ namespace xengine
 		this->width = width;
 		this->height = height;
 
-		m_framebuffer0.Resize(width, height);
-		m_framebuffer1.Resize(width, height);
+		m_mainCanvas.Resize(width, height);
+		m_swapCanvas.Resize(width, height);
 
 		deferredRenderer.Resize(width, height);
 		ssaoRenderer.Resize(width, height);
@@ -200,7 +194,7 @@ namespace xengine
 	// Rendering methods (primary rendering pipeline)
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	void Renderer::Render(Scene* scene, Camera* camera, FrameBuffer* target)
+	void Renderer::Render(Scene* scene, Camera* camera, FrameBuffer && target)
 	{
 		updateUniformBuffer(scene, camera);
 
@@ -248,10 +242,10 @@ namespace xengine
 
 		/// deferred lighting
 		{
-			m_mainCanvas->Bind(); glViewport(0, 0, m_mainCanvas->Width(), m_mainCanvas->Height());
+			m_mainCanvas.Bind(); glViewport(0, 0, m_mainCanvas.Width(), m_mainCanvas.Height());
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-			if (RenderConfig::UseSSR()) deferredRenderer.RenderReflectLight(m_swapCanvas->GetColorAttachment(0));
+			if (RenderConfig::UseSSR()) deferredRenderer.RenderReflectLight(m_swapCanvas.GetColorAttachment(0));
 
 			deferredRenderer.RenderAmbientLight(scene->irradianceMap, scene->reflectionMap, ssaoRenderer.GetAO());
 
@@ -268,7 +262,7 @@ namespace xengine
 
 			ForwardRenderer::SetParallelShadow(scene->parallelLights, commands);
 
-			m_mainCanvas->Bind(); glViewport(0, 0, m_mainCanvas->Width(), m_mainCanvas->Height());
+			m_mainCanvas.Bind(); glViewport(0, 0, m_mainCanvas.Width(), m_mainCanvas.Height());
 
 			OglStatus::SetPolygonMode(RenderConfig::UseWireframe() ? GL_LINE : GL_FILL);
 
@@ -290,7 +284,7 @@ namespace xengine
 
 			ForwardRenderer::SetParallelShadow(scene->parallelLights, commands);
 
-			m_mainCanvas->Bind(); glViewport(0, 0, m_mainCanvas->Width(), m_mainCanvas->Height());
+			m_mainCanvas.Bind(); glViewport(0, 0, m_mainCanvas.Width(), m_mainCanvas.Height());
 
 			OglStatus::SetPolygonMode(RenderConfig::UseWireframe() ? GL_LINE : GL_FILL);
 
@@ -304,14 +298,14 @@ namespace xengine
 			OglStatus::SetBlend(GL_FALSE);
 
 			if (RenderConfig::UseBloom())
-				bloomRenderer.Generate(m_mainCanvas->GetColorAttachment(0));
+				bloomRenderer.Generate(m_mainCanvas.GetColorAttachment(0));
 		}
 
 		/// visualization pass
 		{
 			if (RenderConfig::UseLightVolume())
 			{
-				m_mainCanvas->Bind(); glViewport(0, 0, m_mainCanvas->Width(), m_mainCanvas->Height());
+				m_mainCanvas.Bind(); glViewport(0, 0, m_mainCanvas.Width(), m_mainCanvas.Height());
 
 				OglStatus::SetPolygonMode(GL_LINE);
 				OglStatus::SetCull(GL_TRUE);
@@ -336,21 +330,21 @@ namespace xengine
 
 			if (RenderConfig::UseMotionBlur())
 			{
-				m_swapCanvas->Bind(); glViewport(0, 0, m_swapCanvas->Width(), m_swapCanvas->Height());
-				motionBlurRenderer.Render(m_mainCanvas->GetColorAttachment(0));
+				m_swapCanvas.Bind(); glViewport(0, 0, m_swapCanvas.Width(), m_swapCanvas.Height());
+				motionBlurRenderer.Render(m_mainCanvas.GetColorAttachment(0));
 				std::swap(m_mainCanvas, m_swapCanvas);
 			}
 
 			if (RenderConfig::UseBloom())
 			{
-				m_swapCanvas->Bind(); glViewport(0, 0, m_swapCanvas->Width(), m_swapCanvas->Height());
-				bloomRenderer.Render(m_mainCanvas->GetColorAttachment(0));
+				m_swapCanvas.Bind(); glViewport(0, 0, m_swapCanvas.Width(), m_swapCanvas.Height());
+				bloomRenderer.Render(m_mainCanvas.GetColorAttachment(0));
 				std::swap(m_mainCanvas, m_swapCanvas);
 			}
 
 			{
-				m_swapCanvas->Bind(); glViewport(0, 0, m_swapCanvas->Width(), m_swapCanvas->Height());
-				postRenderer.GenerateEffect(m_mainCanvas->GetColorAttachment(0));
+				m_swapCanvas.Bind(); glViewport(0, 0, m_swapCanvas.Width(), m_swapCanvas.Height());
+				postRenderer.GenerateEffect(m_mainCanvas.GetColorAttachment(0));
 				std::swap(m_mainCanvas, m_swapCanvas);
 			}
 		}
@@ -361,8 +355,8 @@ namespace xengine
 			Blit(m_mainCanvas, m_swapCanvas, GL_COLOR_BUFFER_BIT);
 			
 			// restore front/back buffer pointers
-			m_mainCanvas = &m_framebuffer0;
-			m_swapCanvas = &m_framebuffer1;
+			if (!m_mainCanvas.HasDepth())
+				std::swap(m_mainCanvas, m_swapCanvas);
 
 			// blit final result
 			// Note: This step MUST be done at the END of rendering as the target frame buffer

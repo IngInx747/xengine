@@ -5,11 +5,11 @@
 
 namespace xengine
 {
-	void Model::InsertMesh(Mesh * mesh, Material * material)
+	void Model::InsertMesh(const Mesh & mesh, Material * material)
 	{
 		meshes.push_back(mesh);
 		materials.push_back(material);
-		aabbLocal.UnionAABB(mesh->Aabb());
+		aabbLocal.UnionAABB(mesh.Aabb());
 	}
 
 	void Model::InsertChild(Model* node)

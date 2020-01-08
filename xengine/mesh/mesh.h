@@ -39,6 +39,8 @@ namespace xengine
 		// Commit data to all resources
 		void Commit(bool flag = true);
 
+		explicit operator bool() const { return m_ptr && m_ptr->vao; }
+
 		inline unsigned int VAO() const { return m_ptr->vao; }
 		inline unsigned int IBO() const { return m_ptr->ibo; }
 		inline unsigned int NumVtx() const { return m_ptr->numVertices; }

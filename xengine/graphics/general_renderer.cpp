@@ -36,10 +36,24 @@ namespace xengine
 		glBlitFramebuffer(0, 0, from->Width(), from->Height(), 0, 0, to->Width(), to->Height(), type, GL_NEAREST);
 	}
 
+	void Blit(const FrameBuffer & from, FrameBuffer & to, unsigned int type)
+	{
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, from.ID());
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, to.ID());
+		glBlitFramebuffer(0, 0, from.Width(), from.Height(), 0, 0, to.Width(), to.Height(), type, GL_NEAREST);
+	}
+
 	void Blit(FrameBuffer * from, unsigned int width, unsigned height, unsigned int type)
 	{
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, from->ID());
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 		glBlitFramebuffer(0, 0, from->Width(), from->Height(), 0, 0, width, height, type, GL_NEAREST);
+	}
+
+	void Blit(const FrameBuffer & from, unsigned int width, unsigned height, unsigned int type)
+	{
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, from.ID());
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+		glBlitFramebuffer(0, 0, from.Width(), from.Height(), 0, 0, width, height, type, GL_NEAREST);
 	}
 }

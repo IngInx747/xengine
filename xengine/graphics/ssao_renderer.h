@@ -35,7 +35,7 @@ namespace xengine
 		Texture m_output;
 
 		// related mesh(es)
-		Mesh* m_quad;
+		Mesh m_quad;
 
 		// SSAO configure
 		Texture m_noise; // noise texture

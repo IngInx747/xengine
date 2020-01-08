@@ -81,7 +81,7 @@ namespace xengine
 		m_shader.SetUniform("projection", camera->GetProjection());
 		m_shader.SetUniform("view", camera->GetView());
 
-		RenderMesh(m_quad);
+		RenderMesh(&m_quad);
 
 		m_shader.Unbind();
 

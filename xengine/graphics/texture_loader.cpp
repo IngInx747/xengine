@@ -37,7 +37,7 @@ namespace xengine
 		}
 		else
 		{
-			Log::Message("[TextureManager] Cannot load 2D texture \"" + filename + "\"", Log::WARN);
+			Log::Message("[TextureLoader] Cannot load 2D texture \"" + filename + "\"", Log::WARN);
 			stbi_image_free(data);
 			return Texture();
 		}
@@ -51,7 +51,7 @@ namespace xengine
 
 		if (!stbi_is_hdr(filename.c_str()))
 		{
-			Log::Message("[TextureManager] File \"" + filename + "\" is not HDR format or does not exist", Log::WARN);
+			Log::Message("[TextureLoader] File \"" + filename + "\" is not HDR format or does not exist", Log::WARN);
 			return Texture();
 		}
 
@@ -81,7 +81,7 @@ namespace xengine
 		}
 		else
 		{
-			Log::Message("[TextureManager] Cannot load HDR texture \"" + filename + "\"", Log::WARN);
+			Log::Message("[TextureLoader] Cannot load HDR texture \"" + filename + "\"", Log::WARN);
 			stbi_image_free(data);
 			return Texture();
 		}
@@ -121,7 +121,7 @@ namespace xengine
 			}
 			else
 			{
-				Log::Message("[TextureManager] Cannot load cubic texture \"" + faces[i] + "\"", Log::WARN);
+				Log::Message("[TextureLoader] Cannot load cubic texture \"" + faces[i] + "\"", Log::WARN);
 				stbi_image_free(data);
 			}
 		}
@@ -135,7 +135,7 @@ namespace xengine
 	{
 		if (!FileSystem::IsDirectory(folder))
 		{
-			Log::Message("[TextureManager] Cannot load cubic texture. Path \"" + folder + "\" is not a folder.", Log::WARN);
+			Log::Message("[TextureLoader] Cannot load cubic texture. Path \"" + folder + "\" is not a folder.", Log::WARN);
 			return Texture();
 		}
 
@@ -151,7 +151,7 @@ namespace xengine
 		}
 		else
 		{
-			Log::Message("[TextureManager] Cannot load cubic texture in folder \"" + folder + "\". Textures do not exist.", Log::WARN);
+			Log::Message("[TextureLoader] Cannot load cubic texture in folder \"" + folder + "\". Textures do not exist.", Log::WARN);
 			return Texture();
 		}
 

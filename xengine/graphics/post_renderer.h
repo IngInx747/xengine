@@ -23,7 +23,7 @@ namespace xengine
 		Shader m_shader;
 
 		// related mesh(es)
-		Mesh* m_quad;
+		Mesh m_quad;
 	};
 }
 

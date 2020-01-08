@@ -3,9 +3,9 @@
 void MyScene1::Initialize()
 {
 	// mesh
-	xengine::Mesh* plane = xengine::MeshManager::LoadPrimitive("plane");
-	xengine::Mesh* sphere = xengine::MeshManager::LoadPrimitive("sphere", 256, 128);
-	xengine::Mesh* torus = xengine::MeshManager::LoadPrimitive("torus", 32, 32, 2.0f, 0.5f);
+	xengine::Mesh plane = xengine::MeshManager::LoadPrimitive("plane");
+	xengine::Mesh sphere = xengine::MeshManager::LoadPrimitive("sphere", 256, 128);
+	xengine::Mesh torus = xengine::MeshManager::LoadPrimitive("torus", 32, 32, 2.0f, 0.5f);
 
 	// shader
 	xengine::Shader shdPlasma = xengine::ShaderManager::LoadLocalVF("plasma orb", "shaders/plasma_orb.vs", "shaders/plasma_orb.fs");

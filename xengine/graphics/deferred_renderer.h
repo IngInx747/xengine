@@ -33,7 +33,8 @@ namespace xengine
 		// render reflect light (Screen-space reflection)
 		void RenderReflectLight(const Texture & last_frame);
 
-		inline FrameBuffer* GetFrameBuffer() { return &m_gBuffer; }
+		inline const FrameBuffer & GetFrameBuffer() { return m_gBuffer; }
+
 		inline const Texture & GetTexPosition() { return m_gBuffer.GetColorAttachment(0); }
 		inline const Texture & GetTexNormal() { return m_gBuffer.GetColorAttachment(1); }
 		inline const Texture & GetTexAlbedo() { return m_gBuffer.GetColorAttachment(2); }
@@ -53,8 +54,8 @@ namespace xengine
 		Shader m_reflectLightShader; // deferred reflect light shader
 
 		// related primitives
-		Mesh* m_quad; // mesh for g-buffer quad sampling (parallel light)
-		Mesh* m_sphere; // mesh for g-buffer spheric sampling (volumn point light)
+		Mesh m_quad; // mesh for g-buffer quad sampling (parallel light)
+		Mesh m_sphere; // mesh for g-buffer spheric sampling (volumn point light)
 	};
 }
 

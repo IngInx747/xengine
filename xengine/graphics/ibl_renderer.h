@@ -43,9 +43,9 @@ namespace xengine
 		static Shader _reflectionCaptureShader; // generate the reflection cubemap from environment cubemap
 
 		// related meshes
-		static Mesh* _quad;
-		static Mesh* _cube;
-		static Mesh* _sphere;
+		static Mesh _quad;
+		static Mesh _cube;
+		static Mesh _sphere;
 
 		static Texture _brdfIntegrationMap; // pre-calculated normal-roughness lookup texture
 		static FrameBuffer _brdfIntegrationMapBuffer; // pre-calculated normal-roughness lookup frame buffer

@@ -19,7 +19,7 @@ const int ScreenWidth = 1600;
 const int ScreenHeight = 900;
 bool keysPressed[1024];
 bool keysActive[1024];
-int sceneId = 2;
+int sceneId = 3;
 
 int main(int argc, char** argv)
 {
@@ -99,7 +99,7 @@ int main(int argc, char** argv)
 			scene->Update(currentFrameTime, deltaTime);
 
 			// primary render pipeline
-			mainRenderer->Render(scene.get(), mainCamera, nullptr);
+			mainRenderer->Render(scene.get(), mainCamera, xengine::FrameBuffer());
 
 			// ui
 			xengine::UI::Render();

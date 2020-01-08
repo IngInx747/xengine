@@ -15,39 +15,37 @@ namespace xengine
 	class MeshManager
 	{
 	public:
+		// initialize shader manager (load default resources)
 		static void Initialize();
+
+		// clear resources
 		static void Clear();
+
+		// clear local resources (loaded with scene)
 		static void ClearLocal();
-		static void ClearPrimitives();
+
+		// clear global resources (default resources or shared by multiple scenes)
+		static void ClearGlobal();
 
 		// load primitive
-		static Mesh* LoadPrimitive(std::string type, ...); // load meshed primitive (zero or more params)
+		static Mesh LoadPrimitive(std::string type, ...); // load meshed primitive (zero or more params)
 
 		// get named mesh
-		static Mesh* Get(const std::string& name);
-
-		// API for model manager to load mesh from model file (wave-front format)
-		static Mesh* LoadFromModel(aiMesh* aMesh, glm::vec3& vmin, glm::vec3& vmax);
+		static Mesh Get(const std::string& name);
 
 	private:
 		// generate pre-defined mesh
 		static void generateDefaultMesh();
 
 	private:
-		// resources container
-		static std::vector<std::shared_ptr<Mesh>> _meshes;
-
 		// lookup table
-		static std::unordered_map<std::string, Mesh*> _meshTable;
-
-		// primitives
-		static std::vector<std::shared_ptr<Mesh>> _defaultMeshes;
+		static std::unordered_map<std::string, Mesh> g_localTable;
 
 		// primitives lookup table
-		static std::unordered_map<std::string, Mesh*> _defaultMeshTable;
+		static std::unordered_map<std::string, Mesh> g_globalTable;
 
 		// null protector (if a mesh fails to load, this mesh will be the output)
-		static Mesh* _nullMesh;
+		static Mesh _nullMesh;
 	};
 }
 

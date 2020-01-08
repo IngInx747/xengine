@@ -2,7 +2,7 @@
 
 void MyScene2::Initialize()
 {
-	xengine::Mesh* plane = xengine::MeshManager::LoadPrimitive("plane");
+	xengine::Mesh plane = xengine::MeshManager::LoadPrimitive("plane");
 
 	xengine::Material* mtrPlane = xengine::MaterialManager::Get("deferred");
 	mtrPlane->RegisterTexture("TexAlbedo", xengine::TextureManager::LoadTexture2D("checkerboard", "textures/checkerboard.png", GL_RGB));

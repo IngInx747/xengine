@@ -62,7 +62,7 @@ namespace xengine
 		m_captureShader.SetUniform("prevView", camera->GetPrevView());
 		m_captureShader.SetUniform("projection", camera->GetProjection());
 
-		RenderMesh(m_quad);
+		RenderMesh(&m_quad);
 
 		m_captureShader.Unbind();
 
@@ -76,7 +76,7 @@ namespace xengine
 
 		m_postShader.Bind();
 
-		RenderMesh(m_quad);
+		RenderMesh(&m_quad);
 
 		m_postShader.Unbind();
 	}
@@ -94,7 +94,7 @@ namespace xengine
 
 		m_blitShader.Bind();
 
-		RenderMesh(m_quad);
+		RenderMesh(&m_quad);
 
 		m_blitShader.Unbind();
 

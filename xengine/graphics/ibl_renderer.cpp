@@ -16,9 +16,9 @@ namespace xengine
 	Shader IblRenderer::_irradianceCaptureShader; // generate the irradiance cubemap from environment cubemap
 	Shader IblRenderer::_reflectionCaptureShader; // generate the reflection cubemap from environment cubemap
 
-	Mesh* IblRenderer::_quad = nullptr;
-	Mesh* IblRenderer::_cube = nullptr;
-	Mesh* IblRenderer::_sphere = nullptr;
+	Mesh IblRenderer::_quad;
+	Mesh IblRenderer::_cube;
+	Mesh IblRenderer::_sphere;
 
 	Texture IblRenderer::_brdfIntegrationMap;
 	FrameBuffer IblRenderer::_brdfIntegrationMapBuffer;
@@ -62,7 +62,7 @@ namespace xengine
 			material.shader.SetUniform("view", camera->GetView());
 			material.shader.SetUniform("camPos", camera->GetPosition());
 
-			RenderMesh(_cube, &material);
+			RenderMesh(&_cube, &material);
 		}
 
 		return capture.captures;
@@ -91,7 +91,7 @@ namespace xengine
 			material.shader.SetUniform("view", camera->GetView());
 			material.shader.SetUniform("camPos", camera->GetPosition());
 
-			RenderMesh(_cube, &material);
+			RenderMesh(&_cube, &material);
 		}
 
 		return capture.captures;
@@ -131,7 +131,7 @@ namespace xengine
 				material.shader.SetUniform("view", camera->GetView());
 				material.shader.SetUniform("camPos", camera->GetPosition());
 
-				RenderMesh(_cube, &material);
+				RenderMesh(&_cube, &material);
 			}
 		}
 
@@ -152,7 +152,7 @@ namespace xengine
 
 		shader.Bind();
 
-		RenderMesh(_quad);
+		RenderMesh(&_quad);
 
 		_brdfIntegrationMapBuffer.Unbind();
 

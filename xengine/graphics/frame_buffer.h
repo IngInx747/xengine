@@ -30,12 +30,6 @@ namespace xengine
 	class FrameBuffer : public SharedHandle<FrameBufferMemory>
 	{
 	public:
-		//FrameBuffer();
-		//virtual ~FrameBuffer();
-		//
-		//FrameBuffer(const FrameBuffer& other);
-		//FrameBuffer & operator=(const FrameBuffer& other);
-
 		// bind the fbo
 		void Bind();
 
@@ -89,6 +83,17 @@ namespace xengine
 
 		// generate cube map depth attachment alone (for point light shadow map)
 		void GenerateCubeMapDepthAttachment(unsigned int width, unsigned int height, unsigned int data_type, unsigned int num_attachment = 1);
+
+		// Access
+
+		// get number of color attachments
+		inline unsigned int NumColor() const { return static_cast<unsigned int>(m_ptr->colors.size()); }
+
+		// get number of depth attachments
+		inline unsigned int NumDepth() const { return static_cast<unsigned int>(m_ptr->depths.size()); }
+
+		// tell if depth attachment has been attached
+		inline bool HasDepth() const { return m_ptr->rbo || m_ptr->depths.size(); }
 
 		explicit operator bool() const { return m_ptr && m_ptr->fbo; }
 

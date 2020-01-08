@@ -36,7 +36,7 @@ namespace xengine
 		Shader m_parallelShadowShader;
 		Shader m_volumnLightShader;
 
-		Mesh* m_sphere;
+		Mesh m_sphere;
 	};
 }
 

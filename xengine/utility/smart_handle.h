@@ -62,7 +62,7 @@ namespace xengine
 		SharedHandle(const SharedHandle& other)
 		{
 			m_ptr = other.m_ptr;
-			m_ptr->IncreaseReference();
+			if (m_ptr) m_ptr->IncreaseReference();
 		}
 
 		SharedHandle & operator=(const SharedHandle& other)
@@ -79,7 +79,7 @@ namespace xengine
 			}
 
 			m_ptr = other.m_ptr;
-			m_ptr->IncreaseReference();
+			if (m_ptr) m_ptr->IncreaseReference();
 
 			return *this;
 		}

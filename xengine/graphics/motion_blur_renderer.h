@@ -43,7 +43,7 @@ namespace xengine
 		Shader m_postShader; // cast motion blur effect
 
 		// canvas
-		Mesh* m_quad;
+		Mesh m_quad;
 	};
 }
 

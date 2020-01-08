@@ -27,13 +27,13 @@ namespace xengine
 			switch (type)
 			{
 			case GL_VERTEX_SHADER:
-				Log::Message("[Shader] Vertex shader compilation error!\n" + std::string(log), Log::ERROR);
+				Log::Message("[ShaderLoader] Vertex shader compilation error!\n" + std::string(log), Log::ERROR);
 				break;
 			case GL_GEOMETRY_SHADER:
-				Log::Message("[Shader] Geometry shader compilation error!\n" + std::string(log), Log::ERROR);
+				Log::Message("[ShaderLoader] Geometry shader compilation error!\n" + std::string(log), Log::ERROR);
 				break;
 			case GL_FRAGMENT_SHADER:
-				Log::Message("[Shader] Fragment shader compilation error!\n" + std::string(log), Log::ERROR);
+				Log::Message("[ShaderLoader] Fragment shader compilation error!\n" + std::string(log), Log::ERROR);
 				break;
 			default:
 				break;
@@ -69,7 +69,7 @@ namespace xengine
 
 		if (!in)
 		{
-			Log::Message("[Shader] Cannot open shader source \"" + path + "\"", Log::ERROR);
+			Log::Message("[ShaderLoader] Cannot open shader source \"" + path + "\"", Log::ERROR);
 			return "";
 		}
 

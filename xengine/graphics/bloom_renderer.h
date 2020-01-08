@@ -54,7 +54,7 @@ namespace xengine
 		Texture m_output3;
 
 		// canvas
-		Mesh* m_quad;
+		Mesh m_quad;
 	};
 }
 

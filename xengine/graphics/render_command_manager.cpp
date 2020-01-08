@@ -65,8 +65,6 @@ namespace xengine
 
 		for (const RenderCommand& cmd : m_forwardCommands)
 		{
-			//AABB aabb; aabb.BuildFromTransform(cmd.mesh->aabb, cmd.transform);
-
 			if (camera->IntersectFrustum(cmd.aabb))
 				commands.push_back(cmd);
 		}
@@ -82,8 +80,6 @@ namespace xengine
 
 		for (const RenderCommand& cmd : m_deferredCommands)
 		{
-			//AABB aabb; aabb.BuildFromTransform(cmd.mesh->aabb, cmd.transform);
-
 			if (camera->IntersectFrustum(cmd.aabb))
 				commands.push_back(cmd);
 		}
@@ -99,8 +95,6 @@ namespace xengine
 
 		for (const RenderCommand& cmd : m_alphaCommands)
 		{
-			//AABB aabb; aabb.BuildFromTransform(cmd.mesh->aabb, cmd.transform);
-
 			if (camera->IntersectFrustum(cmd.aabb))
 				commands.push_back(cmd);
 		}

@@ -18,7 +18,7 @@ namespace xengine
 		FrameBuffer & dst,
 		FrameBuffer & medium,
 		Shader & shader,
-		Mesh* quad,
+		Mesh & quad,
 		unsigned int count)
 	{
 		// pick pre-defined render targets for blur based on render size
@@ -46,7 +46,7 @@ namespace xengine
 			if (flag) rt_horizontal.Bind();
 			else rt_vertical.Bind();
 
-			RenderMesh(quad);
+			RenderMesh(&quad);
 		}
 	}
 
@@ -134,7 +134,7 @@ namespace xengine
 
 		m_filterShader.Bind();
 
-		RenderMesh(m_quad);
+		RenderMesh(&m_quad);
 		bloom_blur_pingpong_op(m_origin.GetColorAttachment(0), m_target0, m_medium0, m_blurShader, m_quad, 8);
 		bloom_blur_pingpong_op(m_output0, m_target1, m_medium1, m_blurShader, m_quad, 8);
 		bloom_blur_pingpong_op(m_output1, m_target2, m_medium2, m_blurShader, m_quad, 8);
@@ -155,7 +155,7 @@ namespace xengine
 
 		m_postShader.Bind();
 
-		RenderMesh(m_quad);
+		RenderMesh(&m_quad);
 
 		m_postShader.Unbind();
 	}

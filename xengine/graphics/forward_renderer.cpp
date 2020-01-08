@@ -109,7 +109,7 @@ namespace xengine
 		for (const RenderCommand& command : commands)
 		{
 			Material* material = command.material;
-			Mesh* mesh = command.mesh;
+			Mesh * mesh = command.mesh;
 
 			material->shader.Bind();
 			material->shader.SetUniform("model", command.transform);
@@ -120,8 +120,6 @@ namespace xengine
 
 	void ForwardRenderer::RenderEmissionPointLights(const std::vector<PointLight*>& lights, Camera* camera, float radius)
 	{
-		Mesh* sphere = m_sphere;
-
 		m_volumnLightShader.Bind();
 
 		for (PointLight* light : lights)
@@ -140,7 +138,7 @@ namespace xengine
 			m_volumnLightShader.SetUniform("model", model);
 			m_volumnLightShader.SetUniform("lightColor", glm::normalize(light->color) * light->intensity * 0.25f);
 
-			RenderMesh(sphere);
+			RenderMesh(&m_sphere);
 		}
 	}
 

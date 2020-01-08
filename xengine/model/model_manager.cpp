@@ -6,7 +6,7 @@
 
 #include <geometry/constant.h>
 #include <utility/log.h>
-#include <mesh/mesh_manager.h>
+#include <mesh/mesh_loader.h>
 #include <graphics/material_manager.h>
 
 namespace xengine
@@ -100,19 +100,17 @@ namespace xengine
 
 		for (unsigned int i = 0; i < aNode->mNumMeshes; ++i)
 		{
-			glm::vec3 vmin{ kInf }, vmax{ -kInf };
-
 			aiMesh* aMesh = aScene->mMeshes[aNode->mMeshes[i]];
 			aiMaterial* aMaterial = aScene->mMaterials[aMesh->mMaterialIndex];
 
-			Mesh* mesh = MeshManager::LoadFromModel(aMesh, vmin, vmax);
+			Mesh mesh = LoadMesh_Impl_Assimp(aMesh);
 			Material* material = nullptr;
 
 			if (use_dft_mtr) material = MaterialManager::LoadFromModel(aMaterial, directory, aMesh);
 
 			node->meshes.push_back(mesh);
 			node->materials.push_back(material);
-			node->aabbLocal.UnionAABB(mesh->Aabb()); // update local bounding box
+			node->aabbLocal.UnionAABB(mesh.Aabb()); // update local bounding box
 		}
 
 		for (unsigned int i = 0; i < aNode->mNumChildren; ++i)

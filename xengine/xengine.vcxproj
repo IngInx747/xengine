@@ -51,6 +51,7 @@
     <ClCompile Include="graphics\uniform_block.cpp" />
     <ClCompile Include="graphics\uniform_buffer.cpp" />
     <ClCompile Include="mesh\mesh.cpp" />
+    <ClCompile Include="mesh\mesh_loader.cpp" />
     <ClCompile Include="mesh\mesh_manager.cpp" />
     <ClCompile Include="mesh\primitive.cpp" />
     <ClCompile Include="model\model.cpp" />
@@ -109,6 +110,7 @@
     <ClInclude Include="graphics\uniform_block.h" />
     <ClInclude Include="graphics\uniform_buffer.h" />
     <ClInclude Include="mesh\mesh.h" />
+    <ClInclude Include="mesh\mesh_loader.h" />
     <ClInclude Include="mesh\mesh_manager.h" />
     <ClInclude Include="mesh\primitive.h" />
     <ClInclude Include="model\model.h" />

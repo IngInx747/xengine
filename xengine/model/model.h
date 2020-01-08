@@ -25,7 +25,7 @@ namespace xengine
 		virtual void UpdateTransform(const glm::mat4& parentTransform);
 
 		// insert a mesh with material
-		void InsertMesh(Mesh* mesh, Material* material);
+		void InsertMesh(const Mesh & mesh, Material* material);
 
 		// insert a model as child node
 		void InsertChild(Model* node);
@@ -34,7 +34,7 @@ namespace xengine
 		void RemoveChild(Model* node);
 
 	public:
-		std::vector<Mesh*> meshes;
+		std::vector<Mesh> meshes;
 		std::vector<Material*> materials;
 
 		// hierarchical structure
