@@ -97,7 +97,7 @@ namespace xengine
 		m_postShader.SetUniform("TexBloom4", 4);
 		m_postShader.Unbind();
 
-		m_quad = MeshManager::LoadPrimitive("quad");
+		m_quad = MeshManager::LoadGlobalPrimitive("quad");
 	}
 
 	void BloomRenderer::Resize(unsigned int width, unsigned int height)

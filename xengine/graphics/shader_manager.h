@@ -60,6 +60,22 @@ namespace xengine
 			const std::vector<std::string>& defines = {});
 
 	private:
+		static Shader loadVF(
+			std::unordered_map<std::string, Shader>& table,
+			const std::string& name,
+			const std::string& vsPath,
+			const std::string& fsPath,
+			const std::vector<std::string>& defines = {});
+
+		static Shader loadVGF(
+			std::unordered_map<std::string, Shader>& table,
+			const std::string& name,
+			const std::string& vsPath,
+			const std::string& gsPath,
+			const std::string& fsPath,
+			const std::vector<std::string>& defines = {});
+
+	private:
 		// local lookup tables
 		static std::unordered_map<std::string, Shader> g_localTable;
 

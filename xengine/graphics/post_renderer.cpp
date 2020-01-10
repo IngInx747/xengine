@@ -17,7 +17,7 @@ namespace xengine
 		m_shader.SetUniform("TexSrc", 0);
 		m_shader.SetUniform("gMotion", 1);
 
-		m_quad = MeshManager::LoadPrimitive("quad");
+		m_quad = MeshManager::LoadGlobalPrimitive("quad");
 	}
 
 	void PostRenderer::GenerateEffect(const Texture & source)

@@ -79,8 +79,8 @@ namespace xengine
 		m_reflectLightShader.SetUniform("LastImage", 3);
 		m_reflectLightShader.Unbind();
 
-		m_quad = MeshManager::LoadPrimitive("quad");
-		m_sphere = MeshManager::LoadPrimitive("sphere", 16, 8);
+		m_quad = MeshManager::LoadGlobalPrimitive("quad");
+		m_sphere = MeshManager::LoadGlobalPrimitive("sphere", 16, 8);
 	}
 
 	void DeferredRenderer::Resize(unsigned int width, unsigned int height)

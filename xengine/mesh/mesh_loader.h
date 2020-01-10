@@ -8,8 +8,6 @@ struct aiMesh;
 
 namespace xengine
 {
-	Mesh LoadMesh_Primitive(const std::string & type, const std::vector<double>& params);
-
 	Mesh LoadMesh_Impl_Assimp(aiMesh* aMesh);
 }
 

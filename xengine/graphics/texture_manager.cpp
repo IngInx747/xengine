@@ -54,74 +54,34 @@ namespace xengine
 		return _nullTexture2D;
 	}
 
-	Texture TextureManager::LoadTexture2D(const std::string& name, const std::string& path, unsigned int format, bool srgb)
+	Texture TextureManager::LoadLocalTexture2D(const std::string& name, const std::string& path, unsigned int format, bool srgb)
 	{
-		// if texture exists in scene-specific resources, return it directly
-		auto it = g_localTable.find(name);
-		if (it != g_localTable.end()) return it->second;
-
-		// Note: Here we do not search in default resources, so the texture can override
-		// the default texture, which possibly already exists and has the same name.
-
-		Log::Message("[TextureManager] Loading 2D texture \"" + name + "\" from \"" + path + "\" ...", Log::INFO);
-
-		Texture texture = LoadTexture2D_Impl_Stbi(path, format, srgb);
-
-		if (!texture)
-		{
-			Log::Message("[TextureManager] 2D Texture \"" + name + "\" loading failed", Log::WARN);
-			return _nullTexture2D;
-		}
-
-		g_localTable[name] = texture;
-
-		Log::Message("[TextureManager] 2D Texture \"" + name + "\" loaded successfully", Log::INFO);
-
-		return texture;
+		return loadTexture2D(g_localTable, name, path, format, srgb);
 	}
 
-	Texture TextureManager::LoadHDR(const std::string& name, const std::string& path)
+	Texture TextureManager::LoadGlobalTexture2D(const std::string & name, const std::string & path, unsigned int format, bool srgb)
 	{
-		auto it = g_localTable.find(name);
-		if (it != g_localTable.end()) return it->second;
-
-		Log::Message("[TextureManager] Loading HDR texture \"" + name + "\" from \"" + path + "\" ...", Log::INFO);
-
-		Texture texture = LoadHDR_Impl_Stbi(path);
-
-		if (!texture)
-		{
-			Log::Message("[TextureManager] HDR texture \"" + name + "\" loading failed", Log::WARN);
-			return _nullTexture2D;
-		}
-
-		g_localTable[name] = texture;
-
-		Log::Message("[TextureManager] HDR texture \"" + name + "\" loaded successfully", Log::INFO);
-
-		return texture;
+		return loadTexture2D(g_globalTable, name, path, format, srgb);
 	}
 
-	CubeMap TextureManager::LoadCubeMap(const std::string& name, const std::string& directory)
+	Texture TextureManager::LoadLocalTextureHDR(const std::string& name, const std::string& path)
 	{
-		auto it = g_localTable.find(name);
-		if (it != g_localTable.end()) return it->second;
+		return loadTextureHDR(g_localTable, name, path);
+	}
 
-		Log::Message("[TextureManager] Loading cube map \"" + name + "\" from \"" + directory + "\" ...", Log::INFO);
+	Texture TextureManager::LoadGlobalTextureHDR(const std::string & name, const std::string & path)
+	{
+		return loadTextureHDR(g_globalTable, name, path);
+	}
 
-		CubeMap texture = LoadCubeMap_Impl_Stbi(directory);
+	CubeMap TextureManager::LoadLocalCubeMap(const std::string& name, const std::string& directory)
+	{
+		return loadCubeMap(g_localTable, name, directory);
+	}
 
-		if (!texture)
-		{
-			Log::Message("[TextureManager] Cube map \"" + name + "\" loading failed", Log::WARN);
-			return _nullTexture2D; // TODO: use default cube map here
-		}
-
-		g_localTable[name] = texture;
-
-		Log::Message("[TextureManager] Cube map \"" + name + "\" loaded successfully", Log::INFO);
-
-		return texture;
+	CubeMap TextureManager::LoadGlobalCubeMap(const std::string & name, const std::string & directory)
+	{
+		return loadCubeMap(g_globalTable, name, directory);
 	}
 
 	Texture TextureManager::CreateTexture2DPureColor(
@@ -168,6 +128,87 @@ namespace xengine
 		texture.Generate2D(width, height, colorFormat, pixelFormat, GL_UNSIGNED_BYTE, &data[0]);
 		texture.SetFilterMin(GL_NEAREST);
 		texture.SetFilterMax(GL_NEAREST);
+
+		return texture;
+	}
+
+	Texture TextureManager::loadTexture2D(
+		std::unordered_map<std::string, Texture>& table,
+		const std::string & name,
+		const std::string & path,
+		unsigned int format,
+		bool srgb)
+	{
+		// if texture exists in scene-specific resources, return it directly
+		auto it = table.find(name);
+		if (it != table.end()) return it->second;
+
+		// Note: Here we do not search in default resources, so the texture can override
+		// the default texture, which possibly already exists and has the same name.
+
+		Log::Message("[TextureManager] Loading 2D texture \"" + name + "\" from \"" + path + "\" ...", Log::INFO);
+
+		Texture texture = LoadTexture2D_Impl_Stbi(path, format, srgb);
+
+		if (!texture)
+		{
+			Log::Message("[TextureManager] 2D Texture \"" + name + "\" loading failed", Log::WARN);
+			return _nullTexture2D;
+		}
+
+		table[name] = texture;
+
+		Log::Message("[TextureManager] 2D Texture \"" + name + "\" loaded successfully", Log::INFO);
+
+		return texture;
+	}
+
+	Texture TextureManager::loadTextureHDR(
+		std::unordered_map<std::string, Texture>& table,
+		const std::string & name,
+		const std::string & path)
+	{
+		auto it = table.find(name);
+		if (it != table.end()) return it->second;
+
+		Log::Message("[TextureManager] Loading HDR texture \"" + name + "\" from \"" + path + "\" ...", Log::INFO);
+
+		Texture texture = LoadHDR_Impl_Stbi(path);
+
+		if (!texture)
+		{
+			Log::Message("[TextureManager] HDR texture \"" + name + "\" loading failed", Log::WARN);
+			return _nullTexture2D;
+		}
+
+		table[name] = texture;
+
+		Log::Message("[TextureManager] HDR texture \"" + name + "\" loaded successfully", Log::INFO);
+
+		return texture;
+	}
+
+	CubeMap TextureManager::loadCubeMap(
+		std::unordered_map<std::string, Texture>& table,
+		const std::string & name,
+		const std::string & directory)
+	{
+		auto it = table.find(name);
+		if (it != table.end()) return it->second;
+
+		Log::Message("[TextureManager] Loading cube map \"" + name + "\" from \"" + directory + "\" ...", Log::INFO);
+
+		CubeMap texture = LoadCubeMap_Impl_Stbi(directory);
+
+		if (!texture)
+		{
+			Log::Message("[TextureManager] Cube map \"" + name + "\" loading failed", Log::WARN);
+			return _nullTexture2D; // TODO: use default cube map here
+		}
+
+		table[name] = texture;
+
+		Log::Message("[TextureManager] Cube map \"" + name + "\" loaded successfully", Log::INFO);
 
 		return texture;
 	}

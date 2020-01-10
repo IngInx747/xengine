@@ -42,7 +42,25 @@ namespace xengine
 		g_globalTable.clear();
 	}
 
-	Mesh MeshManager::LoadPrimitive(std::string type, ...)
+	Mesh MeshManager::LoadLocalPrimitive(std::string type, ...)
+	{
+		va_list args;
+		va_start(args, type);
+		Mesh mesh = loadPrimitive(g_localTable, type, args);
+		va_end(args);
+		return mesh;
+	}
+
+	Mesh MeshManager::LoadGlobalPrimitive(std::string type, ...)
+	{
+		va_list args;
+		va_start(args, type);
+		Mesh mesh = loadPrimitive(g_globalTable, type, args);
+		va_end(args);
+		return mesh;
+	}
+
+	Mesh MeshManager::loadPrimitive(std::unordered_map<std::string, Mesh>& table, std::string type, va_list args_list)
 	{
 		Mesh mesh;
 
@@ -50,29 +68,28 @@ namespace xengine
 		// to your variadic function. char and short are promoted to int, float is promoted
 		// to double, etc.
 
-		va_list args_list;
 		unsigned int argc = 0;
 
 		std::string name = type;
 
 		if (type == "quad")
 		{
-			auto it = g_globalTable.find(name);
-			if (it != g_globalTable.end()) return it->second;
+			auto it = table.find(name);
+			if (it != table.end()) return it->second;
 
 			mesh = Quad();
 		}
 		else if (type == "cube")
 		{
-			auto it = g_globalTable.find(name);
-			if (it != g_globalTable.end()) return it->second;
+			auto it = table.find(name);
+			if (it != table.end()) return it->second;
 
 			mesh = Cube();
 		}
 		else if (type == "plane")
 		{
-			auto it = g_globalTable.find(name);
-			if (it != g_globalTable.end()) return it->second;
+			auto it = table.find(name);
+			if (it != table.end()) return it->second;
 
 			mesh = Plane();
 		}
@@ -80,18 +97,16 @@ namespace xengine
 		{
 			unsigned int xseg = 16, yseg = 8;
 
-			va_start(args_list, type);
 			xseg = va_arg(args_list, unsigned int);
 			yseg = va_arg(args_list, unsigned int);
-			va_end(args_list);
 
 			name.append("_");
 			name.append(std::to_string(xseg));
 			name.append("_");
 			name.append(std::to_string(yseg));
 
-			auto it = g_globalTable.find(name);
-			if (it != g_globalTable.end()) return it->second;
+			auto it = table.find(name);
+			if (it != table.end()) return it->second;
 
 			mesh = Sphere(xseg, yseg);
 		}
@@ -100,12 +115,10 @@ namespace xengine
 			unsigned int xseg = 16, yseg = 8;
 			float r1 = 1.0f, r2 = 0.25f;
 
-			va_start(args_list, type);
 			xseg = va_arg(args_list, unsigned int);
 			yseg = va_arg(args_list, unsigned int);
 			r1 = static_cast<float>(va_arg(args_list, double));
 			r2 = static_cast<float>(va_arg(args_list, double));
-			va_end(args_list);
 
 			name.append("_");
 			name.append(std::to_string(xseg));
@@ -116,8 +129,8 @@ namespace xengine
 			name.append("_");
 			name.append(std::to_string(r2));
 
-			auto it = g_globalTable.find(name);
-			if (it != g_globalTable.end()) return it->second;
+			auto it = table.find(name);
+			if (it != table.end()) return it->second;
 
 			mesh = Torus(xseg, yseg, r1, r2);
 		}
@@ -138,7 +151,7 @@ namespace xengine
 		}
 
 		Log::Message("[MeshManager] Mesh \"" + name + "\" loaded successfully", Log::INFO);
-		g_globalTable[name] = mesh;
+		table[name] = mesh;
 
 		return mesh;
 	}
@@ -161,9 +174,10 @@ namespace xengine
 
 	void MeshManager::generateDefaultMesh()
 	{
-		LoadPrimitive("quad");
-		LoadPrimitive("cube");
-		LoadPrimitive("sphere", 16, 8);
-		LoadPrimitive("sphere", 256, 128);
+		LoadGlobalPrimitive("quad");
+		LoadGlobalPrimitive("plane");
+		LoadGlobalPrimitive("cube");
+		LoadGlobalPrimitive("sphere", 16, 8);
+		LoadGlobalPrimitive("sphere", 256, 128);
 	}
 }

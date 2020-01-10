@@ -13,7 +13,7 @@ namespace xengine
 		meshes.resize(1);
 		materials.resize(1);
 
-		meshes[0] = MeshManager::LoadPrimitive("cube");
+		meshes[0] = MeshManager::LoadGlobalPrimitive("cube");
 		materials[0] = MaterialManager::Get("skybox");
 	}
 

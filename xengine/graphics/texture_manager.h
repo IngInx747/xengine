@@ -33,7 +33,13 @@ namespace xengine
 		// TODO
 
 		// load a 2D texture
-		static Texture LoadTexture2D(
+		static Texture LoadLocalTexture2D(
+			const std::string& name,
+			const std::string& path,
+			unsigned int format,
+			bool srgb = false);
+
+		static Texture LoadGlobalTexture2D(
 			const std::string& name,
 			const std::string& path,
 			unsigned int format,
@@ -43,10 +49,12 @@ namespace xengine
 		// TODO
 
 		// load a high-dynamical-range texture
-		static Texture LoadHDR(const std::string& name, const std::string& path);
+		static Texture LoadLocalTextureHDR(const std::string& name, const std::string& path);
+		static Texture LoadGlobalTextureHDR(const std::string& name, const std::string& path);
 
 		// load a cubic texture
-		static CubeMap LoadCubeMap(const std::string& name, const std::string& directory);
+		static CubeMap LoadLocalCubeMap(const std::string& name, const std::string& directory);
+		static CubeMap LoadGlobalCubeMap(const std::string& name, const std::string& directory);
 
 		// create a pure color texture
 		static Texture CreateTexture2DPureColor(
@@ -66,6 +74,26 @@ namespace xengine
 			unsigned char color2[4]);
 
 	private:
+		// load a 2D texture
+		static Texture loadTexture2D(
+			std::unordered_map<std::string, Texture>& table,
+			const std::string& name,
+			const std::string& path,
+			unsigned int format,
+			bool srgb = false);
+
+		// load a high-dynamical-range texture
+		static Texture loadTextureHDR(
+			std::unordered_map<std::string, Texture>& table,
+			const std::string& name,
+			const std::string& path);
+
+		// load a cubic texture
+		static CubeMap loadCubeMap(
+			std::unordered_map<std::string, Texture>& table,
+			const std::string& name,
+			const std::string& directory);
+
 		static void generateDefaultTexture();
 
 	private:

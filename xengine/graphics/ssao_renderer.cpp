@@ -55,7 +55,7 @@ namespace xengine
 
 		m_noise.Generate2D(4, 4, GL_RGBA16F, GL_RGB, GL_HALF_FLOAT, &noises[0]);
 
-		m_quad = MeshManager::LoadPrimitive("quad");
+		m_quad = MeshManager::LoadGlobalPrimitive("quad");
 	}
 
 	void SSAORenderer::Resize(unsigned int width, unsigned int height)

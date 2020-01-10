@@ -2,10 +2,10 @@
 
 void MyScene2::Initialize()
 {
-	xengine::Mesh plane = xengine::MeshManager::LoadPrimitive("plane");
+	xengine::Mesh plane = xengine::MeshManager::LoadGlobalPrimitive("plane");
 
 	xengine::Material* mtrPlane = xengine::MaterialManager::Get("deferred");
-	mtrPlane->RegisterTexture("TexAlbedo", xengine::TextureManager::LoadTexture2D("checkerboard", "textures/checkerboard.png", GL_RGB));
+	mtrPlane->RegisterTexture("TexAlbedo", xengine::TextureManager::LoadLocalTexture2D("checkerboard", "textures/checkerboard.png", GL_RGB));
 	xengine::Material* mtrMetal = xengine::MaterialManager::Get("deferred");
 	mtrMetal->RegisterTexture("TexMetallic", xengine::TextureManager::Get("white"));
 
@@ -28,7 +28,7 @@ void MyScene2::Initialize()
 	wall.SetScale(glm::vec3(100.0f));
 
 	// environment capture
-	xengine::Texture hdrMap = xengine::TextureManager::LoadHDR("sky env", "textures/backgrounds/colorful_studio.hdr");
+	xengine::Texture hdrMap = xengine::TextureManager::LoadLocalTextureHDR("sky env", "textures/backgrounds/colorful_studio.hdr");
 
 	// allocate image-based lighting renderer
 	fbEnvironment = xengine::IblRenderer::CreateEnvironment(hdrMap);

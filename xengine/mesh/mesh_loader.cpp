@@ -13,56 +13,6 @@
 
 namespace xengine
 {
-	Mesh LoadMesh_Primitive(const std::string & type, const std::vector<double>& params)
-	{
-		Mesh mesh;
-
-		if (type == "quad")
-		{
-			mesh = Quad();
-		}
-		else if (type == "cube")
-		{
-			mesh = Cube();
-		}
-		else if (type == "plane")
-		{
-			mesh = Plane();
-		}
-		else if (type == "sphere")
-		{
-			unsigned int xseg = 16, yseg = 8;
-
-			if (params.size() > 0) xseg = static_cast<int>(params[0]);
-			if (params.size() > 1) yseg = static_cast<int>(params[1]);
-
-			mesh = Sphere(xseg, yseg);
-		}
-		else if (type == "torus")
-		{
-			unsigned int xseg = 16, yseg = 8;
-			float r1 = 1.0f, r2 = 0.25f;
-
-			if (params.size() > 0) xseg = static_cast<int>(params[0]);
-			if (params.size() > 1) yseg = static_cast<int>(params[1]);
-			if (params.size() > 2) r1 = static_cast<float>(params[2]);
-			if (params.size() > 3) r2 = static_cast<float>(params[3]);
-
-			mesh = Torus(xseg, yseg, r1, r2);
-		}
-		else if (false)
-		{
-			// TODO: more primitives
-		}
-		else
-		{
-			Log::Message("[MeshLoader] Primitive \"" + type + "\" not supported", Log::ERROR);
-			return Mesh();
-		}
-
-		return mesh;
-	}
-
 	Mesh LoadMesh_Impl_Assimp(aiMesh * aMesh)
 	{
 		// Note: Meshes can be named, but this is not a requirement and leaving

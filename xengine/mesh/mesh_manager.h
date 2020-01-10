@@ -28,12 +28,19 @@ namespace xengine
 		static void ClearGlobal();
 
 		// load primitive
-		static Mesh LoadPrimitive(std::string type, ...); // load meshed primitive (zero or more params)
+		static Mesh LoadLocalPrimitive(std::string type, ...);
+		static Mesh LoadGlobalPrimitive(std::string type, ...);
 
 		// get named mesh
 		static Mesh Get(const std::string& name);
 
 	private:
+		// load primitive
+		static Mesh loadPrimitive(
+			std::unordered_map<std::string, Mesh>& table,
+			std::string type,
+			va_list args_list); // load meshed primitive (zero or more params)
+
 		// generate pre-defined mesh
 		static void generateDefaultMesh();
 

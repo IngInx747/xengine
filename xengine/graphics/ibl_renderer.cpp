@@ -31,9 +31,9 @@ namespace xengine
 		_reflectionCaptureShader = ShaderManager::LoadGlobalVF("pbr:reflection", "shaders/pbr/pbr.sampler.cube.vs", "shaders/pbr/pbr.capture.reflection.fs");
 
 		// meshes
-		_quad = MeshManager::LoadPrimitive("quad");
-		_cube = MeshManager::LoadPrimitive("cube");
-		_sphere = MeshManager::LoadPrimitive("sphere", 16, 8);
+		_quad = MeshManager::LoadGlobalPrimitive("quad");
+		_cube = MeshManager::LoadGlobalPrimitive("cube");
+		_sphere = MeshManager::LoadGlobalPrimitive("sphere", 16, 8);
 
 		// brdf integration
 		generateNormalRoughnessLookup();

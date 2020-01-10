@@ -26,7 +26,7 @@ namespace xengine
 		m_volumnLightShader.AttachFragmentShader(ReadShaderSource("shaders/light.fs"));
 		m_volumnLightShader.GenerateAndLink();
 
-		m_sphere = MeshManager::LoadPrimitive("sphere", 16, 8);
+		m_sphere = MeshManager::LoadGlobalPrimitive("sphere", 16, 8);
 	}
 
 	void ForwardRenderer::GenerateParallelShadow(const std::vector<RenderCommand>& commands, const std::vector<ParallelLight*>& lights, Camera* camera)

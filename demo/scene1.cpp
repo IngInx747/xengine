@@ -3,9 +3,9 @@
 void MyScene1::Initialize()
 {
 	// mesh
-	xengine::Mesh plane = xengine::MeshManager::LoadPrimitive("plane");
-	xengine::Mesh sphere = xengine::MeshManager::LoadPrimitive("sphere", 256, 128);
-	xengine::Mesh torus = xengine::MeshManager::LoadPrimitive("torus", 32, 32, 2.0f, 0.5f);
+	xengine::Mesh plane = xengine::MeshManager::LoadGlobalPrimitive("plane");
+	xengine::Mesh sphere = xengine::MeshManager::LoadGlobalPrimitive("sphere", 256, 128);
+	xengine::Mesh torus = xengine::MeshManager::LoadLocalPrimitive("torus", 32, 32, 2.0f, 0.5f);
 
 	// shader
 	xengine::Shader shdPlasma = xengine::ShaderManager::LoadLocalVF("plasma orb", "shaders/plasma_orb.vs", "shaders/plasma_orb.fs");
@@ -22,7 +22,7 @@ void MyScene1::Initialize()
 	mtrPlasma->attribute.bBlend = true;
 	mtrPlasma->attribute.eBlendSrc = GL_ONE;
 	mtrPlasma->attribute.eBlendDst = GL_ONE;
-	mtrPlasma->RegisterTexture("TexPerllin", xengine::TextureManager::LoadTexture2D("perlin noise", "textures/perlin.png", GL_RGBA));
+	mtrPlasma->RegisterTexture("TexPerllin", xengine::TextureManager::LoadLocalTexture2D("perlin noise", "textures/perlin.png", GL_RGBA));
 	mtrPlasma->RegisterUniform("Strength", 1.5f);
 	mtrPlasma->RegisterUniform("Speed", 0.083f);
 
@@ -76,7 +76,7 @@ void MyScene1::Initialize()
 	torchLights.push_back(torch);
 
 	// environment capture
-	xengine::Texture hdrMap = xengine::TextureManager::LoadHDR("sky env", "textures/backgrounds/alley.hdr");
+	xengine::Texture hdrMap = xengine::TextureManager::LoadLocalTextureHDR("sky env", "textures/backgrounds/alley.hdr");
 
 	// allocate image-based lighting renderer
 	fbEnvironment = xengine::IblRenderer::CreateEnvironment(hdrMap);

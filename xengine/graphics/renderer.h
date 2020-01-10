@@ -72,8 +72,6 @@ namespace xengine
 		PostRenderer postRenderer;
 
 		// related frame buffer(s)
-		//FrameBuffer m_framebuffer0; // primary frame buffer
-		//FrameBuffer m_framebuffer1; // secondary frame buffer
 		FrameBuffer m_mainCanvas;
 		FrameBuffer m_swapCanvas;
 

@@ -37,7 +37,7 @@ namespace xengine
 		m_postShader.SetUniform("MotionSamples", 16);
 		m_postShader.Unbind();
 
-		m_quad = MeshManager::LoadPrimitive("quad");
+		m_quad = MeshManager::LoadGlobalPrimitive("quad");
 	}
 
 	void MotionBlurRenderer::Resize(unsigned int width, unsigned int height)

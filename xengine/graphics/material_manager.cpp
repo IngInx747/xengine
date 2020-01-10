@@ -176,11 +176,11 @@ namespace xengine
 		//
 		//	std::shared_ptr<Material> material = loadMaterial(shader);
 		//	material->type = Material::FORWARD;
-		//	material->RegisterTexture("TexAlbedo", TextureManager::LoadTexture2D("glass albedo", "textures/glass.png", GL_RGBA));
-		//	material->RegisterTexture("TexNormal", TextureManager::LoadTexture2D("glass normal", "textures/pbr/plastic/normal.png", GL_RGBA));
-		//	material->RegisterTexture("TexMetallic", TextureManager::LoadTexture2D("glass metallic", "textures/pbr/plastic/metallic.png", GL_RGBA));
-		//	material->RegisterTexture("TexRoughness", TextureManager::LoadTexture2D("glass roughness", "textures/pbr/plastic/roughness.png", GL_RGBA));
-		//	material->RegisterTexture("TexAO", TextureManager::LoadTexture2D("glass ao", "textures/pbr/plastic/ao.png", GL_RGBA));
+		//	material->RegisterTexture("TexAlbedo", TextureManager::LoadLocalTexture2D("glass albedo", "textures/glass.png", GL_RGBA));
+		//	material->RegisterTexture("TexNormal", TextureManager::LoadLocalTexture2D("glass normal", "textures/pbr/plastic/normal.png", GL_RGBA));
+		//	material->RegisterTexture("TexMetallic", TextureManager::LoadLocalTexture2D("glass metallic", "textures/pbr/plastic/metallic.png", GL_RGBA));
+		//	material->RegisterTexture("TexRoughness", TextureManager::LoadLocalTexture2D("glass roughness", "textures/pbr/plastic/roughness.png", GL_RGBA));
+		//	material->RegisterTexture("TexAO", TextureManager::LoadLocalTexture2D("glass ao", "textures/pbr/plastic/ao.png", GL_RGBA));
 		//	material->attribute.bBlend = true;
 		//
 		//	_defaultMaterials.push_back(material);
@@ -289,7 +289,7 @@ namespace xengine
 			aMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aPath);
 			std::string filename = processPath(&aPath, directory);
 
-			Texture texture = TextureManager::LoadTexture2D(filename, filename, alpha ? GL_RGBA : GL_RGB, true);
+			Texture texture = TextureManager::LoadLocalTexture2D(filename, filename, alpha ? GL_RGBA : GL_RGB, true);
 			if (texture) material->RegisterTexture("TexAlbedo", texture);
 		}
 
@@ -299,7 +299,7 @@ namespace xengine
 			aMaterial->GetTexture(aiTextureType_DISPLACEMENT, 0, &aPath);
 			std::string filename = processPath(&aPath, directory);
 
-			Texture texture = TextureManager::LoadTexture2D(filename, filename, GL_RGBA, false);
+			Texture texture = TextureManager::LoadLocalTexture2D(filename, filename, GL_RGBA, false);
 			if (texture) material->RegisterTexture("TexNormal", texture);
 		}
 
@@ -309,7 +309,7 @@ namespace xengine
 			aMaterial->GetTexture(aiTextureType_SPECULAR, 0, &aPath);
 			std::string filename = processPath(&aPath, directory);
 
-			Texture texture = TextureManager::LoadTexture2D(filename, filename, GL_RGBA, false);
+			Texture texture = TextureManager::LoadLocalTexture2D(filename, filename, GL_RGBA, false);
 			if (texture) material->RegisterTexture("TexMetallic", texture);
 		}
 
@@ -319,7 +319,7 @@ namespace xengine
 			aMaterial->GetTexture(aiTextureType_SHININESS, 0, &aPath);
 			std::string filename = processPath(&aPath, directory);
 
-			Texture texture = TextureManager::LoadTexture2D(filename, filename, GL_RGBA, false);
+			Texture texture = TextureManager::LoadLocalTexture2D(filename, filename, GL_RGBA, false);
 			if (texture) material->RegisterTexture("TexRoughness", texture);
 		}
 
@@ -329,7 +329,7 @@ namespace xengine
 			aMaterial->GetTexture(aiTextureType_AMBIENT, 0, &aPath);
 			std::string filename = processPath(&aPath, directory);
 
-			Texture texture = TextureManager::LoadTexture2D(filename, filename, GL_RGBA, false);
+			Texture texture = TextureManager::LoadLocalTexture2D(filename, filename, GL_RGBA, false);
 			if (texture) material->RegisterTexture("TexAO", texture);
 		}
 
