@@ -2,7 +2,7 @@
 #ifndef XE_PARTICLE_SYSTEM_H
 #define XE_PARTICLE_SYSTEM_H
 
-#include <model/object.h>
+#include <geometry/object.h>
 
 #include "shader.h"
 #include "texture.h"

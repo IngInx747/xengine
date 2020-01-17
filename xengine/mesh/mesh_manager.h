@@ -52,7 +52,7 @@ namespace xengine
 		static std::unordered_map<std::string, Mesh> g_globalTable;
 
 		// null protector (if a mesh fails to load, this mesh will be the output)
-		static Mesh _nullMesh;
+		static Mesh g_nullMesh;
 	};
 }
 

@@ -19,6 +19,6 @@ namespace xengine
 
 	void Skybox::SetCubeMap(const CubeMap& cubemap)
 	{
-		materials[0]->RegisterTexture("background", cubemap);
+		materials[0].RegisterTexture("background", cubemap);
 	}
 }

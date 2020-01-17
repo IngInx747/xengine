@@ -2,7 +2,7 @@
 #ifndef XE_GENERAL_RENDERER_H
 #define XE_GENERAL_RENDERER_H
 
-#include <camera/camera.h>
+#include <geometry/camera.h>
 #include <mesh/mesh.h>
 
 #include "material.h"

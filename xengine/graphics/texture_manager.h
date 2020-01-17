@@ -104,8 +104,7 @@ namespace xengine
 		static std::unordered_map<std::string, Texture> g_globalTable;
 
 		// null protector (if a texture fails to load, this texture will be the output)
-		static Texture _nullTexture2D;
-		// TODO: more types of protectors
+		static Texture g_nullTexture2D; // TODO: more types of protectors
 	};
 }
 

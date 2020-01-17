@@ -79,7 +79,6 @@ namespace xengine
 		// local lookup tables
 		static std::unordered_map<std::string, Shader> g_localTable;
 
-	private:
 		// global lookup tables
 		static std::unordered_map<std::string, Shader> g_globalTable;
 	};

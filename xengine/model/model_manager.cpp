@@ -7,7 +7,7 @@
 #include <geometry/constant.h>
 #include <utility/log.h>
 #include <mesh/mesh_loader.h>
-#include <graphics/material_manager.h>
+#include <graphics/material_loader.h>
 
 namespace xengine
 {
@@ -104,9 +104,9 @@ namespace xengine
 			aiMaterial* aMaterial = aScene->mMaterials[aMesh->mMaterialIndex];
 
 			Mesh mesh = LoadMesh_Impl_Assimp(aMesh);
-			Material* material = nullptr;
+			Material material;
 
-			if (use_dft_mtr) material = MaterialManager::LoadFromModel(aMaterial, directory, aMesh);
+			if (use_dft_mtr) material = LoadMaterial_Impl_Assimp(aMaterial, directory, aMesh);
 
 			node->meshes.push_back(mesh);
 			node->materials.push_back(material);

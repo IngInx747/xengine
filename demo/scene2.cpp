@@ -4,10 +4,10 @@ void MyScene2::Initialize()
 {
 	xengine::Mesh plane = xengine::MeshManager::LoadGlobalPrimitive("plane");
 
-	xengine::Material* mtrPlane = xengine::MaterialManager::Get("deferred");
-	mtrPlane->RegisterTexture("TexAlbedo", xengine::TextureManager::LoadLocalTexture2D("checkerboard", "textures/checkerboard.png", GL_RGB));
-	xengine::Material* mtrMetal = xengine::MaterialManager::Get("deferred");
-	mtrMetal->RegisterTexture("TexMetallic", xengine::TextureManager::Get("white"));
+	xengine::Material mtrPlane = xengine::MaterialManager::Get("deferred");
+	mtrPlane.RegisterTexture("TexAlbedo", xengine::TextureManager::LoadLocalTexture2D("checkerboard", "textures/checkerboard.png", GL_RGB));
+	xengine::Material mtrMetal = xengine::MaterialManager::Get("deferred");
+	mtrMetal.RegisterTexture("TexMetallic", xengine::TextureManager::Get("white"));
 
 	// models
 	glock17 = xengine::ModelManager::LoadFromObj("glock17", "meshes/glock17/Glock_17.obj");
@@ -41,7 +41,7 @@ void MyScene2::Initialize()
 	reflectionMap = fbReflection.GetColorAttachment(0);
 
 	// setup skybox
-	skybox.materials[0]->RegisterUniform("lodLevel", 1.5f);
+	skybox.materials[0].RegisterUniform("lodLevel", 1.5f);
 	skybox.SetScale(glm::vec3(1e20f)); // set skybox infinitely big (model size, not the cube)
 	skybox.SetCubeMap(envMap);
 

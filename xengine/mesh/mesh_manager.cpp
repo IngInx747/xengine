@@ -18,12 +18,12 @@ namespace xengine
 {
 	std::unordered_map<std::string, Mesh> MeshManager::g_localTable{};
 	std::unordered_map<std::string, Mesh> MeshManager::g_globalTable{};
-	Mesh MeshManager::_nullMesh;
+	Mesh MeshManager::g_nullMesh;
 
 	void MeshManager::Initialize()
 	{
 		generateDefaultMesh();
-		_nullMesh = g_globalTable["cube"];
+		g_nullMesh = g_globalTable["cube"];
 	}
 
 	void MeshManager::Clear()
@@ -141,13 +141,13 @@ namespace xengine
 		else
 		{
 			Log::Message("[MeshManager] Primitive \"" + type + "\" not supported", Log::ERROR);
-			return _nullMesh;
+			return g_nullMesh;
 		}
 
 		if (!mesh)
 		{
 			Log::Message("[MeshManager] Primitive \"" + name + "\" loading failed", Log::ERROR);
-			return _nullMesh;
+			return g_nullMesh;
 		}
 
 		Log::Message("[MeshManager] Mesh \"" + name + "\" loaded successfully", Log::INFO);
@@ -169,7 +169,7 @@ namespace xengine
 		}
 
 		Log::Message("[MeshManager] Material \"" + name + "\" not found", Log::WARN);
-		return _nullMesh;
+		return g_nullMesh;
 	}
 
 	void MeshManager::generateDefaultMesh()

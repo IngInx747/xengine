@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include <camera/camera.h>
+#include <geometry/camera.h>
 
 #include "light.h"
 #include "render_command.h"

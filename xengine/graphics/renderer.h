@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include <camera/camera.h>
+#include <geometry/camera.h>
 #include <scene/scene.h>
 
 #include "render_command.h"

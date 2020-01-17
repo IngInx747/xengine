@@ -19,9 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="camera\camera.cpp" />
     <ClCompile Include="geometry\aabb.cpp" />
+    <ClCompile Include="geometry\camera.cpp" />
     <ClCompile Include="geometry\frustum.cpp" />
+    <ClCompile Include="geometry\object.cpp" />
     <ClCompile Include="graphics\bloom_renderer.cpp" />
     <ClCompile Include="graphics\cubic_capture.cpp" />
     <ClCompile Include="graphics\deferred_renderer.cpp" />
@@ -31,6 +32,7 @@
     <ClCompile Include="graphics\ibl_renderer.cpp" />
     <ClCompile Include="graphics\light.cpp" />
     <ClCompile Include="graphics\material.cpp" />
+    <ClCompile Include="graphics\material_loader.cpp" />
     <ClCompile Include="graphics\material_manager.cpp" />
     <ClCompile Include="graphics\motion_blur_renderer.cpp" />
     <ClCompile Include="graphics\ogl_status.cpp" />
@@ -56,7 +58,6 @@
     <ClCompile Include="mesh\primitive.cpp" />
     <ClCompile Include="model\model.cpp" />
     <ClCompile Include="model\model_manager.cpp" />
-    <ClCompile Include="model\object.cpp" />
     <ClCompile Include="model\skybox.cpp" />
     <ClCompile Include="scene\scene.cpp" />
     <ClCompile Include="ui\ui.cpp" />
@@ -77,10 +78,11 @@
     <ClCompile Include="xengine.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="camera\camera.h" />
     <ClInclude Include="geometry\aabb.h" />
+    <ClInclude Include="geometry\camera.h" />
     <ClInclude Include="geometry\constant.h" />
     <ClInclude Include="geometry\frustum.h" />
+    <ClInclude Include="geometry\object.h" />
     <ClInclude Include="graphics\bloom_renderer.h" />
     <ClInclude Include="graphics\cubic_capture.h" />
     <ClInclude Include="graphics\deferred_renderer.h" />
@@ -90,6 +92,7 @@
     <ClInclude Include="graphics\ibl_renderer.h" />
     <ClInclude Include="graphics\light.h" />
     <ClInclude Include="graphics\material.h" />
+    <ClInclude Include="graphics\material_loader.h" />
     <ClInclude Include="graphics\material_manager.h" />
     <ClInclude Include="graphics\motion_blur_renderer.h" />
     <ClInclude Include="graphics\ogl_status.h" />
@@ -115,7 +118,6 @@
     <ClInclude Include="mesh\primitive.h" />
     <ClInclude Include="model\model.h" />
     <ClInclude Include="model\model_manager.h" />
-    <ClInclude Include="model\object.h" />
     <ClInclude Include="model\skybox.h" />
     <ClInclude Include="scene\scene.h" />
     <ClInclude Include="ui\ui.h" />

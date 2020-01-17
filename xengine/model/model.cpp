@@ -5,7 +5,7 @@
 
 namespace xengine
 {
-	void Model::InsertMesh(const Mesh & mesh, Material * material)
+	void Model::InsertMesh(const Mesh & mesh, const Material & material)
 	{
 		meshes.push_back(mesh);
 		materials.push_back(material);

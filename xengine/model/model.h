@@ -8,10 +8,9 @@
 #include <vendor/glm/glm.hpp>
 #include <vendor/glm/gtc/quaternion.hpp>
 
+#include <geometry/object.h>
 #include <mesh/mesh.h>
 #include <graphics/material.h>
-
-#include "object.h"
 
 namespace xengine
 {
@@ -25,7 +24,7 @@ namespace xengine
 		virtual void UpdateTransform(const glm::mat4& parentTransform);
 
 		// insert a mesh with material
-		void InsertMesh(const Mesh & mesh, Material* material);
+		void InsertMesh(const Mesh & mesh, const Material & material);
 
 		// insert a model as child node
 		void InsertChild(Model* node);
@@ -35,7 +34,7 @@ namespace xengine
 
 	public:
 		std::vector<Mesh> meshes;
-		std::vector<Material*> materials;
+		std::vector<Material> materials;
 
 		// hierarchical structure
 		std::vector<Model*> children;

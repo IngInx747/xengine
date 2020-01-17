@@ -58,9 +58,6 @@
     <Filter Include="xengine">
       <UniqueIdentifier>{7e20b9ae-4ef6-40ec-b1c8-b3d80168e674}</UniqueIdentifier>
     </Filter>
-    <Filter Include="camera">
-      <UniqueIdentifier>{c9f7a436-6228-49f9-872b-f7ca462da338}</UniqueIdentifier>
-    </Filter>
     <Filter Include="graphics\uniform_buffer">
       <UniqueIdentifier>{adb5107e-55b1-43ba-9e98-236242eed652}</UniqueIdentifier>
     </Filter>
@@ -135,9 +132,6 @@
     <ClCompile Include="xengine.cpp">
       <Filter>xengine</Filter>
     </ClCompile>
-    <ClCompile Include="camera\camera.cpp">
-      <Filter>camera</Filter>
-    </ClCompile>
     <ClCompile Include="ui\ui.cpp">
       <Filter>ui</Filter>
     </ClCompile>
@@ -146,9 +140,6 @@
     </ClCompile>
     <ClCompile Include="vendor\imgui\imgui_impl_opengl3.cpp">
       <Filter>vendor\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="model\object.cpp">
-      <Filter>model</Filter>
     </ClCompile>
     <ClCompile Include="utility\smart_handle.cpp">
       <Filter>utility</Filter>
@@ -243,6 +234,15 @@
     <ClCompile Include="mesh\mesh_loader.cpp">
       <Filter>mesh</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\material_loader.cpp">
+      <Filter>graphics\material</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry\camera.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry\object.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utility\configure.h">
@@ -317,9 +317,6 @@
     <ClInclude Include="xengine.h">
       <Filter>xengine</Filter>
     </ClInclude>
-    <ClInclude Include="camera\camera.h">
-      <Filter>camera</Filter>
-    </ClInclude>
     <ClInclude Include="mesh\primitive.h">
       <Filter>mesh</Filter>
     </ClInclude>
@@ -331,9 +328,6 @@
     </ClInclude>
     <ClInclude Include="vendor\imgui\imgui_impl_opengl3.h">
       <Filter>vendor\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="model\object.h">
-      <Filter>model</Filter>
     </ClInclude>
     <ClInclude Include="utility\smart_handle.h">
       <Filter>utility</Filter>
@@ -424,6 +418,15 @@
     </ClInclude>
     <ClInclude Include="mesh\mesh_loader.h">
       <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\material_loader.h">
+      <Filter>graphics\material</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry\camera.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry\object.h">
+      <Filter>geometry</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

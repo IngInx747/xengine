@@ -14,7 +14,7 @@
 #include <model/skybox.h>
 #include <model/model_manager.h>
 #include <scene/scene.h>
-#include <camera/camera.h>
+#include <geometry/camera.h>
 #include <graphics/shader_manager.h>
 #include <graphics/texture_manager.h>
 #include <graphics/material_manager.h>

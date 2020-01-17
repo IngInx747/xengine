@@ -11,20 +11,20 @@ void MyScene1::Initialize()
 	xengine::Shader shdPlasma = xengine::ShaderManager::LoadLocalVF("plasma orb", "shaders/plasma_orb.vs", "shaders/plasma_orb.fs");
 
 	// material
-	xengine::Material* mtrMetal = xengine::MaterialManager::Get("deferred no TBN"); // "normal debug" "deferred"
-	mtrMetal->RegisterTexture("TexMetallic", xengine::TextureManager::Get("white"));
+	xengine::Material mtrMetal = xengine::MaterialManager::Get("deferred no TBN"); // "normal debug" "deferred"
+	mtrMetal.RegisterTexture("TexMetallic", xengine::TextureManager::Get("white"));
 
 	//xengine::Material* mtrTorus = xengine::MaterialManager::Get("deferred"); // "normal debug" "deferred"
-	xengine::Material* mtrTorus = xengine::MaterialManager::Get("deferred no TBN"); // "normal debug" "deferred"
+	xengine::Material mtrTorus = xengine::MaterialManager::Get("deferred no TBN"); // "normal debug" "deferred"
 
-	xengine::Material* mtrPlasma = xengine::MaterialManager::Load(shdPlasma);
-	mtrPlasma->attribute.bCull = false;
-	mtrPlasma->attribute.bBlend = true;
-	mtrPlasma->attribute.eBlendSrc = GL_ONE;
-	mtrPlasma->attribute.eBlendDst = GL_ONE;
-	mtrPlasma->RegisterTexture("TexPerllin", xengine::TextureManager::LoadLocalTexture2D("perlin noise", "textures/perlin.png", GL_RGBA));
-	mtrPlasma->RegisterUniform("Strength", 1.5f);
-	mtrPlasma->RegisterUniform("Speed", 0.083f);
+	xengine::Material mtrPlasma(shdPlasma);
+	mtrPlasma.attribute.bCull = false;
+	mtrPlasma.attribute.bBlend = true;
+	mtrPlasma.attribute.eBlendSrc = GL_ONE;
+	mtrPlasma.attribute.eBlendDst = GL_ONE;
+	mtrPlasma.RegisterTexture("TexPerllin", xengine::TextureManager::LoadLocalTexture2D("perlin noise", "textures/perlin.png", GL_RGBA));
+	mtrPlasma.RegisterUniform("Strength", 1.5f);
+	mtrPlasma.RegisterUniform("Speed", 0.083f);
 
 	// model
 	plane_0.InsertMesh(plane, mtrMetal);
@@ -89,7 +89,7 @@ void MyScene1::Initialize()
 	reflectionMap = fbReflection.GetColorAttachment(0);
 
 	// setup skybox
-	skybox.materials[0]->RegisterUniform("lodLevel", 1.5f);
+	skybox.materials[0].RegisterUniform("lodLevel", 1.5f);
 	skybox.SetScale(glm::vec3(1e20f)); // set skybox infinitely big (model size, not the cube)
 	skybox.SetCubeMap(envMap);
 
@@ -112,7 +112,7 @@ void MyScene1::Update(float t, float dt)
 	torus_1.Rotate(dt * 3.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 	torus_2.Rotate(dt * 4.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
-	plasmaOrb.materials[0]->RegisterUniform("Time", t);
+	plasmaOrb.materials[0].RegisterUniform("Time", t);
 
 	for (int i = 0; i < torchLights.size(); ++i)
 	{

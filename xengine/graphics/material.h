@@ -118,6 +118,8 @@ namespace xengine
 		void UpdateOglStatus(); // update opengl status
 		void UpdateShaderUniforms(); // flush uniforms into shader before rendering
 
+		explicit operator bool() const { return shader.operator bool(); }
+
 	public:
 		unsigned int type;
 

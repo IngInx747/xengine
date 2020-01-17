@@ -1,7 +1,7 @@
 #ifndef XE_SSAO_RENDERER_H
 #define XE_SSAO_RENDERER_H
 
-#include <camera/camera.h>
+#include <geometry/camera.h>
 #include <mesh/mesh.h>
 
 #include "shader.h"

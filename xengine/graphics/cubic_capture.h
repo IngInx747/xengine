@@ -4,7 +4,7 @@
 
 #include <vendor/glm/common.hpp>
 
-#include <camera/camera.h>
+#include <geometry/camera.h>
 
 #include "frame_buffer.h"
 

@@ -8,7 +8,7 @@
 
 #include <vendor/glm/glm.hpp>
 
-#include <camera/camera.h>
+#include <geometry/camera.h>
 #include <mesh/mesh.h>
 
 #include "material.h"

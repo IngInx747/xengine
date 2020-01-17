@@ -7,7 +7,7 @@
 
 #include <vendor/glm/common.hpp>
 
-#include <camera/camera.h>
+#include <geometry/camera.h>
 #include <model/model.h>
 
 #include "render_command.h"

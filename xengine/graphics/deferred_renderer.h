@@ -2,7 +2,7 @@
 #ifndef XE_DEFERRED_RENDERER_H
 #define XE_DEFERRED_RENDERER_H
 
-#include <camera/camera.h>
+#include <geometry/camera.h>
 
 #include "frame_buffer.h"
 #include "render_command.h"

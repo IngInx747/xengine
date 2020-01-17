@@ -11,13 +11,13 @@ namespace xengine
 {
 	std::unordered_map<std::string, Texture> TextureManager::g_localTable{};
 	std::unordered_map<std::string, Texture> TextureManager::g_globalTable{};
-	Texture TextureManager::_nullTexture2D;
+	Texture TextureManager::g_nullTexture2D;
 
 	void TextureManager::Initialize()
 	{
 		generateDefaultTexture();
 
-		_nullTexture2D = g_globalTable["chessboard"];
+		g_nullTexture2D = g_globalTable["chessboard"];
 	}
 
 	void TextureManager::Clear()
@@ -51,7 +51,7 @@ namespace xengine
 		}
 
 		Log::Message("[TextureManager] Texture \"" + name + "\" not found", Log::WARN);
-		return _nullTexture2D;
+		return g_nullTexture2D;
 	}
 
 	Texture TextureManager::LoadLocalTexture2D(const std::string& name, const std::string& path, unsigned int format, bool srgb)
@@ -153,7 +153,7 @@ namespace xengine
 		if (!texture)
 		{
 			Log::Message("[TextureManager] 2D Texture \"" + name + "\" loading failed", Log::WARN);
-			return _nullTexture2D;
+			return g_nullTexture2D;
 		}
 
 		table[name] = texture;
@@ -178,7 +178,7 @@ namespace xengine
 		if (!texture)
 		{
 			Log::Message("[TextureManager] HDR texture \"" + name + "\" loading failed", Log::WARN);
-			return _nullTexture2D;
+			return g_nullTexture2D;
 		}
 
 		table[name] = texture;
@@ -203,7 +203,7 @@ namespace xengine
 		if (!texture)
 		{
 			Log::Message("[TextureManager] Cube map \"" + name + "\" loading failed", Log::WARN);
-			return _nullTexture2D; // TODO: use default cube map here
+			return g_nullTexture2D; // TODO: use default cube map here
 		}
 
 		table[name] = texture;

@@ -146,7 +146,7 @@ namespace xengine
 				// generate a render command and push to queue
 				for (size_t i = 0; i < model->meshes.size(); ++i)
 				{
-					RenderCommand command(&model->meshes[i], model->materials[i]);
+					RenderCommand command(&model->meshes[i], &model->materials[i]);
 					command.transform = model->transform;
 					command.prevTrans = model->prevTrans;
 					command.aabb.BuildFromTransform(command.mesh->Aabb(), command.transform);

@@ -4,7 +4,6 @@
 #include <vendor/glm/glm.hpp>
 #include <vendor/glm/gtc/matrix_transform.hpp>
 
-#include <camera/camera.h>
 #include <mesh/mesh.h>
 #include <model/model.h>
 #include <mesh/mesh_manager.h>
