@@ -29,6 +29,9 @@ namespace xengine
 		// get a named shader
 		static Shader Get(const std::string& name);
 
+		// register a named shader into global resource
+		static void RegisterGlobalShader(const std::string & name, const Shader& shader);
+
 		// load a vertex-fragment shader program as local resource
 		static Shader LoadLocalVF(
 			const std::string& name,

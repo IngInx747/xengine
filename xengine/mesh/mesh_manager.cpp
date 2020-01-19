@@ -42,6 +42,11 @@ namespace xengine
 		g_globalTable.clear();
 	}
 
+	void MeshManager::RegisterGlobalMesh(const std::string & name, const Mesh & mesh)
+	{
+		g_globalTable[name] = mesh;
+	}
+
 	Mesh MeshManager::LoadLocalPrimitive(std::string type, ...)
 	{
 		va_list args;

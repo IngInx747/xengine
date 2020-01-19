@@ -243,6 +243,9 @@
     <ClCompile Include="geometry\object.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
+    <ClCompile Include="model\model_loader.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utility\configure.h">
@@ -427,6 +430,9 @@
     </ClInclude>
     <ClInclude Include="geometry\object.h">
       <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="model\model_loader.h">
+      <Filter>model</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

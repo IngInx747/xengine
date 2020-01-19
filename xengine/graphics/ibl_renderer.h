@@ -8,7 +8,6 @@
 #include <vendor/glm/common.hpp>
 
 #include <geometry/camera.h>
-#include <model/model.h>
 
 #include "render_command.h"
 #include "cubic_capture.h"

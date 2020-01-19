@@ -17,6 +17,12 @@ namespace xengine
 	class Model : public GeometryObject
 	{
 	public:
+		Model();
+		virtual ~Model();
+
+		Model(const Model& other);
+		Model& operator=(const Model& other);
+
 		// update model's and all its children's transform matrices
 		virtual void UpdateTransform();
 
@@ -29,8 +35,27 @@ namespace xengine
 		// insert a model as child node
 		void InsertChild(Model* node);
 
-		// delete a node from this model node
+		// remove a node from this model
 		void RemoveChild(Model* node);
+
+		// get all children nodes of this model
+		void GetAllNodes(std::vector<Model*>& nodes);
+
+	protected:
+		// copy node contents only
+		Model(const Model* other);
+
+		// return a deep copy of this model
+		Model* deepcopy();
+
+		// get all children nodes of this model
+		void getAllNodes(std::vector<Model*>& nodes, bool exclude_this);
+
+		// delete all children nodes from memory (in a deferred way)
+		void destoryAllChildren();
+
+		//
+		void getHierarchy(const std::vector<Model*>& nodes, std::vector<int>& hierarchy);
 
 	public:
 		std::vector<Mesh> meshes;

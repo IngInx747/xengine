@@ -5,7 +5,6 @@
 #include <vendor/glm/gtc/matrix_transform.hpp>
 
 #include <mesh/mesh.h>
-#include <model/model.h>
 #include <mesh/mesh_manager.h>
 
 #include "shader_manager.h"

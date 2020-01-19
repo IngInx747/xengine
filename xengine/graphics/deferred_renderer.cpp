@@ -11,7 +11,6 @@
 
 #include "render_config.h"
 #include "general_renderer.h"
-#include "ibl_renderer.h"
 
 namespace xengine
 {
@@ -209,7 +208,7 @@ namespace xengine
 		OglStatus::SetDepthTest(GL_TRUE);
 	}
 
-	void DeferredRenderer::RenderAmbientLight(const CubeMap & irradiance, const CubeMap & reflection, const Texture & ao)
+	void DeferredRenderer::RenderAmbientLight(const CubeMap & irradiance, const CubeMap & reflection, const Texture & ao, const Texture & brdflut)
 	{
 		GetTexPosition().Bind(0); // gPositionMetallic
 		GetTexNormal().Bind(1); // gNormalRoughness
@@ -217,7 +216,7 @@ namespace xengine
 		GetTexPbrParam().Bind(3); // gPbrParam
 		if (irradiance) irradiance.Bind(4); // envIrradiance
 		if (reflection) reflection.Bind(5); // envReflection
-		IblRenderer::GetBrdfIntegrationMap().Bind(6); // BRDFLUT
+		brdflut.Bind(6); // BRDFLUT
 		ao.Bind(7); // TexSSAO
 
 		OglStatus::SetDepthTest(GL_FALSE);

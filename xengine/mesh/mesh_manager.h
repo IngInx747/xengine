@@ -27,6 +27,9 @@ namespace xengine
 		// clear global resources (default resources or shared by multiple scenes)
 		static void ClearGlobal();
 
+		// register a named mesh into global resource
+		static void RegisterGlobalMesh(const std::string & name, const Mesh& mesh);
+
 		// load primitive
 		static Mesh LoadLocalPrimitive(std::string type, ...);
 		static Mesh LoadGlobalPrimitive(std::string type, ...);

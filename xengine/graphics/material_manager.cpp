@@ -2,10 +2,6 @@
 
 #include <vendor/glad/glad.h>
 
-#include <vendor/assimp/scene.h>
-#include <vendor/assimp/Importer.hpp>
-#include <vendor/assimp/postprocess.h>
-
 #include <utility/log.h>
 
 #include "shader_manager.h"
@@ -38,12 +34,7 @@ namespace xengine
 		g_globalTable.clear();
 	}
 
-	void MaterialManager::LoadLocalMaterial(const Material & other, const std::string & name)
-	{
-		g_localTable[name] = other;
-	}
-
-	void MaterialManager::LoadGlobalMaterial(const Material & other, const std::string & name)
+	void MaterialManager::RegisterGlobalMaterial(const std::string & name, const Material & other)
 	{
 		g_globalTable[name] = other;
 	}
@@ -82,7 +73,7 @@ namespace xengine
 			material.RegisterTexture("TexRoughness", TextureManager::Get("chessboard"));
 			material.RegisterTexture("TexAO", TextureManager::Get("white"));
 
-			g_globalTable[name] = material;
+			RegisterGlobalMaterial(name, material);
 		}
 
 		// deferred (w/o TBN) (deferred pipeline OK)
@@ -99,27 +90,8 @@ namespace xengine
 			material.RegisterTexture("TexRoughness", TextureManager::Get("chessboard"));
 			material.RegisterTexture("TexAO", TextureManager::Get("white")); // default: no AO
 
-			g_globalTable[name] = material;
+			RegisterGlobalMaterial(name, material);
 		}
-
-		// glass (deferred pipeline NOT OK due to transparency sorting)
-		//{
-		//	std::string name{ "glass" };
-		//
-		//	Shader* shader = ShaderManager::LoadGlobalVF(name, "shaders/forward_render.vs", "shaders/forward_render.fs", { "ALPHA_BLEND" });
-		//
-		//	std::shared_ptr<Material> material = loadMaterial(shader);
-		//	material->type = Material::FORWARD;
-		//	material->RegisterTexture("TexAlbedo", TextureManager::LoadLocalTexture2D("glass albedo", "textures/glass.png", GL_RGBA));
-		//	material->RegisterTexture("TexNormal", TextureManager::LoadLocalTexture2D("glass normal", "textures/pbr/plastic/normal.png", GL_RGBA));
-		//	material->RegisterTexture("TexMetallic", TextureManager::LoadLocalTexture2D("glass metallic", "textures/pbr/plastic/metallic.png", GL_RGBA));
-		//	material->RegisterTexture("TexRoughness", TextureManager::LoadLocalTexture2D("glass roughness", "textures/pbr/plastic/roughness.png", GL_RGBA));
-		//	material->RegisterTexture("TexAO", TextureManager::LoadLocalTexture2D("glass ao", "textures/pbr/plastic/ao.png", GL_RGBA));
-		//	material->attribute.bBlend = true;
-		//
-		//	_defaultMaterials.push_back(material);
-		//	_defaultMaterialTable[name] = material.get();
-		//}
 
 		// alpha blend
 		{
@@ -131,7 +103,7 @@ namespace xengine
 			material.type = Material::FORWARD;
 			material.attribute.bBlend = true;
 
-			g_globalTable[name] = material;
+			RegisterGlobalMaterial(name, material);
 		}
 
 		// alpha cutout
@@ -144,7 +116,7 @@ namespace xengine
 			material.type = Material::FORWARD;
 			material.attribute.bBlend = false;
 
-			g_globalTable[name] = material;
+			RegisterGlobalMaterial(name, material);
 		}
 
 		// sky box
@@ -160,7 +132,7 @@ namespace xengine
 			material.attribute.bShadowCast = false;
 			material.attribute.bShadowRecv = false;
 
-			g_globalTable[name] = material;
+			RegisterGlobalMaterial(name, material);
 		}
 
 		// normal vector debug
@@ -172,7 +144,7 @@ namespace xengine
 			material.type = Material::FORWARD;
 			material.attribute.bBlend = false;
 
-			g_globalTable[name] = material;
+			RegisterGlobalMaterial(name, material);
 		}
 	}
 }

@@ -10,6 +10,7 @@
 #include "render_config.h"
 #include "general_renderer.h"
 #include "forward_renderer.h"
+#include "ibl_renderer.h"
 
 namespace xengine
 {
@@ -130,33 +131,26 @@ namespace xengine
 
 	void Renderer::generateCommandsFromScene(Scene* scene)
 	{
+		std::vector<Model*> models;
+
 		for (Model* root : scene->models)
 		{
-			std::vector<Model*> recStack;
-			recStack.push_back(root);
+			// make sure model geometry is up-to-date
+			root->UpdateTransform();
 
-			while (!recStack.empty())
+			root->GetAllNodes(models);
+		}
+
+		// generate a render command and push to queue
+		for (Model* model : models)
+		{
+			for (size_t i = 0; i < model->meshes.size(); ++i)
 			{
-				Model* model = recStack.back();
-				recStack.pop_back();
-
-				// make sure model geometry is up-to-date
-				model->UpdateTransform();
-
-				// generate a render command and push to queue
-				for (size_t i = 0; i < model->meshes.size(); ++i)
-				{
-					RenderCommand command(&model->meshes[i], &model->materials[i]);
-					command.transform = model->transform;
-					command.prevTrans = model->prevTrans;
-					command.aabb.BuildFromTransform(command.mesh->Aabb(), command.transform);
-
-					commandManager.Push(command);
-				}
-
-				// continue to render all children of current model
-				for (auto child : model->children)
-					recStack.push_back(child);
+				RenderCommand command(&model->meshes[i], &model->materials[i]);
+				command.transform = model->transform;
+				command.prevTrans = model->prevTrans;
+				command.aabb.BuildFromTransform(command.mesh->Aabb(), command.transform);
+				commandManager.Push(command);
 			}
 		}
 	}
@@ -247,7 +241,7 @@ namespace xengine
 
 			if (RenderConfig::UseSSR()) deferredRenderer.RenderReflectLight(m_swapCanvas.GetColorAttachment(0));
 
-			deferredRenderer.RenderAmbientLight(scene->irradianceMap, scene->reflectionMap, ssaoRenderer.GetAO());
+			deferredRenderer.RenderAmbientLight(scene->irradianceMap, scene->reflectionMap, ssaoRenderer.GetAO(), IblRenderer::GetBrdfIntegrationMap());
 
 			deferredRenderer.RenderParallelLights(scene->parallelLights, camera, ssaoRenderer.GetAO());
 

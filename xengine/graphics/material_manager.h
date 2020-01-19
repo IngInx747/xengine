@@ -25,9 +25,8 @@ namespace xengine
 		// clear global resources (default resources or shared by multiple scenes)
 		static void ClearGlobal();
 
-		// register material to resource
-		static void LoadLocalMaterial(const Material& other, const std::string& name);
-		static void LoadGlobalMaterial(const Material& other, const std::string& name);
+		// register a named material to global resource
+		static void RegisterGlobalMaterial(const std::string& name, const Material& other);
 
 		// search for a named material loaded previously (if not exist, search in default resources)
 		static Material Get(const std::string& name);

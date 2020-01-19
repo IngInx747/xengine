@@ -11,7 +11,6 @@ uniform sampler2D LastImage;
 
 #include ../common/constants.glsl
 #include ../common/brdf.glsl
-#include ../common/reflections.glsl
 #include ../common/uniforms.glsl
 
 vec2 WorldPositionToScreenCoord(vec3 world_pos)

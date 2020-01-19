@@ -57,6 +57,7 @@
     <ClCompile Include="mesh\mesh_manager.cpp" />
     <ClCompile Include="mesh\primitive.cpp" />
     <ClCompile Include="model\model.cpp" />
+    <ClCompile Include="model\model_loader.cpp" />
     <ClCompile Include="model\model_manager.cpp" />
     <ClCompile Include="model\skybox.cpp" />
     <ClCompile Include="scene\scene.cpp" />
@@ -117,6 +118,7 @@
     <ClInclude Include="mesh\mesh_manager.h" />
     <ClInclude Include="mesh\primitive.h" />
     <ClInclude Include="model\model.h" />
+    <ClInclude Include="model\model_loader.h" />
     <ClInclude Include="model\model_manager.h" />
     <ClInclude Include="model\skybox.h" />
     <ClInclude Include="scene\scene.h" />

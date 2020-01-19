@@ -45,6 +45,11 @@ namespace xengine
 		return Shader();
 	}
 
+	void ShaderManager::RegisterGlobalShader(const std::string & name, const Shader & shader)
+	{
+		g_globalTable[name] = shader;
+	}
+
 	Shader ShaderManager::LoadLocalVF(const std::string & name, const std::string & vsPath, const std::string & fsPath, const std::vector<std::string>& defines)
 	{
 		return loadVF(g_localTable, name, vsPath, fsPath, defines);

@@ -6,7 +6,6 @@ in vec2 TexCoord;
 
 #include ../common/constants.glsl
 #include ../common/brdf.glsl
-#include ../common/reflections.glsl
 #include ../common/uniforms.glsl
 
 uniform samplerCube envIrradiance;
@@ -44,7 +43,7 @@ void main()
 	// calculate color/reflectance at normal incidence
     // if dia-electric (like plastic) use F0 as 0.04 and
     // if it's a metal, use their albedo color as F0 (metallic workflow)
-	 //kS is equal to Fresnel
+	// kS is equal to Fresnel
 	// calculate reflectance w/ (modified for roughness) Fresnel
 	vec3 F0 = vec3(0.04); // base reflectance at incident angle for non-metallic (dia-conductor) surfaces 
 	F0 = mix(F0, albedo, metallic);

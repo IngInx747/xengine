@@ -28,7 +28,7 @@ namespace xengine
 		void RenderPointLights(const std::vector<PointLight*>& lights, Camera* camera);
 
 		// render deferred ambient light (Image-based lighting environment)
-		void RenderAmbientLight(const CubeMap & irradiance, const CubeMap & reflection, const Texture & ao);
+		void RenderAmbientLight(const CubeMap & irradiance, const CubeMap & reflection, const Texture & ao, const Texture & brdflut);
 
 		// render reflect light (Screen-space reflection)
 		void RenderReflectLight(const Texture & last_frame);

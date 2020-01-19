@@ -4,6 +4,11 @@
 
 #include <xengine.h>
 
+// model convention:
+// root: instance
+// intra: pointer
+// from-disk: pointer
+
 class MyScene1 : public xengine::Scene
 {
 public:
@@ -14,8 +19,8 @@ public:
 	// models
 	xengine::Model plane_0;
 	xengine::Model torus_0;
-	xengine::Model torus_1;
-	xengine::Model torus_2;
+	xengine::Model* torus_1;
+	xengine::Model* torus_2;
 	xengine::Model plasmaOrb;
 	xengine::Model* sponza;
 	xengine::Skybox skybox;

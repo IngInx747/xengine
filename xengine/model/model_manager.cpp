@@ -4,18 +4,14 @@
 #include <vendor/assimp/Importer.hpp>
 #include <vendor/assimp/postprocess.h>
 
-#include <geometry/constant.h>
 #include <utility/log.h>
-#include <mesh/mesh_loader.h>
-#include <graphics/material_loader.h>
+
+#include "model_loader.h"
 
 namespace xengine
 {
-	std::vector<std::shared_ptr<Model>> ModelManager::_models{};
-	std::unordered_map<std::string, Model*> ModelManager::_modelTable{};
-
-	std::vector<std::shared_ptr<Model>> ModelManager::_defaultModels{};
-	std::unordered_map<std::string, Model*> ModelManager::_defaultModelTable{};
+	std::unordered_map<std::string, Model*> ModelManager::g_localTable{};
+	std::unordered_map<std::string, Model*> ModelManager::g_globalTable{};
 
 	void ModelManager::Initialize()
 	{
@@ -30,103 +26,70 @@ namespace xengine
 
 	void ModelManager::ClearLocal()
 	{
-		_modelTable.clear();
-		_models.clear();
+		for (auto it = g_localTable.begin(); it != g_localTable.end(); ++it)
+			delete it->second;
+
+		g_localTable.clear();
 	}
 
 	void ModelManager::ClearGlobal()
 	{
-		_defaultModelTable.clear();
-		_defaultModels.clear();
+		for (auto it = g_globalTable.begin(); it != g_globalTable.end(); ++it)
+			delete it->second;
+
+		g_globalTable.clear();
 	}
 
-	Model * ModelManager::LoadFromObj(const std::string & name, const std::string & path, bool use_dft_mtr)
+	void ModelManager::RegisterLocalModel(const std::string & name, Model * model)
 	{
-		auto it = _modelTable.find(name);
-		if (it != _modelTable.end()) return it->second;
+		g_localTable[name] = model;
+	}
 
-		Log::Message("[ModelManager] Loading model \"" + name + "\" from \"" + path + "\" ...", Log::INFO);
+	void ModelManager::RegisterGlobalModel(const std::string & name, Model * model)
+	{
+		g_globalTable[name] = model;
+	}
 
-		Assimp::Importer importer;
-		const aiScene* aScene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+	Model * ModelManager::LoadLocalModel(const std::string & name, const std::string & path)
+	{
+		return loadModel(name, path, g_localTable);
+	}
 
-		if (!aScene || aScene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !aScene->mRootNode)
-		{
-			Log::Message("[ModelManager] Model \"" + path + "\" failed to load", Log::ERROR);
-			return nullptr;
-		}
-
-		std::string directory = path.substr(0, path.find_last_of("/"));
-		Model * node = loadFromObj(aScene->mRootNode, aScene, directory, use_dft_mtr);
-
-		if (!node)
-		{
-			Log::Message("[ModelManager] Model \"" + name + "\" loading failed", Log::ERROR);
-			return nullptr;
-		}
-
-		_modelTable[name] = node; // only added root node to model lookup table
-
-		Log::Message("[ModelManager] Model \"" + name + "\" loaded successfully", Log::INFO);
-
-		return node;
+	Model * ModelManager::LoadGlobalModel(const std::string & name, const std::string & path)
+	{
+		return loadModel(name, path, g_globalTable);
 	}
 
 	Model * ModelManager::Get(const std::string & name)
 	{
-		auto it = _modelTable.find(name);
-		if (it != _modelTable.end()) return it->second;
+		{
+			auto it = g_localTable.find(name);
+			if (it != g_localTable.end()) return it->second;
+		}
+
+		{
+			auto it = g_globalTable.find(name);
+			if (it != g_globalTable.end()) return it->second;
+		}
 
 		Log::Message("[ModelManager] Model \"" + name + "\" not found", Log::WARN);
 		return nullptr;
 	}
 
-	Model * ModelManager::loadFromObj(aiNode * aNode, const aiScene * aScene, const std::string & directory, bool use_dft_mtr)
+	Model * ModelManager::loadModel(const std::string & name, const std::string & path, std::unordered_map<std::string, Model*>& table)
 	{
-		aiString aString = aNode->mName;
-		std::string name{ aString.C_Str() };
+		auto it = table.find(name);
+		if (it != table.end()) return it->second;
 
-		// Note: The name might be empty (length of zero) but all nodes which need
-		// to be accessed afterwards by bones or anims are usually named. Multiple
-		// nodes may have the same name, but nodes which are accessed by bones (see
-		// aiBone and aiMesh::mBones) must be unique.
-		//if (name.size() > 0)
-		//{
-		//	auto it = _modelTable.find(name);
-		//	if (it != _modelTable.end()) return it->second;
-		//}
+		Log::Message("[ModelManager] Loading model \"" + name + "\" from \"" + path + "\" ...", Log::INFO);
 
-		std::shared_ptr<Model> node = std::make_shared<Model>();
+		Model * node = LoadModel_Impl_Assimp(path);
 
-		for (unsigned int i = 0; i < aNode->mNumMeshes; ++i)
-		{
-			aiMesh* aMesh = aScene->mMeshes[aNode->mMeshes[i]];
-			aiMaterial* aMaterial = aScene->mMaterials[aMesh->mMaterialIndex];
+		g_localTable[name] = node; // only added root node to model lookup table
 
-			Mesh mesh = LoadMesh_Impl_Assimp(aMesh);
-			Material material;
+		Log::Message("[ModelManager] Model \"" + name + "\" loaded successfully", Log::INFO);
 
-			if (use_dft_mtr) material = LoadMaterial_Impl_Assimp(aMaterial, directory, aMesh);
-
-			node->meshes.push_back(mesh);
-			node->materials.push_back(material);
-			node->aabbLocal.UnionAABB(mesh.Aabb()); // update local bounding box
-		}
-
-		for (unsigned int i = 0; i < aNode->mNumChildren; ++i)
-		{
-			Model * child = loadFromObj(aNode->mChildren[i], aScene, directory, use_dft_mtr);
-			node->InsertChild(child);
-
-			// current node won't update bounding box based on children's box
-		}
-
-		_models.push_back(node); // Resource container registering
-		//_modelTable[name] = node.get(); // inner nodes won't be registered to model lookup table
-
-		Log::Message("[ModelManager] Node \"" + name + "\" loaded successfully", Log::INFO);
-
-		return node.get();
+		return node;
 	}
 
 	void ModelManager::generateDefaultModel()

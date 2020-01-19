@@ -10,7 +10,7 @@ void MyScene2::Initialize()
 	mtrMetal.RegisterTexture("TexMetallic", xengine::TextureManager::Get("white"));
 
 	// models
-	glock17 = xengine::ModelManager::LoadFromObj("glock17", "meshes/glock17/Glock_17.obj");
+	glock17 = xengine::ModelManager::LoadLocalModel("glock17", "meshes/glock17/Glock_17.obj");
 	glock17->SetPosition(glm::vec3(0.0, 0.0, 2.0));
 	glock17->SetScale(glm::vec3(0.1f));
 

@@ -81,14 +81,6 @@ namespace xengine
 		inline unsigned int WrapT() const { return m_ptr->wrapT; }
 		inline unsigned int WrapR() const { return m_ptr->wrapR; }
 		inline bool Mipmap() const { return m_ptr->mipmapping; }
-
-	//protected:
-	//	void allocateMemory(); // allocate shared memory
-	//	void generateObject(); // generate OGL object
-	//	void generate();
-
-	protected:
-		//TextureMemory* m_ptr = nullptr;
 	};
 
 	using CubeMap = Texture;

@@ -29,6 +29,9 @@ namespace xengine
 		// get a named texture (if not exist, search for default resources)
 		static Texture Get(const std::string& name);
 
+		// register a named texture into global resource
+		static void RegisterGlobalTexture(const std::string& name, const Texture& texture);
+
 		// load a 1D texture
 		// TODO
 

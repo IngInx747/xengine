@@ -31,24 +31,26 @@ void MyScene1::Initialize()
 	plane_0.SetPosition(glm::vec3(0, -1, 0));
 	plane_0.SetScale(glm::vec3(10.0f));
 
+	torus_1 = new xengine::Model;
+	torus_2 = new xengine::Model;
 	torus_0.InsertMesh(torus, mtrTorus);
-	torus_1.InsertMesh(torus, mtrTorus);
-	torus_2.InsertMesh(torus, mtrTorus);
+	torus_1->InsertMesh(torus, mtrTorus);
+	torus_2->InsertMesh(torus, mtrTorus);
 
-	torus_0.InsertChild(&torus_1);
-	torus_1.InsertChild(&torus_2);
+	torus_0.InsertChild(torus_1);
+	torus_1->InsertChild(torus_2);
 
 	torus_0.SetScale(glm::vec3(1.0f));
 	torus_0.SetPosition(glm::vec3(-4.4f, 3.46f, -0.3));
-	torus_1.SetScale(glm::vec3(0.65f));
-	torus_1.SetRotation(glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	torus_2.SetScale(glm::vec3(0.65f));
+	torus_1->SetScale(glm::vec3(0.65f));
+	torus_1->SetRotation(glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	torus_2->SetScale(glm::vec3(0.65f));
 
 	plasmaOrb.InsertMesh(sphere, mtrPlasma);
 	plasmaOrb.SetPosition(glm::vec3(-4.0f, 4.0f, 0.25f));
 	plasmaOrb.SetScale(glm::vec3(0.6f));
 
-	sponza = xengine::ModelManager::LoadFromObj("sponza", "meshes/sponza/sponza.obj");
+	sponza = xengine::ModelManager::LoadLocalModel("sponza", "meshes/sponza/sponza.obj");
 	sponza->SetPosition(glm::vec3(0.0, -1.0, 0.0));
 	sponza->SetScale(glm::vec3(0.01f));
 
@@ -109,8 +111,8 @@ void MyScene1::Initialize()
 void MyScene1::Update(float t, float dt)
 {
 	torus_0.Rotate(dt * 2.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-	torus_1.Rotate(dt * 3.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-	torus_2.Rotate(dt * 4.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+	torus_1->Rotate(dt * 3.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+	torus_2->Rotate(dt * 4.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
 	plasmaOrb.materials[0].RegisterUniform("Time", t);
 

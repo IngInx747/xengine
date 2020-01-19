@@ -54,6 +54,11 @@ namespace xengine
 		return g_nullTexture2D;
 	}
 
+	void TextureManager::RegisterGlobalTexture(const std::string & name, const Texture & texture)
+	{
+		g_globalTable[name] = texture;
+	}
+
 	Texture TextureManager::LoadLocalTexture2D(const std::string& name, const std::string& path, unsigned int format, bool srgb)
 	{
 		return loadTexture2D(g_localTable, name, path, format, srgb);
@@ -218,26 +223,26 @@ namespace xengine
 		{
 			unsigned char color[4]{ 255, 255, 255, 255 };
 			Texture texture = CreateTexture2DPureColor(GL_RGBA, GL_RGBA, 1, 1, color);
-			g_globalTable["white"] = texture;
+			RegisterGlobalTexture("white", texture);
 		}
 
 		{
 			unsigned char color[4]{   1,   1,   1, 255 };
 			Texture texture = CreateTexture2DPureColor(GL_RGBA, GL_RGBA, 1, 1, color);
-			g_globalTable["black"] = texture;
+			RegisterGlobalTexture("black", texture);
 		}
 
 		{
 			unsigned char color[4]{ 128, 128, 255, 255 };
 			Texture texture = CreateTexture2DPureColor(GL_RGBA, GL_RGBA, 1, 1, color);
-			g_globalTable["normal"] = texture;
+			RegisterGlobalTexture("normal", texture);
 		}
 
 		{
 			unsigned char color1[4]{ 255, 255, 255, 255 };
 			unsigned char color2[4]{   1,   1,   1, 255 };
 			Texture texture = CreateTexture2DChessboard(GL_RGBA, GL_RGBA, 8, 8, color1, color2);
-			g_globalTable["chessboard"] = texture;
+			RegisterGlobalTexture("chessboard", texture);
 		}
 	}
 }
