@@ -49,6 +49,13 @@ int main(int argc, char** argv)
 
 	mainRenderer->Resize(ScreenWidth, ScreenHeight);
 
+	//printf("Shd %zd\n",sizeof(xengine::Shader));
+	//printf("TEX %zd\n",sizeof(xengine::Texture));
+	//printf("MTR %zd\n",sizeof(xengine::Material));
+	//printf("FBF %zd\n",sizeof(xengine::FrameBuffer));
+	//printf("MSH %zd\n",sizeof(xengine::Mesh));
+	//printf("MOD %zd\n",sizeof(xengine::Model));
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Main loop
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

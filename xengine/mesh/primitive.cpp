@@ -9,6 +9,13 @@ namespace xengine
 {
 	Quad::Quad()
 	{
+		std::vector<glm::vec3>& positions = Positions();
+		std::vector<glm::vec2>& texCoords = TexCoords();
+		std::vector<glm::vec3>& normals = Normals();
+		std::vector<glm::vec3>& tangents = Tangents();
+		std::vector<glm::vec3>& bitangents = Bitangents();
+		std::vector<unsigned int>& indices = Indices();
+
 		positions =
 		{
 			{ -1.0f, -1.0f,  0.0f, },
@@ -35,6 +42,13 @@ namespace xengine
 
 	Quad::Quad(float width, float height)
 	{
+		std::vector<glm::vec3>& positions = Positions();
+		std::vector<glm::vec2>& texCoords = TexCoords();
+		std::vector<glm::vec3>& normals = Normals();
+		std::vector<glm::vec3>& tangents = Tangents();
+		std::vector<glm::vec3>& bitangents = Bitangents();
+		std::vector<unsigned int>& indices = Indices();
+
 		positions =
 		{
 			{ -width, -height,  0.0f, },
@@ -61,6 +75,13 @@ namespace xengine
 
 	Plane::Plane()
 	{
+		std::vector<glm::vec3>& positions = Positions();
+		std::vector<glm::vec2>& texCoords = TexCoords();
+		std::vector<glm::vec3>& normals = Normals();
+		std::vector<glm::vec3>& tangents = Tangents();
+		std::vector<glm::vec3>& bitangents = Bitangents();
+		std::vector<unsigned int>& indices = Indices();
+
 		positions = {
 			{ -0.5,  0.0, -0.5 },
 			{ -0.5,  0.0,  0.5 },
@@ -107,6 +128,13 @@ namespace xengine
 
 	Cube::Cube()
 	{
+		std::vector<glm::vec3>& positions = Positions();
+		std::vector<glm::vec2>& texCoords = TexCoords();
+		std::vector<glm::vec3>& normals = Normals();
+		std::vector<glm::vec3>& tangents = Tangents();
+		std::vector<glm::vec3>& bitangents = Bitangents();
+		std::vector<unsigned int>& indices = Indices();
+
 		positions = {
 			// front
 			{ -0.5, -0.5,  0.5 },
@@ -299,6 +327,13 @@ namespace xengine
 
 	Sphere::Sphere(unsigned int xseg, unsigned int yseg)
 	{
+		std::vector<glm::vec3>& positions = Positions();
+		std::vector<glm::vec2>& texCoords = TexCoords();
+		std::vector<glm::vec3>& normals = Normals();
+		std::vector<glm::vec3>& tangents = Tangents();
+		std::vector<glm::vec3>& bitangents = Bitangents();
+		std::vector<unsigned int>& indices = Indices();
+
 		for (unsigned int y = 0; y <= yseg; ++y)
 		{
 			for (unsigned int x = 0; x <= xseg; ++x)
@@ -339,6 +374,13 @@ namespace xengine
 
 	Torus::Torus(unsigned int xseg, unsigned int yseg, float r1, float r2)
 	{
+		std::vector<glm::vec3>& positions = Positions();
+		std::vector<glm::vec2>& texCoords = TexCoords();
+		std::vector<glm::vec3>& normals = Normals();
+		std::vector<glm::vec3>& tangents = Tangents();
+		std::vector<glm::vec3>& bitangents = Bitangents();
+		std::vector<unsigned int>& indices = Indices();
+
 		for (unsigned int y = 0; y <= yseg; ++y)
 		{
 			for (unsigned int x = 0; x <= xseg; ++x)

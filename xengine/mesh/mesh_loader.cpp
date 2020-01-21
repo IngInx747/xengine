@@ -31,12 +31,12 @@ namespace xengine
 
 		Mesh mesh;
 
-		std::vector<glm::vec3>& positions = mesh.positions;
-		std::vector<glm::vec2>& texCoords = mesh.texCoords;
-		std::vector<glm::vec3>& normals = mesh.normals;
-		std::vector<glm::vec3>& tangents = mesh.tangents;
-		std::vector<glm::vec3>& bitangents = mesh.bitangents;
-		std::vector<unsigned int>& indices = mesh.indices;
+		std::vector<glm::vec3>& positions = mesh.Positions();
+		std::vector<glm::vec2>& texCoords = mesh.TexCoords();
+		std::vector<glm::vec3>& normals = mesh.Normals();
+		std::vector<glm::vec3>& tangents = mesh.Tangents();
+		std::vector<glm::vec3>& bitangents = mesh.Bitangents();
+		std::vector<unsigned int>& indices = mesh.Indices();
 
 		positions.resize(aMesh->mNumVertices);
 		normals.resize(aMesh->mNumVertices);

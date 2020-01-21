@@ -3,7 +3,6 @@
 #define XE_MESH_H
 
 #include <vector>
-#include <functional>
 
 #include <vendor/glm/common.hpp>
 
@@ -31,6 +30,14 @@ namespace xengine
 		// geometry info
 		unsigned int numVertices = 0;
 		unsigned int numIndices = 0;
+
+		// temporary mesh data
+		std::vector<glm::vec3> positions;
+		std::vector<glm::vec2> texCoords;
+		std::vector<glm::vec3> normals;
+		std::vector<glm::vec3> tangents;
+		std::vector<glm::vec3> bitangents;
+		std::vector<unsigned int> indices;
 	};
 
 	class Mesh : public SharedHandle<MeshMomory>
@@ -51,21 +58,19 @@ namespace xengine
 		inline unsigned int& Topology() { return m_ptr->topology; }
 		inline AABB & Aabb() { return m_ptr->aabb; }
 
+		std::vector<glm::vec3>& Positions();
+		std::vector<glm::vec2>& TexCoords();
+		std::vector<glm::vec3>& Normals();
+		std::vector<glm::vec3>& Tangents();
+		std::vector<glm::vec3>& Bitangents();
+		std::vector<unsigned int>& Indices();
+
 	protected:
 		// commit vertices data to GPU in an interleaved way
 		void commitOglVertexInter();
 
 		// commit vertices data to GPU separately (in batch)
 		void commitOglVertexBatch();
-
-	public:
-		// register mesh data
-		std::vector<glm::vec3> positions;
-		std::vector<glm::vec2> texCoords;
-		std::vector<glm::vec3> normals;
-		std::vector<glm::vec3> tangents;
-		std::vector<glm::vec3> bitangents;
-		std::vector<unsigned int> indices;
 	};
 }
 #endif // !XE_MESH_H

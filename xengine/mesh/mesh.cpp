@@ -37,13 +37,20 @@ namespace xengine
 	// Mesh
 	////////////////////////////////////////////////////////////////
 
+	std::vector<glm::vec3>& Mesh::Positions() { allocateMemory(); return m_ptr->positions; }
+	std::vector<glm::vec2>& Mesh::TexCoords() { allocateMemory(); return m_ptr->texCoords; }
+	std::vector<glm::vec3>& Mesh::Normals() { allocateMemory(); return m_ptr->normals; }
+	std::vector<glm::vec3>& Mesh::Tangents() { allocateMemory(); return m_ptr->tangents; }
+	std::vector<glm::vec3>& Mesh::Bitangents() { allocateMemory(); return m_ptr->bitangents; }
+	std::vector<unsigned int>& Mesh::Indices() { allocateMemory(); return m_ptr->indices; }
+
 	void Mesh::Commit(bool flag)
 	{
 		generate();
 
-		m_ptr->numVertices = static_cast<unsigned int>(positions.size());
-		m_ptr->numIndices = static_cast<unsigned int>(indices.size());
-		m_ptr->aabb.BuildFromVertices(positions);
+		m_ptr->numVertices = static_cast<unsigned int>(m_ptr->positions.size());
+		m_ptr->numIndices = static_cast<unsigned int>(m_ptr->indices.size());
+		m_ptr->aabb.BuildFromVertices(m_ptr->positions);
 
 		// process buffer data as interleaved or seperate when specified
 		if (flag)
@@ -55,12 +62,12 @@ namespace xengine
 			commitOglVertexBatch();
 		}
 
-		positions.clear();
-		texCoords.clear();
-		normals.clear();
-		tangents.clear();
-		bitangents.clear();
-		indices.clear();
+		m_ptr->positions.clear();
+		m_ptr->texCoords.clear();
+		m_ptr->normals.clear();
+		m_ptr->tangents.clear();
+		m_ptr->bitangents.clear();
+		m_ptr->indices.clear();
 	}
 
 	void Mesh::commitOglVertexInter()
@@ -72,6 +79,13 @@ namespace xengine
 		}
 
 		std::vector<float> data;
+
+		std::vector<glm::vec3>& positions  = m_ptr->positions;
+		std::vector<glm::vec2>& texCoords  = m_ptr->texCoords;
+		std::vector<glm::vec3>& normals    = m_ptr->normals;
+		std::vector<glm::vec3>& tangents   = m_ptr->tangents;
+		std::vector<glm::vec3>& bitangents = m_ptr->bitangents;
+		std::vector<unsigned int>& indices = m_ptr->indices;
 
 		for (size_t i = 0; i < positions.size(); ++i)
 		{
@@ -170,6 +184,13 @@ namespace xengine
 		}
 
 		std::vector<float> data;
+
+		std::vector<glm::vec3>& positions  = m_ptr->positions;
+		std::vector<glm::vec2>& texCoords  = m_ptr->texCoords;
+		std::vector<glm::vec3>& normals    = m_ptr->normals;
+		std::vector<glm::vec3>& tangents   = m_ptr->tangents;
+		std::vector<glm::vec3>& bitangents = m_ptr->bitangents;
+		std::vector<unsigned int>& indices = m_ptr->indices;
 
 		for (size_t i = 0; i < positions.size(); ++i)
 		{
