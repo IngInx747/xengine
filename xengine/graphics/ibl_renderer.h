@@ -5,7 +5,7 @@
 #include <vector>
 #include <memory>
 
-#include <vendor/glm/common.hpp>
+#include <glm/common.hpp>
 
 #include <geometry/camera.h>
 

@@ -2,7 +2,7 @@
 #ifndef XE_LIGHT_H
 #define XE_LIGHT_H
 
-#include <vendor/glm/common.hpp>
+#include <glm/common.hpp>
 
 #include "shadow.h"
 

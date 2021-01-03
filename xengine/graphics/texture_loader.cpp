@@ -1,10 +1,10 @@
 #include "texture_loader.h"
 
-#include <vendor/glad/glad.h>
+#include <glad/glad.h>
 
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
-#include <vendor/stb_image/stb_image.h>
+#include <stb/stb_image.h>
 #endif
 
 #include <utility/log.h>

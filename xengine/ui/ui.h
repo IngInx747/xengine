@@ -2,10 +2,6 @@
 #ifndef XE_UI_H
 #define XE_UI_H
 
-#include <vendor/imgui/imgui.h>
-#include <vendor/imgui/imgui_impl_glfw.h>
-#include <vendor/imgui/imgui_impl_opengl3.h>
-
 struct GLFWwindow;
 
 namespace xengine

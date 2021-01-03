@@ -1,6 +1,6 @@
 #include "random.h"
 
-#include <vendor/glm/gtx/compatibility.hpp>
+#include <glm/gtx/compatibility.hpp>
 
 namespace xengine
 {

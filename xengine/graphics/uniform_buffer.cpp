@@ -1,6 +1,6 @@
 #include "uniform_buffer.h"
 
-#include <vendor/glad/glad.h>
+#include <glad/glad.h>
 
 namespace xengine
 {

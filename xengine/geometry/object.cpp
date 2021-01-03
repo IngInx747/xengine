@@ -1,6 +1,6 @@
 #include "object.h"
 
-#include <vendor/glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace xengine
 {

@@ -6,7 +6,7 @@
 #include <memory>
 #include <unordered_map>
 
-#include <vendor/glm/glm.hpp>
+#include <glm/glm.hpp>
 
 #include <geometry/camera.h>
 #include <mesh/mesh.h>

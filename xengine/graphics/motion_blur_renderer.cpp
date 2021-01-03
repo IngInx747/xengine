@@ -1,6 +1,6 @@
 #include "motion_blur_renderer.h"
 
-#include <vendor/glad/glad.h>
+#include <glad/glad.h>
 
 #include <mesh/mesh_manager.h>
 

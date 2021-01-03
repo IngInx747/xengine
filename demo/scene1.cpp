@@ -110,7 +110,7 @@ void MyScene1::Initialize()
 
 void MyScene1::Update(float t, float dt)
 {
-	torus_0.Rotate(dt * 2.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+	torus_0.Rotate(dt * 2.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	torus_1->Rotate(dt * 3.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 	torus_2->Rotate(dt * 4.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 

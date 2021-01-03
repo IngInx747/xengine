@@ -1,10 +1,10 @@
 #include "material_loader.h"
 
-#include <vendor/glad/glad.h>
+#include <glad/glad.h>
 
-#include <vendor/assimp/scene.h>
-#include <vendor/assimp/Importer.hpp>
-#include <vendor/assimp/postprocess.h>
+#include <assimp/scene.h>
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
 
 #include "texture_manager.h"
 #include "material_manager.h"

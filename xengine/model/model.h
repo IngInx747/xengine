@@ -5,8 +5,8 @@
 #include <vector>
 #include <memory>
 
-#include <vendor/glm/glm.hpp>
-#include <vendor/glm/gtc/quaternion.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include <geometry/object.h>
 #include <mesh/mesh.h>

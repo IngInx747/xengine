@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include <vendor/glm/glm.hpp>
+#include <glm/glm.hpp>
 
 #include "shader.h"
 #include "texture.h"
@@ -85,9 +85,16 @@ namespace xengine
 				glm::mat4 mat4;
 			};
 
-			VarTableEntry() {}
+			VarTableEntry() : type(0), mat4() {}
 			VarTableEntry(const VarTableEntry& entry) : type(entry.type), mat4(entry.mat4) {}
 			~VarTableEntry() {}
+
+			VarTableEntry& operator= (const VarTableEntry& other)
+			{
+				type = other.type;
+				mat4 = other.mat4;
+				return *this;
+			}
 		};
 
 		struct TexTableEntry

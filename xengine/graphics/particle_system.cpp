@@ -4,8 +4,8 @@
 #include <random>
 #include <functional> // std::bind
 
-#include <vendor/glm/glm.hpp>
-#include <vendor/glad/glad.h>
+#include <glm/glm.hpp>
+#include <glad/glad.h>
 
 #include "shader_manager.h"
 #include "texture_manager.h"

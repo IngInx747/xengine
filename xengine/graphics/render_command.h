@@ -4,7 +4,7 @@
 
 #include <memory>
 
-#include <vendor/glm/glm.hpp>
+#include <glm/glm.hpp>
 
 #include <geometry/aabb.h>
 #include <mesh/mesh.h>

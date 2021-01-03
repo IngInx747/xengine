@@ -4,7 +4,7 @@
 
 #include <vector>
 
-#include <vendor/glm/common.hpp>
+#include <glm/common.hpp>
 
 #include <geometry/aabb.h>
 #include <utility/smart_handle.h>

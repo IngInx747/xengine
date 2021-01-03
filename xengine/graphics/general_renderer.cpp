@@ -1,6 +1,6 @@
 #include "general_renderer.h"
 
-#include <vendor/glad/glad.h>
+#include <glad/glad.h>
 
 namespace xengine
 {

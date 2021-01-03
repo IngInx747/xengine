@@ -1,10 +1,6 @@
 #include <xengine.h>
 #include "scenes.h"
 
-#pragma comment (lib, "assimp-vc140-mt.lib")
-#pragma comment (lib, "glfw3.lib")
-#pragma comment (lib, "xengine.lib")
-
 void glfwFramebufferSizeCallback(GLFWwindow* window, int width, int height);
 void glfwKeyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void glfwMouseMoveCallback(GLFWwindow* window, double xpos, double ypos);

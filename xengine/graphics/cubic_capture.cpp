@@ -1,6 +1,6 @@
 #include "cubic_capture.h"
 
-#include <vendor/glad/glad.h>
+#include <glad/glad.h>
 
 #include <geometry/constant.h>
 

@@ -2,7 +2,7 @@
 #ifndef XE_CUBIC_CAPTURE_H
 #define XE_CUBIC_CAPTURE_H
 
-#include <vendor/glm/common.hpp>
+#include <glm/common.hpp>
 
 #include <geometry/camera.h>
 

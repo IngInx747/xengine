@@ -2,7 +2,7 @@
 #ifndef XE_CAMERA_H
 #define XE_CAMERA_H
 
-#include <vendor/glm/glm.hpp>
+#include <glm/glm.hpp>
 
 #include <geometry/frustum.h>
 #include <geometry/aabb.h>

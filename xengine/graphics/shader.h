@@ -6,7 +6,7 @@
 #include <vector>
 #include <unordered_map>
 
-#include <vendor/glm/common.hpp>
+#include <glm/common.hpp>
 
 #include <utility/smart_handle.h>
 

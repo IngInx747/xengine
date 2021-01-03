@@ -1,8 +1,8 @@
 #include "camera.h"
 
-#include <vendor/glm/glm.hpp>
-#include <vendor/glm/gtx/compatibility.hpp>
-#include <vendor/glm/gtc/matrix_transform.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtx/compatibility.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <geometry/constant.h>
 

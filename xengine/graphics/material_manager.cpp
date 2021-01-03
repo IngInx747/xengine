@@ -1,6 +1,6 @@
 #include "material_manager.h"
 
-#include <vendor/glad/glad.h>
+#include <glad/glad.h>
 
 #include <utility/log.h>
 

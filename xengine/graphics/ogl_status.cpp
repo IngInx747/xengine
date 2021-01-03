@@ -1,6 +1,6 @@
 #include "ogl_status.h"
 
-#include <vendor/glad/glad.h>
+#include <glad/glad.h>
 
 namespace xengine
 {

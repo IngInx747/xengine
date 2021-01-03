@@ -1,7 +1,7 @@
 #include "material.h"
 
-#include <vendor/glad/glad.h>
-#include <vendor/glm/glm.hpp>
+#include <glad/glad.h>
+#include <glm/glm.hpp>
 
 #include <utility/log.h>
 

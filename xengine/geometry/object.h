@@ -2,8 +2,8 @@
 #ifndef XE_OBJECT_H
 #define XE_OBJECT_H
 
-#include <vendor/glm/glm.hpp>
-#include <vendor/glm/gtc/quaternion.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include <geometry/aabb.h>
 

@@ -3,9 +3,9 @@
 #include <random>
 #include <functional> // std::bind
 
-#include <vendor/glad/glad.h>
-#include <vendor/glm/glm.hpp>
-#include <vendor/glm/gtx/compatibility.hpp>
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtx/compatibility.hpp>
 
 #include <mesh/mesh_manager.h>
 

@@ -1,0 +1,26 @@
+# Locate root dir
+SET(ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}")
+
+FILE(GLOB SOURCES
+    "${ROOT_DIR}/glad.c")
+    
+FILE(GLOB HEADERS
+    "${ROOT_DIR}/glad.h"
+    "${ROOT_DIR}/khrplatform.h")
+    
+# Handle the QUIETLY and REQUIRED arguments and set XXX_FOUND to TRUE if all listed variables are TRUE.
+INCLUDE(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(
+	glad DEFAULT_MSG
+	ROOT_DIR
+	SOURCES
+	HEADERS)
+
+SET(GLAD_SOURCES ${SOURCES})
+SET(GLAD_HEADERS ${HEADERS})
+SET(GLAD_INCLUDE_DIRS ${ROOT_DIR})
+
+MARK_AS_ADVANCED(
+    GLAD_SOURCES
+    GLAD_HEADERS
+    GLAD_INCLUDE_DIRS)

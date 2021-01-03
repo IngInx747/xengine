@@ -2,9 +2,9 @@
 #ifndef XENGINE_H
 #define XENGINE_H
 
-#include <vendor/glad/glad.h>
-#include <vendor/GLFW/glfw3.h>
-#include <vendor/glm/glm.hpp>
+#include <glad/glad.h>
+#include <glfw/glfw3.h>
+#include <glm/glm.hpp>
 
 #include <utility/log.h>
 #include <mesh/mesh.h>

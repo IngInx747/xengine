@@ -2,7 +2,7 @@
 #ifndef XE_SHADOW_H
 #define XE_SHADOW_H
 
-#include <vendor/glm/glm.hpp>
+#include <glm/glm.hpp>
 
 #include <geometry/camera.h>
 

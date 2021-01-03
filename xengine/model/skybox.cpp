@@ -1,7 +1,7 @@
 #include "skybox.h"
 
-#include <vendor/glad/glad.h>
-#include <vendor/glm/glm.hpp>
+#include <glad/glad.h>
+#include <glm/glm.hpp>
 
 #include <mesh/mesh_manager.h>
 #include <graphics/material_manager.h>

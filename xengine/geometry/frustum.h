@@ -4,7 +4,7 @@
 
 #include <memory>
 
-#include <vendor/glm/common.hpp>
+#include <glm/common.hpp>
 
 namespace xengine
 {

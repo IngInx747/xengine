@@ -1,6 +1,6 @@
 #include "aabb.h"
 
-#include <vendor/glm/gtx/matrix_operation.hpp>
+#include <glm/gtx/matrix_operation.hpp>
 
 #include "constant.h"
 

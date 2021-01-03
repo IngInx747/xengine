@@ -4,7 +4,7 @@
 
 #include <vector>
 
-#include <vendor/glm/glm.hpp>
+#include <glm/glm.hpp>
 
 namespace xengine
 {

@@ -1,0 +1,12 @@
+# Locate root dir
+SET(ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}")
+
+# Handle the QUIETLY and REQUIRED arguments and set XXX_FOUND to TRUE if all listed variables are TRUE.
+INCLUDE(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(
+	glm DEFAULT_MSG
+	ROOT_DIR)
+
+SET(GLM_INCLUDE_DIRS ${ROOT_DIR})
+
+MARK_AS_ADVANCED(GLM_INCLUDE_DIRS)
