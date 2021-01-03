@@ -29,6 +29,7 @@ CXX standards:
 ## Build
 
 > mkdir build && cd build
+
 > cmake ..
 
 ## Running
