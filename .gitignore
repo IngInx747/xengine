@@ -23,6 +23,9 @@ bld/
 [Ll]og/
 [Bb]uild/
 
+# 3rd party binaries
+!3rdparty/assimp/bin/
+
 # Visual Studio 2015 cache/options directory
 .vs/
 
