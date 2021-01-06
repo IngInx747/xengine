@@ -23,17 +23,11 @@ bld/
 [Ll]og/
 [Bb]uild/
 
-# 3rd party binaries
-!3rdparty/assimp/bin/
-
 # Visual Studio 2015 cache/options directory
 .vs/
 
 # Visual Studio Code local config directory
 .vscode/
-
-# Configure files
-*.ini
 
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
@@ -271,3 +265,12 @@ paket-files/
 __pycache__/
 *.pyc
 /Z
+
+# Configure files
+*.ini
+
+# 3rd party binaries
+!3rdparty/assimp/bin/
+
+# Data set
+!meshes/**/*.obj
